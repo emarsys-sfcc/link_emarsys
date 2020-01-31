@@ -41,13 +41,13 @@ module.exports.replacePathPlaceholders = function (path) {
     var newPath = path;
 
     if (path.indexOf('_today_') > -1) {
-        newPath = path.replace(/_today_/, StringUtils.formatCalendar(calendar, DATE_FORMAT));
+        newPath = newPath.replace(/_today_/, (StringUtils.formatCalendar(calendar, DATE_FORMAT)));
     }
     if (path.indexOf('_now_') > -1) {
-        newPath = path.replace(/_now_/, StringUtils.formatCalendar(calendar, DATETIME_FORMAT));
+        newPath = newPath.replace(/_now_/, (StringUtils.formatCalendar(calendar, DATETIME_FORMAT)));
     }
     if (path.indexOf('_siteid_') > -1) {
-        newPath = path.replace(/_siteid_/, siteID);
+        newPath = newPath.replace(/_siteid_/, siteID);
     }
 
     return newPath;

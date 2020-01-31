@@ -151,13 +151,13 @@ var ExportCustomerInfo = {
             var MailTo = params.mailTo;
             var MailSubject = params.mailSubject;
             var MainTemplate = 'email/dbload_notification';
-            var template = new dw.util.Template(MainTemplate);
+            var template = new (require('dw/util/Template'))(MainTemplate);
 
-            var o = new dw.util.HashMap();
+            var o = new (require('dw/util/HashMap'))();
             o.put('MailSubject', MailSubject);
 
             var content = template.render(o);
-            var mail = new dw.net.Mail();
+            var mail = new (require('dw/net/Mail'))();
             mail.addTo(MailTo)
                 .setFrom(MailFrom)
                 .setSubject(MailSubject)
@@ -229,7 +229,7 @@ var ExportCustomerInfo = {
         var attributeValue = '';
         if (assignedValue) {
             var listOfValues = [];    // list of all possible values for specified field
-
+           
             if (FieldValueMapping[Field.field]) {
                 listOfValues = FieldValueMapping[Field.field];
             }
