@@ -7,12 +7,13 @@
 	
 	<field formid="gender" binding="gender" label="emarsys.gender" type="string" mandatory="false">
 		<options>
+			<option label="emarsys.selectgender" value="" />
 			<option label="emarsys.male" value="male" />
 			<option label="emarsys.female" value="female" />
 		</options>
 	</field>
 	
-	<field formid="countryCode" label="country" type="string" mandatory="false" binding="countryCode" missing-error="address.country.missing" value-error="address.field.invalid">
+	<field formid="countryCode" label="emarsys.country" type="string" mandatory="false" binding="countryCode" missing-error="address.country.missing" value-error="address.field.invalid">
 		<options>
 			<option optionid="" label="emarsys.selectcountry" value=""/>
 			<option optionid="us" label="emarsys.unitedstates" value="us"/>

@@ -1,0 +1,24 @@
+{
+  "globals": {
+    "EmarsysUrls": "writable",
+    "ScarabQueue": "writable",
+    "jQuery": "writable",
+    "session": "readonly",
+    "exports": "readonly",
+    "empty": "readonly",
+    "module": "readonly",
+    "dw": "readonly",
+    "window": "readonly",
+    "document": "readonly",
+    "require": "readonly",
+    "response": "readonly",
+    "request": "readonly",
+    "Resources": "readonly",
+    "totalFields": "readonly",
+    "customer": "readonly",
+    "args": "writable",
+    "PIPELET_ERROR": "readonly",
+    "PIPELET_NEXT": "readonly",
+    "next": "readonly"
+  }
+}

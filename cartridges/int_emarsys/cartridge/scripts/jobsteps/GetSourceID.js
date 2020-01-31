@@ -9,11 +9,11 @@ var Status = require('dw/system/Status');
 var SourceID = {
     /** @type {dw.system.Log} */
     logger: require('dw/system/Logger').getLogger('SourceID', 'SourceID'),
-    execute: function() {
+    execute: function () {
         try {
-           this.emarsysHelper = new (require('int_emarsys/cartridge/scripts/util/EmarsysHelper'))();
+            this.emarsysHelper = new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))();
 
-           this.getSourceId();
+            this.getSourceId();
         } catch (err) {
             this.logger.error('SourceID: Error ' + err.message + '\n' + err.stack);
 
@@ -26,12 +26,12 @@ var SourceID = {
      * @description creates a source, gets id source and store it in custom preference
      * @returns {void} set custom preference value
      */
-    getSourceId: function() {
+    getSourceId: function () {
         var sourceName = Site.current.preferences.custom.emarsysSourceName;
         var createSource;
         var sourceId;
         var request = {
-            'name': sourceName
+            name: sourceName
         };
         var getAllSources = this.emarsysHelper.triggerAPICall('source', {}, 'GET');
 
@@ -56,8 +56,7 @@ var SourceID = {
         }
 
         Site.current.setCustomPreferenceValue('emarsysSourceID', sourceId);
-
-     }
+    }
 
 };
 

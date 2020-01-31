@@ -17,13 +17,12 @@ var File = require('dw/io/File');
 var Status = require('dw/system/Status');
 
 /**
- * The main function.
+ * @description The main function.
  *
  * @returns {dw.system.Status} The exit status for the job step
  */
 var run = function run() {
-
-    var jobHelper = require('int_emarsys/cartridge/scripts/util/JobHelper');
+    var jobHelper = require('int_emarsys/cartridge/scripts/helpers/jobHelper');
     var emarsysFTPService = require('int_emarsys/cartridge/scripts/service/emarsysFTPService');
     var StepUtil = require('int_emarsys/cartridge/scripts/util/StepUtil');
     var args = arguments[0];
@@ -57,10 +56,10 @@ var run = function run() {
     }
     if (fileList.length === 0) {
         switch (noFilesFoundStatus) {
-        case 'ERROR':
-            return new Status(Status.ERROR, 'ERROR', 'No files to upload.');
-        default:
-            return new Status(Status.OK, 'NO_FILE_FOUND', 'No files to upload.');
+            case 'ERROR':
+                return new Status(Status.ERROR, 'ERROR', 'No files to upload.');
+            default:
+                return new Status(Status.OK, 'NO_FILE_FOUND', 'No files to upload.');
         }
     }
 

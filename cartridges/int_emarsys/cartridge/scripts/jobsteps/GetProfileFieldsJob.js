@@ -10,11 +10,11 @@ var CustomObjectMgr = require('dw/object/CustomObjectMgr');
 var ProfileField = {
     /** @type {dw.system.Log} */
     logger: require('dw/system/Logger').getLogger('ProfileField', 'ProfileField'),
-    execute: function() {
+    execute: function () {
         try {
-           this.emarsysHelper = new (require('int_emarsys/cartridge/scripts/util/EmarsysHelper'))();
+            this.emarsysHelper = new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))();
 
-           this.getProfileFields();
+            this.getProfileFields();
         } catch (err) {
             this.logger.error('ProfileField: Error ' + err.message + '\n' + err.stack);
 
@@ -27,7 +27,7 @@ var ProfileField = {
      * @description retrieves and stores profile fields from Emarsys
      * @returns {void} create custom object
      */
-    getProfileFields: function() {
+    getProfileFields: function () {
         var language = Site.getCurrent().getCustomPreferenceValue('emarsysGetProfileFieldsLanguage');
         var UniqueObjectKey = 'profileFields';
 
@@ -38,16 +38,16 @@ var ProfileField = {
 
         if (!empty(profileFields) && profileFields.status === 'OK') {
             var result = JSON.parse(profileFields.object);
-                result = JSON.stringify(result.data);
+
+            result = JSON.stringify(result.data);
             var CheckObject = CustomObjectMgr.getCustomObject('EmarsysProfileFields', UniqueObjectKey);
 
-            if(CheckObject !== null) {
+            if (CheckObject !== null) {
                 CustomObjectMgr.remove(CheckObject);
             }
             var Store = CustomObjectMgr.createCustomObject('EmarsysProfileFields', UniqueObjectKey);
             Store.custom.result = result;
         }
-
     }
 };
 

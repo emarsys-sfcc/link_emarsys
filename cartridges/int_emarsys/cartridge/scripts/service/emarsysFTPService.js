@@ -1,16 +1,16 @@
 var LocalServiceRegistry = require('dw/svc/LocalServiceRegistry');
-var FtpClientHelper = require('int_emarsys/cartridge/scripts/util/FtpClientHelper');
+var FtpClientHelper = require('int_emarsys/cartridge/scripts/helpers/ftpClientHelper');
 /**
- * Returns a newly initialized service related to the given {serviceID}
+ * @description Returns a newly initialized service related to the given {serviceID}
  * If the service does not exists, this method will throw an error
  * This method should only be used to initialize (S)FTP services as the create request is based
  * on the assumption that the service is an instance of the dw.src.FTPService class
  *
- * @param {String} serviceID The service to initialize
+ * @param {string} serviceID The service to initialize
  *
  * @throw {Error} If the service does not exists in the Business Manager
  *
- * @returns {Object}
+ * @returns {Object} constructor function
  */
 module.exports.getFTPService = function (serviceID) {
     var ftpService = LocalServiceRegistry.createService(serviceID, {

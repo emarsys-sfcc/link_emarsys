@@ -8,7 +8,8 @@ var EmarsysOrderTracking = {
 
     /**
      * @description Process Orders and send orders data to emarsys
-     * @returns {dw.system.Status}
+     * @param {Object} args input parametr
+     * @returns {dw.system.Status} - return status 'Ok' or 'Error'
      */
     execute: function (args) {
         try {
@@ -18,7 +19,8 @@ var EmarsysOrderTracking = {
             this.destinationFolder = args.destinationFolder;
             this.currencyToConvert = args.smartInsightCurrency;
             this.defaultRequestCurrency = session.currency.currencyCode;
-            this.jobHelper = require('int_emarsys/cartridge/scripts/util/JobHelper');
+
+            this.jobHelper = require('int_emarsys/cartridge/scripts/helpers/jobHelper');
             this.fileName = this.jobHelper.createSmartInsightFeedName();
             this.exportFile = this.jobHelper.createSmartInsightExportFile(this.destinationFolder);
 
@@ -52,11 +54,11 @@ var EmarsysOrderTracking = {
         // end date for export timeframe
         var endDate = this.enableCustomTimeFrame ? this.timeframeEnd : this.today;
 
-        var ORDER_BY = "creationDate desc";
-        var query    = "creationDate >= {0} AND creationDate <= {1}";
+        var ORDER_BY = 'creationDate desc';
+        var query = 'creationDate >= {0} AND creationDate <= {1}';
 
         if (!this.enableCustomTimeFrame) {
-            query += " AND (custom.exported = NULL OR custom.exported = false)";
+            query += ' AND (custom.exported = NULL OR custom.exported = false)';
         }
 
         this.orders = OrderMgr.searchOrders(query, ORDER_BY, startDate, endDate);
@@ -65,6 +67,7 @@ var EmarsysOrderTracking = {
 
     /**
      * @description Prepare csv stream writer
+     * @returns {void} prepare header
      */
     prepareCsvStreamWriter: function () {
         if (!this.needExportData) {
@@ -88,12 +91,11 @@ var EmarsysOrderTracking = {
         var co = CustomObjectMgr.getCustomObject('EmarsysSmartInsightConfiguration', 'emarsysSmartInsight');
 
         this.columnNames = [];    // names of columns in created feed
-        this.attributes  = [];    // attributes to read values from
+        this.attributes = [];    // attributes to read values from
 
         // throw error when can't load config
         if (!co) {
             this.logger.error('EmarsysOrderTracking: *** Error occurred during reading SmartInsight stored fields mapping.');
-            return PIPELET_ERROR;
         }
 
         // parse mapped fields
@@ -101,7 +103,7 @@ var EmarsysOrderTracking = {
 
         if (mappedFields.length > 0) {
             for (var i = 0; i < mappedFields.length; i++) {
-                var placeholder = mappedFields[i]['placeholder'];
+                var placeholder = mappedFields[i].placeholder;
                 var columnName = this.jobHelper.escapeCSVField(placeholder);
 
                 this.columnNames.push(columnName);
@@ -110,7 +112,6 @@ var EmarsysOrderTracking = {
         }
 
         this.csvStreamWriter.writeNext(this.columnNames);
-
     },
 
     /**
@@ -127,7 +128,7 @@ var EmarsysOrderTracking = {
 
             while (plis.hasNext()) {
                 var pli = plis.next();
-                var csvItem = this._getCsvItem(order, pli);
+                var csvItem = this.getCsvItem(order, pli);
 
                 this.csvStreamWriter.writeNext(csvItem);
 
@@ -151,11 +152,11 @@ var EmarsysOrderTracking = {
 
     /**
      * @description Returns data line for CSV.
-     * @param {dw.order.Order} order
-     * @param {dw.order.ProductLineItem} pli
-     * @returns {Array}
+     * @param {dw.order.Order} order current order
+     * @param {dw.order.ProductLineItem} pli ProductLineItem
+     * @returns {Array} new feedLine
      */
-    _getCsvItem: function (order, pli) {
+    getCsvItem: function (order, pli) {
         var feedLine = [];
 
         this.attributes.forEach(function (attribute) {
@@ -163,7 +164,7 @@ var EmarsysOrderTracking = {
             var value = this.jobHelper.escapeCSVField(origValue);
 
             feedLine.push(value);
-        },this);
+        }, this);
 
         return feedLine;
     },
@@ -171,9 +172,9 @@ var EmarsysOrderTracking = {
     /**
      * @description Renders attribute value
      * @param {string} attributesChain - attributes chain (ex: attr1.attr2.attr3.attr4)
-     * @param {Object} order
-     * @param {Object} lineItem
-     * @returns {*}
+     * @param {Object} order current order
+     * @param {Object} lineItem current lineItem
+     * @returns {*} value
      */
     renderAttributeValue: function (attributesChain, order, lineItem) {
         var Calendar = require('dw/util/Calendar');
@@ -190,7 +191,7 @@ var EmarsysOrderTracking = {
              Render order creation date
              */
             case 'date':
-                return StringUtils.formatCalendar(new Calendar(order.creationDate), "YYYY-MM-dd");
+                return StringUtils.formatCalendar(new Calendar(order.creationDate), 'YYYY-MM-dd');
             /*
              Render customer email
              */
@@ -205,7 +206,7 @@ var EmarsysOrderTracking = {
             Render variant ID
             */
             case 'variantid':
-               return this.getItemId(lineItem);
+                return this.getItemId(lineItem);
             /*
             Render master ID
             */
@@ -235,19 +236,21 @@ var EmarsysOrderTracking = {
     },
     /**
      * @description check order status
-     * @param {objcet} order
-     * @param {Number} price
+     * @param {objcet} order current order
+     * @param {number} price value price
+     * @returns {number} price
      */
     checkOrderStatus: function (order, price) {
+        var priceNew;
         if (order.status.value === order.ORDER_STATUS_CANCELLED) {
-            price = -price;
+            priceNew = -price;
         }
-        return price;
+        return priceNew;
     },
     /**
      * @description Helper method to render master ID
      * @param {Object} lineItem object of type ProductLineItem or GiftCertificateLineItem
-     * @returns {String}
+     * @returns {string} return master id
      */
     getMasterId: function (lineItem) {
         switch (true) {
@@ -271,7 +274,7 @@ var EmarsysOrderTracking = {
     /**
      * @description Helper method to render item ID
      * @param {Object} lineItem object of type ProductLineItem or GiftCertificateLineItem
-     * @returns {String}
+     * @returns {string} return id
      */
     getItemId: function (lineItem) {
         switch (true) {
@@ -292,8 +295,8 @@ var EmarsysOrderTracking = {
 
     /**
      * @description Helper method to render item quantity
-     * @param {Object} lineItem
-     * @returns {Number}
+     * @param {Object} lineItem object of type ProductLineItem or GiftCertificateLineItem
+     * @returns {number} value quantity
      */
     getQuantity: function (lineItem) {
         if (lineItem instanceof dw.order.GiftCertificateLineItem) {
@@ -304,8 +307,11 @@ var EmarsysOrderTracking = {
 
     /**
      * @description Helper method to render item price
-     * @param {object} lineItem object product line item
-     * @returns {*}
+     * @param {Object} lineItem object product line item
+     * @param {Object} order current order
+     * @param {string} currencyToConvert mnemonic currency code
+     * @param {string} defaultRequestCurrency mnemonic code of the currency
+     * @returns {*} return item GiftCertificateLineItem or ProductLineItem
      */
     getPrice: function (lineItem, order, currencyToConvert, defaultRequestCurrency) {
         var Currency = require('dw/util/Currency');
@@ -322,44 +328,41 @@ var EmarsysOrderTracking = {
 
                     if (!empty(priceValue)) {
                         return priceValue.toFixed(2);
-                    } else {
-                        return null;
                     }
-                } else {
-                    priceValue = lineItem.getProratedPrice().getValueOrNull();
 
-                    currency = Currency.getCurrency(orderCurrencyCode);
-                    session.setCurrency(currency);
-                    var priceInOrderCurrency = lineItem.getProduct().getPriceModel().getPrice();
-
-                    currency = Currency.getCurrency(currencyToConvert);
-                    session.setCurrency(currency);
-                    var priceInCurrencyToConvert = lineItem.getProduct().getPriceModel().getPrice();
-
-                    var ratio = priceInCurrencyToConvert.getValue() / priceInOrderCurrency.getValue();
-
-                    var convertedPrice = (priceValue * ratio).toFixed(2);
-
-                    if (!empty(priceValue)) {
-                        currency = Currency.getCurrency(defaultRequestCurrency);
-                        session.setCurrency(currency);
-                        return convertedPrice;
-                    } else {
-                        currency = Currency.getCurrency(defaultRequestCurrency);
-                        session.setCurrency(currency);
-                        return null;
-                    }
+                    return null;
                 }
-                break;
+
+                priceValue = lineItem.getProratedPrice().getValueOrNull();
+                currency = Currency.getCurrency(orderCurrencyCode);
+                session.setCurrency(currency);
+                var priceInOrderCurrency = lineItem.getProduct().getPriceModel().getPrice();
+
+                currency = Currency.getCurrency(currencyToConvert);
+                session.setCurrency(currency);
+
+                var priceInCurrencyToConvert = lineItem.getProduct().getPriceModel().getPrice();
+                var ratio = priceInCurrencyToConvert.getValue() / priceInOrderCurrency.getValue();
+                var convertedPrice = (priceValue * ratio).toFixed(2);
+
+                if (!empty(priceValue)) {
+                    currency = Currency.getCurrency(defaultRequestCurrency);
+                    session.setCurrency(currency);
+                    return convertedPrice;
+                }
+                currency = Currency.getCurrency(defaultRequestCurrency);
+                session.setCurrency(currency);
+                return null;
+
             case lineItem instanceof dw.order.GiftCertificateLineItem:
                 priceValue = lineItem.getPrice().getValueOrNull();
 
                 if (!empty(priceValue)) {
                     return priceValue.toFixed(2);
-                } else {
-                    return null;
                 }
-                break;
+
+                return null;
+
             default:
                 return null;
         }
@@ -367,10 +370,10 @@ var EmarsysOrderTracking = {
 
     /**
      * @description Helper method to render custom fields
-     * @param {Array} attributes
-     * @param {Object} order
-     * @param {Object} lineItem
-     * @returns {*}
+     * @param {Array} attributes current attributes
+     * @param {Object} order current order
+     * @param {Object} lineItem object of type ProductLineItem or GiftCertificateLineItem
+     * @returns {*} values
      */
     getCustom: function (attributes, order, lineItem) {
         var firstAttr = attributes[0];
@@ -386,7 +389,6 @@ var EmarsysOrderTracking = {
                 } catch (e) {
                     return null;
                 }
-                break;
             default:
                 return null;
         }

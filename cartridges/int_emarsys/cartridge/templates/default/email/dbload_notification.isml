@@ -1,8 +1,14 @@
 <iscontent type="text/html" charset="UTF-8"/>
-<isinclude template="util/modules"/>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 
-<subject><isif condition="${!empty(pdict.MailSubject)}">${pdict.MailSubject}<iselse/><isprint value="${Resource.msg('dbload.subject', 'dbload_notification', null)}" /></isif></subject>
+<html>
+<subject>
+    <isif condition="${!empty(pdict.mailSubject)}">
+        ${pdict.mailSubject}
+    <iselse/>
+        <isprint value="${Resource.msg('dbload.subject', 'dbload_notification', null)}" />
+    </isif>
+</subject>
 
 <head></head>
 

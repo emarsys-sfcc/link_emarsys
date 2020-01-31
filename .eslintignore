@@ -1,0 +1,12 @@
+cartridges/app_storefront_base/
+cartridges/bm_app_storefront_base/
+cartridges/bm_emarsys/cartridge/static/
+cartridges/test/
+cartridges/int_emarsys/cartridge/static/
+cartridges/modules/
+cartridges/gulpfile.js
+coverage/
+doc/
+bin/
+codecept.conf.js
+test/

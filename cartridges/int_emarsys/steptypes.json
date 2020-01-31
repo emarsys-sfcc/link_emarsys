@@ -297,6 +297,23 @@
                             "default-value": "1000"
                         },
                         {
+                            "@name":"enableCustomTimeFrame",
+                            "@type":"boolean",
+                            "description":"Enable timeframe for exported orders"
+                        },
+                        {
+                            "@name": "timeframeStart",
+                            "@type": "date-string",
+                            "@required": "false",
+                            "description": "Timeframe start date for the Emarsys historical export job"
+                        },
+                        {
+                            "@name": "timeframeEnd",
+                            "@type": "date-string",
+                            "@required": "false",
+                            "description": "Timeframe end date for the Emarsys historical export job"
+                        },
+                        {
                             "@name": "fromEmail",
                             "@type": "string",
                             "@required": "false",

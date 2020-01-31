@@ -8,12 +8,10 @@ var DATE_FORMAT = 'yyyy-MM-dd';
 var DATETIME_FORMAT = 'yyyy-MM-dd_HH-mm-ss-SSS';
 
 /**
- * Returns true if the given {params} object contains a isDisabled property as true.
+ * @description Returns true if the given {params} object contains a isDisabled property as true.
  * This will allows us to disable a step without removing it from the configuration
- *
- * @param {Object} params
- *
- * @return {Boolean}
+ * @param {Object} params object
+ * @return {boolean} boolean
  */
 module.exports.isDisabled = function (params) {
     if (empty(params)) {
@@ -24,15 +22,14 @@ module.exports.isDisabled = function (params) {
 };
 
 /**
- * Replace some placeholders found in the given path by dynamic values
+ * @description Replace some placeholders found in the given path by dynamic values
  * Available placeholders:
  * _today_ : Will be the current date
  * _now_ : Will be the current date time
  * _siteid_ : Will be the current site ID
  *
- * @param {String} path
- *
- * @returns {String}
+ * @param {string} path string
+ * @returns {string} return new current path
  */
 module.exports.replacePathPlaceholders = function (path) {
     if (empty(path)) {
@@ -41,16 +38,17 @@ module.exports.replacePathPlaceholders = function (path) {
 
     var siteID = Site.getCurrent().getID();
     var calendar = new Calendar();
+    var newPath = path;
 
     if (path.indexOf('_today_') > -1) {
-        path = path.replace(/_today_/, StringUtils.formatCalendar(calendar, DATE_FORMAT));
+        newPath = path.replace(/_today_/, StringUtils.formatCalendar(calendar, DATE_FORMAT));
     }
     if (path.indexOf('_now_') > -1) {
-        path = path.replace(/_now_/, StringUtils.formatCalendar(calendar, DATETIME_FORMAT));
+        newPath = path.replace(/_now_/, StringUtils.formatCalendar(calendar, DATETIME_FORMAT));
     }
     if (path.indexOf('_siteid_') > -1) {
-        path = path.replace(/_siteid_/, siteID);
+        newPath = path.replace(/_siteid_/, siteID);
     }
 
-    return path;
+    return newPath;
 };

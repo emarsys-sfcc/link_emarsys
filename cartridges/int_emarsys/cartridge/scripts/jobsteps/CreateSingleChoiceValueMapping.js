@@ -12,11 +12,11 @@ var choiceValueMap = {
      * @description start CreateSingleChoiceValueMapping
      * @returns {dw.system.Status} - return status 'Ok' or 'Error'
      */
-    execute: function() {
+    execute: function () {
         try {
-            this.emarsysHelper = new (require('int_emarsys/cartridge/scripts/util/EmarsysHelper'))();
+            this.emarsysHelper = new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))();
 
-           this.CreateSingleChoiceValueMapping();
+            this.createSingleChoiceValueMapping();
         } catch (err) {
             this.logger.error('choiceValueMap: Error ' + err.message + '\n' + err.stack);
 
@@ -29,38 +29,37 @@ var choiceValueMap = {
      * @description Create Single Choice Value Mapping
      * @returns {void}
      */
-    CreateSingleChoiceValueMapping: function() {
-        var fieldMapping  = {};
+    createSingleChoiceValueMapping: function () {
+        var fieldMapping = {};
         var availableFields;
         var response = this.emarsysHelper.triggerAPICall('field', {}, 'GET');
 
         if (response.status === 'OK') {
             availableFields = JSON.parse(response.object);
 
-            for (var keyField in availableFields['data']) {
-                var field = availableFields['data'][keyField];
-                if(field['application_type'] === 'singlechoice' || (field['application_type'] === 'special' && field['name'] === 'Opt-In')) {
-                    response = this.emarsysHelper.triggerAPICall('field/' + field['id'] + '/choice', {}, 'GET');
+            Object.keys(availableFields.data).forEach(function (keyField) {
+                var field = availableFields.data[keyField];
+                if (field.application_type === 'singlechoice' || (field.application_type === 'special' && field.name === 'Opt-In')) {
+                    response = this.emarsysHelper.triggerAPICall('field/' + field.id + '/choice', {}, 'GET');
                     if (response.status === 'OK') {
-                        var fieldObject = JSON.parse(response.object),
-                            filedChoiceMapping = [];
+                        var fieldObject = JSON.parse(response.object);
+                        var filedChoiceMapping = [];
 
-                        for (var keyFieldChoice in fieldObject['data']) {
-                            var fieldChoice = fieldObject['data'][keyFieldChoice];
+                        Object.keys(fieldObject.data).forEach(function (keyFieldChoice) {
+                            var fieldChoice = fieldObject.data[keyFieldChoice];
                             filedChoiceMapping.push({
-                                "value" : fieldChoice['id'],
-                                "choice" : fieldChoice['choice']
+                                value: fieldChoice.id,
+                                choice: fieldChoice.choice
                             });
-                        }
+                        }, this);
 
-                        fieldMapping[field['id']] = filedChoiceMapping;
+                        fieldMapping[field.id] = filedChoiceMapping;
                     }
                 }
-            }
+            }, this);
 
             currentSite.setCustomPreferenceValue('emarsysSingleChoiceValueMapping', JSON.stringify(fieldMapping));
         }
-
     }
 };
 

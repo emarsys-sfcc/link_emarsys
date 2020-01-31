@@ -18,7 +18,10 @@
     "customer": "readonly",
     "args": "writable",
     "pageContext": "writable",
+    "emarsysAnalytics": "writable",
+    "execute": "writable",
     "PIPELET_ERROR": "readonly",
+    "data": "readonly",
     "PIPELET_NEXT": "readonly",
     "$": "readonly"
   }

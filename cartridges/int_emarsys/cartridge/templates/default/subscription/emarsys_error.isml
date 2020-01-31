@@ -1,9 +1,8 @@
 <!--- TEMPLATENAME: emarsys_thankyou.isml --->
 <iscontent type="text/html" charset="UTF-8" compact="true"/>
 <iscache type="relative" hour="24"/>
-<isinclude template="util/modules"/>
 
-<isdecorate template="content/content/pt_content">
+<isdecorate template="${Resource.msg('page.decorator.default', 'emarsys', 'common/layout/page')}">
     <div class="show-confirmation-message">
         <h1>${Resource.msg("subscription.error", "emarsys", null)}</h1>
         <isif condition="${pdict.ErrorMsg}" >

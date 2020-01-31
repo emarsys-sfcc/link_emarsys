@@ -5,8 +5,8 @@ var dwLogger = require('dw/system/Logger');
 var Logger = dwLogger.getLogger('emarsys');
 
 module.exports = {
-    call: function(endpoint, requestBody, requestMethod) {
-        var service = this._getService({
+    call: function (endpoint, requestBody, requestMethod) {
+        var service = this.getService({
             requestMethod: requestMethod,
             endpoint: endpoint
         });
@@ -28,10 +28,11 @@ module.exports = {
 
     /**
      * @description Helper method to create service authorization string
+     * @param {Object} service service
      * @private
      * @return {string} Returns service authorization data
      */
-    _getAuthorizationData: function (service) {
+    getAuthorizationData: function (service) {
         var crypto = require('dw/crypto');
         var Bytes = require('dw/util/Bytes');
         var StringUtils = require('dw/util/StringUtils');
@@ -61,18 +62,18 @@ module.exports = {
     /**
      * @description Constructs local service
      * @private
-     * @param {Object} params
-     * @param {String} params.requestMethod
-     * @param {String} params.endpoint
-     * @returns {dw.svc.HTTPService}
+     * @param {Object} params params
+     * @param {string} params.requestMethod requestMethod
+     * @param {string} params.endpoint endpoint
+     * @returns {dw.svc.HTTPService} JSON
      */
-    _getService: function (params) {
+    getService: function (params) {
         var LocalServiceRegistry = require('dw/svc/LocalServiceRegistry');
         var self = this;
 
         return LocalServiceRegistry.createService('emarsys.api', {
             createRequest: function (service, requestBody) {
-                var authorization = self._getAuthorizationData(service);
+                var authorization = self.getAuthorizationData(service);
                 var requestUrl = service.getURL() + params.endpoint;
 
                 service.addHeader('X-WSSE', authorization);
@@ -82,7 +83,7 @@ module.exports = {
                 switch (params.requestMethod) {
                     case 'POST':
                     case 'PUT':
-                        service.addHeader("Content-Type", "application/json");
+                        service.addHeader('Content-Type', 'application/json');
                         break;
 
                     default:

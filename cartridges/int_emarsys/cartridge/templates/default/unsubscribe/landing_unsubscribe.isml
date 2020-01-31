@@ -1,5 +1,5 @@
 <iscontent type="text/html" charset="UTF-8" compact="true"/>
-<isdecorate template="content/content/pt_content">
+<isdecorate template="${Resource.msg('page.decorator.default', 'emarsys', 'common/layout/page')}">
 
 <div class="show-confirmation-message">
     <iscomment>Render the confirmation</iscomment>
