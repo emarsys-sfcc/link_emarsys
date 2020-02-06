@@ -79,7 +79,7 @@ var EmarsysProductFeed = {
 
     /**
      * @description create and write csv header
-     * @param {Object} args
+     * @param {Object} args job step configurations
      * @returns {void} write column names
      */
     prepareCsvStreamWriter: function (args) {

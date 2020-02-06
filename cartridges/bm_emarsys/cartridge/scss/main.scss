@@ -1,22 +1,45 @@
 /* Small tweaks for dynamic form fields */
 
+td#right {
+    padding-top: 5px;
+}
 
-td#right {	padding-top: 5px; }
+.dynamic-field {
+    margin: 2px auto !important;
+}
 
-.dynamic-field { margin: 2px auto !important; }
+.red {
+    border-color: red !important;
+}
 
-.red { border-color: red !important; }
+.error {
+    font-weight: normal;
+    font-size: 1em;
+    min-height: 14px;
+    height: 14px;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
 
-.error { font-weight: normal; font-size: 1em; min-height: 14px; height: 14px; overflow: hidden; margin: 0; padding: 0; }
+#left,
+#right {
+    vertical-align: top;
+}
 
-#left, #right { vertical-align: top; }
+#r,
+#l {
+    height: 45px !important;
+}
 
-#r, #l { height: 45px !important; }
+#oversizedCount {
+    display: none;
+}
 
-#oversizedCount { display: none; }
-
-select { padding: 0.45px !important; }
+select {
+    padding: 0.45px !important;
+}
 
 .hide {
-	display: none !important;
+    display: none !important;
 }

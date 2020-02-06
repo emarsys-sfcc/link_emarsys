@@ -37,7 +37,7 @@ var CreateAutoImportProfile = {
             var overwrite = sitePrefs.emarsysOverwriteContacts;
 
             request.separator = Separator;
-            request.text_separator = '\"';
+            request.text_separator = '"';
             request.date_format = 'YYYY-MM-DD';
             request.fieldnames = true;
             request.language = language;

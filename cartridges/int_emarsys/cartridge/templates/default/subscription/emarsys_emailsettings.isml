@@ -9,7 +9,6 @@
 </a>
 <div class="email-signup-wrapper" style="display: none;">
     <h3>${Resource.msg('emarsys.signup','forms',null)}</h3>
-
     <isinclude template="subscription/userdataform"/>
 </div>
 </isdecorate>

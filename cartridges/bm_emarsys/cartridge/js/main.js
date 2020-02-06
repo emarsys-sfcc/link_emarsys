@@ -2,8 +2,8 @@
  * Injecting new form elements
  */
 
-var uniqueId = 1,
-    insertedFieldsCount = 1;
+var uniqueId = 1;
+var insertedFieldsCount = 1;
 
 if (totalFields && totalFields > 0) {
     insertedFieldsCount = totalFields;
@@ -21,14 +21,14 @@ window.Emarsys = {
                 insertedFieldsCount++;
 
                 if (!args.thirdParam || !args.thirdParamValues) {
-                    //Placeholder input
+                    // Placeholder input
                     jQuery('<div/>')
                         .attr({
                             class: 'dynamic-field',
                             id: 'r',
                             'data-id': uniqueId
                         })
-                        .appendTo(args.placeholder_parent);
+                        .appendTo(args.placeholderParent);
                     jQuery('<input/>')
                         .attr({
                             name: args.placeholder_name,
@@ -39,17 +39,17 @@ window.Emarsys = {
                         })
                         .appendTo('#r[data-id="' + uniqueId + '"]');
                     jQuery('<p/>')
-                        .attr({class: 'red error'})
+                        .attr({ class: 'red error' })
                         .appendTo('#r[data-id="' + uniqueId + '"]');
                 } else {
-                    //Add select box instead of input field for initial db load
+                    // Add select box instead of input field for initial db load
                     jQuery('<div/>')
                         .attr({
                             class: 'dynamic-field attribute',
                             id: 'r',
                             'data-id': uniqueId
                         })
-                        .appendTo(args.placeholder_parent);
+                        .appendTo(args.placeholderParent);
                     selectBox = jQuery('<select/>')
                         .attr({
                             name: args.placeholder_name,
@@ -64,18 +64,18 @@ window.Emarsys = {
                                 .text(value.name));
                     });
                     jQuery('<p/>')
-                        .attr({class: 'red error'})
+                        .attr({ class: 'red error' })
                         .appendTo('#r[data-id="' + uniqueId + '"]');
                 }
 
-                //Select box
+                // Select box
                 jQuery('<div/>')
                     .attr({
                         class: 'dynamic-field',
                         id: 'l',
                         'data-id': uniqueId
                     })
-                    .appendTo(args.mappedField_parent);
+                    .appendTo(args.mappedFieldParent);
                 selectBox = jQuery('<select/>')
                     .attr({
                         name: args.mappedField_name,
@@ -97,7 +97,7 @@ window.Emarsys = {
                     }
                 });
 
-                //Field removal anchor
+                // Field removal anchor
                 jQuery('#l[data-id="' + uniqueId + '"]').append('&nbsp; ');
                 jQuery('<a/>')
                     .attr({
@@ -108,10 +108,10 @@ window.Emarsys = {
                     .text(args.removeFields_placeholder)
                     .appendTo('#l[data-id="' + uniqueId + '"]');
                 jQuery('<p/>')
-                    .attr({class: 'red error'})
+                    .attr({ class: 'red error' })
                     .appendTo('#l[data-id="' + uniqueId + '"]');
             } else {
-                jQuery("#oversizedCount").show().delay(5000).fadeOut();
+                jQuery('#oversizedCount').show().delay(5000).fadeOut();
             }
         }
     },
@@ -124,15 +124,15 @@ window.Emarsys = {
     },
 
     add: function (args, options) {
-        jQuery("#addField").on("click", function (event) {
+        jQuery('#addField').on('click', function (event) {
             event.preventDefault();
-            Emarsys.addField(args, options);
+            window.Emarsys.addField(args, options);
         });
     },
 
-    addError: function (element_parent, errorText) {
-        if (element_parent && errorText) {
-            jQuery(element_parent).find(".error").text(errorText);
+    addError: function (elementParent, errorText) {
+        if (elementParent && errorText) {
+            jQuery(elementParent).find('.error').text(errorText);
         }
     },
 
@@ -148,7 +148,7 @@ window.Emarsys = {
         if (element && parent && className) {
             jQuery(element).change(function () {
                 jQuery(this).removeClass(className);
-                jQuery(parent).find(".error").text('');
+                jQuery(parent).find('.error').text('');
             });
         }
     },
@@ -157,89 +157,90 @@ window.Emarsys = {
         jQuery(form).submit(function () {
             jQuery('p.error').text('');
 
-            var rows = jQuery("[data-id]"),
-                fieldsValues = [],
-                evtParent,
-                evtValue,
-                placeholdersValues = [],
-                removedFields = [],
-                errors = 0;
+            var rows = jQuery('[data-id]');
+            var fieldsValues = [];
+            var evtParent;
+            var evtValue;
+            var placeholdersValues = [];
+            var removedFields = [];
+            var errors = 0;
 
             /**
              * @description validate mapped fields
              * @param {Array} row - array of id
              */
             function validateMappedFields(row) {
-                var mappedField = jQuery(row).find("select"),
-                    mappedFieldValue = mappedField.find('option:selected').text(),
-                    checkbox = jQuery(row).find("input[name$=_removeField]").prop("checked"),
-                    mappedField_parent = jQuery(row);
+                var mappedField = jQuery(row).find('select');
+                var mappedFieldValue = mappedField.find('option:selected').text();
+                var checkbox = jQuery(row).find('input[name$=_removeField]').prop('checked');
+                var mappedFieldParent = jQuery(row);
                 if (!checkbox) {
                     if (!mappedFieldValue || mappedFieldValue.length <= 0 || mappedFieldValue.toString() === args.mappedField_placeholder) {
-                        Emarsys.addError(mappedField_parent, Resources.SELECT_ELEMENT_ERROR);
-                        Emarsys.addErrorClass(mappedField, "red");
-                        Emarsys.removeError(mappedField, mappedField_parent, "red");
+                        window.Emarsys.addError(mappedFieldParent, Resources.SELECT_ELEMENT_ERROR);
+                        window.Emarsys.addErrorClass(mappedField, 'red');
+                        window.Emarsys.removeError(mappedField, mappedFieldParent, 'red');
                         errors = 1;
                     } else if (fieldsValues.indexOf(mappedFieldValue) >= 0) {
-                        Emarsys.addError(mappedField_parent, Resources.SAME_ELEMENT_ERROR);
-                        Emarsys.addErrorClass(mappedField, "red");
-                        Emarsys.removeError(mappedField, mappedField_parent, "red");
+                        window.Emarsys.addError(mappedFieldParent, Resources.SAME_ELEMENT_ERROR);
+                        window.Emarsys.addErrorClass(mappedField, 'red');
+                        window.Emarsys.removeError(mappedField, mappedFieldParent, 'red');
                         errors = 1;
                     } else {
                         fieldsValues.push(mappedFieldValue);
-                        mappedField.removeClass("red");
+                        mappedField.removeClass('red');
                     }
                 } else {
-                    mappedField.removeClass("red");
+                    mappedField.removeClass('red');
                 }
             }
 
             /**
              * @description validate Placeholders
              * @param {Array} row - array of id
-             * @param {String} currentDataId - current data id
+             * @param {string} currentDataId - current data id
              */
             function validatePlaceholders(row, currentDataId) {
-                var placeholder, placeholderValue;
-                if (args.thirdParam && args.thirdParam === "ignore") {
-                    placeholder = jQuery(row).find("select#" + args.placeholder_name);
+                var placeholder;
+                var placeholderValue;
+                if (args.thirdParam && args.thirdParam === 'ignore') {
+                    placeholder = jQuery(row).find('select#' + args.placeholder_name);
                     placeholderValue = placeholder.find('option:selected').text();
                 } else {
-                    placeholder = jQuery(row).find("input");
+                    placeholder = jQuery(row).find('input');
                     placeholderValue = placeholder.val();
                 }
-                var placeholder_parent = jQuery(row);
+                var placeholderParent = jQuery(row);
 
-                //Validate placeholders
+                // Validate placeholders
                 if (removedFields.indexOf(currentDataId) < 0) {
                     var errorMsg;
                     if (!placeholderValue || placeholderValue.length <= 0) {
-                        Emarsys.addError(placeholder_parent, Resources.EMPTY_PLACEHOLDER_ERROR);
-                        Emarsys.addErrorClass(placeholder, "red");
-                        Emarsys.removeError(placeholder, placeholder_parent, "red");
+                        window.Emarsys.addError(placeholderParent, Resources.EMPTY_PLACEHOLDER_ERROR);
+                        window.Emarsys.addErrorClass(placeholder, 'red');
+                        window.Emarsys.removeError(placeholder, placeholderParent, 'red');
                         errors = 1;
-                    } else if (args.thirdParam && args.thirdParam === "ignore" && placeholderValue === args.placeholder_placeholder) {
-                        errorMsg = Emarsys.selectErrorMessage(placeholder_parent, Resources.EMPTY_PLACEHOLDER_ERROR, Resources.EMPTY_ATTRIBUTE_ERROR);
-                        Emarsys.addError(placeholder_parent, errorMsg);
-                        Emarsys.addErrorClass(placeholder, "red");
-                        Emarsys.removeError(placeholder, placeholder_parent, "red");
+                    } else if (args.thirdParam && args.thirdParam === 'ignore' && placeholderValue === args.placeholder_placeholder) {
+                        errorMsg = window.Emarsys.selectErrorMessage(placeholderParent, Resources.EMPTY_PLACEHOLDER_ERROR, Resources.EMPTY_ATTRIBUTE_ERROR);
+                        window.Emarsys.addError(placeholderParent, errorMsg);
+                        window.Emarsys.addErrorClass(placeholder, 'red');
+                        window.Emarsys.removeError(placeholder, placeholderParent, 'red');
                         errors = 1;
                     } else if (placeholdersValues.indexOf(placeholderValue) >= 0) {
-                        errorMsg = Emarsys.selectErrorMessage(placeholder_parent, Resources.SAME_PLACEHOLDER_ERROR, Resources.SAME_ATTRIBUTE_ERROR);
-                        Emarsys.addError(placeholder_parent, errorMsg);
-                        Emarsys.addErrorClass(placeholder, "red");
-                        Emarsys.removeError(placeholder, placeholder_parent, "red");
+                        errorMsg = window.Emarsys.selectErrorMessage(placeholderParent, Resources.SAME_PLACEHOLDER_ERROR, Resources.SAME_ATTRIBUTE_ERROR);
+                        window.Emarsys.addError(placeholderParent, errorMsg);
+                        window.Emarsys.addErrorClass(placeholder, 'red');
+                        window.Emarsys.removeError(placeholder, placeholderParent, 'red');
                         errors = 1;
                     } else {
                         placeholdersValues.push(placeholderValue);
-                        placeholder.removeClass("red");
+                        placeholder.removeClass('red');
                     }
                 } else {
-                    placeholder.removeClass("red");
+                    placeholder.removeClass('red');
                 }
             }
 
-            if (args.thirdParam && args.thirdParam === "button") {
+            if (args.thirdParam && args.thirdParam === 'button') {
                 evtParent = jQuery('input[name$=' + args.thirdParamName + ']:checked');
                 evtValue = jQuery('input[name$=' + args.thirdParamName + ']:checked').val();
             } else {
@@ -247,20 +248,20 @@ window.Emarsys = {
                 evtValue = evtParent.find('option:selected').text();
             }
 
-            //Validate dynamic fields
+            // Validate dynamic fields
             for (var i = 0; i < rows.length; i++) {
-                var currentDiv = jQuery(rows[i]).attr('id'),
-                    currentDataId = jQuery(rows[i]).attr('data-id');
+                var currentDiv = jQuery(rows[i]).attr('id');
+                var currentDataId = jQuery(rows[i]).attr('data-id');
 
                 switch (currentDiv) {
                     case 'l':
-                        var checkbox = jQuery(rows[i]).find("input[name$=_removeField]").prop("checked");
+                        var checkbox = jQuery(rows[i]).find('input[name$=_removeField]').prop('checked');
 
                         if (checkbox) {
                             removedFields.push(currentDataId);
                         }
 
-                        //Validate mapped fields(elements)
+                        // Validate mapped fields(elements)
                         validateMappedFields(rows[i]);
 
                         break;
@@ -268,16 +269,16 @@ window.Emarsys = {
                     case 'r':
                         validatePlaceholders(rows[i], currentDataId);
                         break;
+                    default:
                 }
-
             }
 
-            //Validate external event
-            if (!args.thirdParam && args.thirdParam !== "ignore") {
-                if (!evtValue && evtValue.length <= 0 || evtValue === args.externalEvents_placeholder) {
-                    Emarsys.addError(evtParent.parent(), Resources.SELECT_EVENT_ERROR);
-                    Emarsys.addErrorClass(evtParent, "red");
-                    Emarsys.removeError(evtParent, evtParent.parent(), "red");
+            // Validate external event
+            if (!args.thirdParam && args.thirdParam !== 'ignore') {
+                if ((!evtValue && evtValue.length <= 0) || (evtValue === args.externalEvents_placeholder)) {
+                    window.Emarsys.addError(evtParent.parent(), Resources.SELECT_EVENT_ERROR);
+                    window.Emarsys.addErrorClass(evtParent, 'red');
+                    window.Emarsys.removeError(evtParent, evtParent.parent(), 'red');
                     errors = 1;
                 }
             }
@@ -287,13 +288,12 @@ window.Emarsys = {
             }
 
             return true;
-
         });
     },
 
     selectErrorMessage: function (element, initialMsg, newMsg) {
         var message = initialMsg;
-        if (element.hasClass("attribute")) {
+        if (element.hasClass('attribute')) {
             message = newMsg;
         }
         return message;
@@ -301,79 +301,78 @@ window.Emarsys = {
     validateMappedFields: function (args) {
         jQuery('p.error').text('');
 
-        var rows = jQuery("[data-id]"),
-            fieldsValues = [],
-            placeholdersValues = [],
-            errors = 0;
+        var rows = jQuery('[data-id]');
+        var fieldsValues = [];
+        var placeholdersValues = [];
+        var errors = 0;
 
         /**
          * @description validate fields
          * @param {Array} row - array of id
          */
         function validateFields(row) {
-            var mappedField_parent = jQuery(row),
-            mappedField = mappedField_parent.find("select"),
-            mappedFieldValue = mappedField.find('option:selected').text();
-            var removeRow = mappedField_parent.find("input[name$=_removeField]").prop("checked");
+            var mappedFieldParent = jQuery(row);
+            var mappedField = mappedFieldParent.find('select');
+            var mappedFieldValue = mappedField.find('option:selected').text();
+            var removeRow = mappedFieldParent.find('input[name$=_removeField]').prop('checked');
 
             if (!removeRow) {
                 if (!mappedFieldValue || mappedFieldValue.length <= 0 || mappedFieldValue.toString() === args.mappedField_placeholder) {
-                    Emarsys.addError(mappedField_parent, Resources.SELECT_ELEMENT_ERROR);
-                    Emarsys.addErrorClass(mappedField, "red");
-                    Emarsys.removeError(mappedField, mappedField_parent, "red");
+                    window.Emarsys.addError(mappedFieldParent, Resources.SELECT_ELEMENT_ERROR);
+                    window.Emarsys.addErrorClass(mappedField, 'red');
+                    window.Emarsys.removeError(mappedField, mappedFieldParent, 'red');
                     errors = 1;
                 } else if (fieldsValues.indexOf(mappedFieldValue) >= 0) {
-                    Emarsys.addError(mappedField_parent, Resources.SAME_ELEMENT_ERROR);
-                    Emarsys.addErrorClass(mappedField, "red");
-                    Emarsys.removeError(mappedField, mappedField_parent, "red");
+                    window.Emarsys.addError(mappedFieldParent, Resources.SAME_ELEMENT_ERROR);
+                    window.Emarsys.addErrorClass(mappedField, 'red');
+                    window.Emarsys.removeError(mappedField, mappedFieldParent, 'red');
                     errors = 1;
                 } else {
                     fieldsValues.push(mappedFieldValue);
-                    mappedField.removeClass("red");
+                    mappedField.removeClass('red');
                 }
             }
         }
-        //Validate dynamic fields
+        // Validate dynamic fields
         for (var i = 0; i < rows.length; i++) {
-
-            var currentDiv = jQuery(rows[i]).attr('id'),
-                removeRow;
+            var currentDiv = jQuery(rows[i]).attr('id');
+            var removeRow;
 
             switch (currentDiv) {
                 case 'l':
-                     //Validate mapped fields(elements)
-                     validateFields(rows[i]);
-                break;
+                    // Validate mapped fields(elements)
+                    validateFields(rows[i]);
+                    break;
 
                 case 'r':
-                    var placeholder = jQuery(rows[i]).find("input"),
-                        placeholderValue = placeholder.val(),
-                        placeholder_parent = jQuery(rows[i]),
+                    var placeholder = jQuery(rows[i]).find('input');
+                    var placeholderValue = placeholder.val();
+                    var placeholderParent = jQuery(rows[i]);
+                    var id = placeholder.parent().data('id');
+                    var filter = '[data-id=' + id + ']';
+                    var leftbox = jQuery('div#l').filter(filter);
 
-                        id = placeholder.parent().data("id"),
-                        filter = "[data-id=" + id + "]",
-                        leftbox = jQuery("div#l").filter(filter);
+                    removeRow = jQuery(leftbox).find('input[name$=_removeField]').prop('checked');
 
-                    removeRow = jQuery(leftbox).find("input[name$=_removeField]").prop("checked");
-
-                    //Validate placeholders
+                    // Validate placeholders
                     if (!removeRow) {
                         if (!placeholderValue || placeholderValue.length <= 0) {
-                            Emarsys.addError(placeholder_parent, Resources.EMPTY_PLACEHOLDER_ERROR);
-                            Emarsys.addErrorClass(placeholder, "red");
-                            Emarsys.removeError(placeholder, placeholder_parent, "red");
+                            window.Emarsys.addError(placeholderParent, Resources.EMPTY_PLACEHOLDER_ERROR);
+                            window.Emarsys.addErrorClass(placeholder, 'red');
+                            window.Emarsys.removeError(placeholder, placeholderParent, 'red');
                             errors = 1;
                         } else if (placeholdersValues.indexOf(placeholderValue) >= 0) {
-                            Emarsys.addError(placeholder_parent, Resources.SAME_PLACEHOLDER_ERROR);
-                            Emarsys.addErrorClass(placeholder, "red");
-                            Emarsys.removeError(placeholder, placeholder_parent, "red");
+                            window.Emarsys.addError(placeholderParent, Resources.SAME_PLACEHOLDER_ERROR);
+                            window.Emarsys.addErrorClass(placeholder, 'red');
+                            window.Emarsys.removeError(placeholder, placeholderParent, 'red');
                             errors = 1;
                         } else {
                             placeholdersValues.push(placeholderValue);
-                            placeholder.removeClass("red");
+                            placeholder.removeClass('red');
                         }
                     }
                     break;
+                default:
             }
         }
         return errors;
@@ -383,17 +382,17 @@ window.Emarsys = {
         jQuery(form).submit(function () {
             jQuery('p.error').text('');
 
-            var evtParent = jQuery('select[name$=_externalEvent]'),
-                evtValue = evtParent.find('option:selected').text(),
-                errors = 0;
+            var evtParent = jQuery('select[name$=_externalEvent]');
+            var evtValue = evtParent.find('option:selected').text();
+            var errors = 0;
 
-            errors = Emarsys.validateMappedFields(args);
+            errors = window.Emarsys.validateMappedFields(args);
 
-            //Validate external event
-            if (!evtValue && evtValue.length <= 0 || evtValue === args.externalEvents_placeholder) {
-                Emarsys.addError(evtParent.parent(), Resources.SELECT_EVENT_ERROR);
-                Emarsys.addErrorClass(evtParent, "red");
-                Emarsys.removeError(evtParent, evtParent.parent(), "red");
+            // Validate external event
+            if ((!evtValue && evtValue.length <= 0) || (evtValue === args.externalEvents_placeholder)) {
+                window.Emarsys.addError(evtParent.parent(), Resources.SELECT_EVENT_ERROR);
+                window.Emarsys.addErrorClass(evtParent, 'red');
+                window.Emarsys.removeError(evtParent, evtParent.parent(), 'red');
                 errors = 1;
             }
 
@@ -402,44 +401,45 @@ window.Emarsys = {
             }
 
             return true;
-
         });
     },
 
     validateSubscription: function () {
-        var strategy = jQuery("select.subscriptionStrategy"),
-            optInEventContainer = strategy.closest("tr").siblings()[0],
-            star = jQuery(optInEventContainer).find("span.star");
+        var strategy = jQuery('select.subscriptionStrategy');
+        var optInEventContainer = strategy.closest('tr').siblings()[0];
+        var star = jQuery(optInEventContainer).find('span.star');
 
-        if (strategy.val() === "2") {
-            star.removeClass("hide");
+        if (strategy.val() === '2') {
+            star.removeClass('hide');
         }
 
-        var form = jQuery(strategy).closest("form"),
-            selectedOptInEvent = form.find("select.externalEventOptin");
+        var form = jQuery(strategy).closest('form');
+        var selectedOptInEvent = form.find('select.externalEventOptin');
 
-        jQuery(strategy).on("change", function () {
-            jQuery(star).toggleClass("hide");
+        jQuery(strategy).on('change', function () {
+            jQuery(star).toggleClass('hide');
 
-            if (strategy.val() === "1") {
-                selectedOptInEvent.removeClass("red");
-                selectedOptInEvent.parent().find(".error").text('');
+            if (strategy.val() === '1') {
+                selectedOptInEvent.removeClass('red');
+                selectedOptInEvent.parent().find('.error').text('');
             }
         });
 
         jQuery(form).submit(function () {
-            if (strategy.val() && strategy.val() === "2") {
+            var result = false;
+            if (strategy.val() && strategy.val() === '2') {
                 if (selectedOptInEvent.val()) {
-                    return true;
+                    result = true;
                 } else {
-                    Emarsys.addErrorClass(selectedOptInEvent, "red");
-                    Emarsys.addError(selectedOptInEvent.parent(), Resources.SELECT_EVENT_ERROR);
-                    Emarsys.removeError(selectedOptInEvent, selectedOptInEvent.parent(), "red");
-                    return false;
+                    window.Emarsys.addErrorClass(selectedOptInEvent, 'red');
+                    window.Emarsys.addError(selectedOptInEvent.parent(), Resources.SELECT_EVENT_ERROR);
+                    window.Emarsys.removeError(selectedOptInEvent, selectedOptInEvent.parent(), 'red');
                 }
-            } else if (strategy.val() && strategy.val() === "1") {
-                return true;
+            } else if (strategy.val() && strategy.val() === '1') {
+                result = true;
             }
+
+            return result;
         });
     },
 
@@ -448,7 +448,7 @@ window.Emarsys = {
             jQuery('p.error').text('');
             var errors = 0;
 
-            errors = Emarsys.validateMappedFields(args);
+            errors = window.Emarsys.validateMappedFields(args);
 
             if (errors > 0) {
                 return false;
@@ -458,13 +458,13 @@ window.Emarsys = {
         });
     },
 
-    validateSendEmailConfirmationEmail: function() {
-        var form = jQuery('#sendOrderConfirmationEmail'),
-            inputOrderNumber = form.find('input[type=text]'),
-            errorContainer = form.find('.error');
+    validateSendEmailConfirmationEmail: function () {
+        var form = jQuery('#sendOrderConfirmationEmail');
+        var inputOrderNumber = form.find('input[type=text]');
+        var errorContainer = form.find('.error');
 
-        form.submit(function() {
-            if(!inputOrderNumber.val()) {
+        form.submit(function () {
+            if (!inputOrderNumber.val()) {
                 errorContainer.html(Resources.ORDER_NUMBER_ERROR);
                 return false;
             }

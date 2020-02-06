@@ -3,6 +3,7 @@ cartridges/bm_app_storefront_base/
 cartridges/bm_emarsys/cartridge/static/
 cartridges/test/
 cartridges/int_emarsys/cartridge/static/
+cartridges/int_emarsys_controllers/
 cartridges/modules/
 cartridges/gulpfile.js
 coverage/

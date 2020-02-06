@@ -1,7 +1,6 @@
 'use strict';
 
 var Logger = require('dw/system/Logger').getLogger('emarsys');
-var Transaction = require('dw/system/Transaction');
 var emarsysHelper = new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))();
 var Site = require('dw/system/Site');
 

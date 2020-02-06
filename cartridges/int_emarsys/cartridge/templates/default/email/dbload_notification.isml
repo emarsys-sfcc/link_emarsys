@@ -1,6 +1,4 @@
 <iscontent type="text/html" charset="UTF-8"/>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-
 <html>
 <subject>
     <isif condition="${!empty(pdict.mailSubject)}">
@@ -9,16 +7,13 @@
         <isprint value="${Resource.msg('dbload.subject', 'dbload_notification', null)}" />
     </isif>
 </subject>
-
 <head></head>
-
 <body>
-
 <table width="100%" cellpadding="0" cellspacing="0">
     <tr>
         <td align="center" style="background:#e0e0e0;padding:50px 0;">
             <center>
-                <table  style="background:#ffffff;border:1px solid #999999;width:680px;">
+                <table style="background:#ffffff;border:1px solid #999999;width:680px;">
                     <tr>
                         <td style="font-size:12px;font-family:arial;padding:20px 10px;vertical-align:top;">
                             <p style="font-family:georgia;font-size:20px;">
@@ -32,6 +27,5 @@
         </td>
     </tr>
 </table>
-
 </body>
 </html>
