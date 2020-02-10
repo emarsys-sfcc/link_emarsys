@@ -11,7 +11,8 @@ var objects = {
                     {'field':'product.image','placeholder':'image'},
                     {'field':'product.categories','placeholder':'category_multilang'},
                     {'field':'product.price','placeholder':'price_multilang'},
-                    {'field':'product.brand','placeholder':'c_braand'}])
+                    {'field':'product.brand','placeholder':'c_braand'}]),
+                exportType: 'variations'
             }
         }
     },

@@ -31,6 +31,10 @@ describe('step util', () => {
         var res = StepUtil.isDisabled(params);
         assert.equal(res, true);
     });
+    it('Testing method: isDisabled, empty param', () => {
+        var res = StepUtil.isDisabled();
+        assert.equal(res, false);
+    });
 
     it('Testing method: replacePathPlaceholders; empty path', () => {
         var res = StepUtil.replacePathPlaceholders();
@@ -41,6 +45,7 @@ describe('step util', () => {
         var path = '_today_; _now_; _siteid_';
         var nowStr = StringUtils.formatCalendar(new Calendar(), 'YYYY-MM-dd');
         var result = nowStr + '; ' + nowStr + '_HH-mm-ss-SSS; siteName';
+
         var res = StepUtil.replacePathPlaceholders(path);
         assert.equal(res, result);
     });

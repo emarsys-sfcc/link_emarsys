@@ -68,7 +68,8 @@ describe('FtpUpload jobstep', () => {
         ArchiveFolder: 'src/test/archives',
         NoFileFoundStatus: 'OK',
         IsDisabled: false
-    }
+    };
+
     var result = FtpUpload.Run(args);
     assert.deepEqual(result, {
         code: 'OK',

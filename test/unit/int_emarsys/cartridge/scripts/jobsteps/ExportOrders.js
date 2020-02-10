@@ -88,6 +88,7 @@ describe('ExportOrders jobstep', () => {
             timeframeStart: monthEarlier,
             timeframeEnd: nowDate
         };
+
         var result = ExportOrders.execute(args);
         assert.deepEqual(result,{
             code: 'OK',
@@ -105,6 +106,7 @@ describe('ExportOrders jobstep', () => {
             timeframeStart: monthEarlier,
             timeframeEnd: nowDate
         };
+
         var result = ExportOrders.execute(args);
         assert.deepEqual(result,{
             code: 'OK',

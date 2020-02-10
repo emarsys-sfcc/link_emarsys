@@ -68,6 +68,23 @@ describe('JobHelper Scripts', () => {
         assert.equal(result,'Test.csv');
     });
 
+    it('testing method:getFileListRecursive', () => {
+        // Can not be tested
+        var currentSourceDirectory = 'IMPEX/src/test';
+        var filePattern = '.*.csv';
+        var sourceFolder = 'src/test';
+        var targetFolder = 'Test2';
+        var recursive = true;
+        var doOverwrite = false;
+        var getTargetFile = false;
+        var result = JobHelper.getFileListRecursive(currentSourceDirectory, filePattern, sourceFolder, targetFolder, recursive, doOverwrite, getTargetFile);
+        assert.deepEqual(result,[]);
+       
+        var currentSourceDirectory2 = new File('IMPEX/src/test');
+        result = JobHelper.getFileListRecursive(currentSourceDirectory2, filePattern, sourceFolder, targetFolder, recursive, doOverwrite, getTargetFile);
+        assert.deepEqual(result,[]);
+    });
+
     it('testing method: createDirectory', () => {
         var directoryPath = 'IMPEX/src/test/test';
         var result = JobHelper.createDirectory(directoryPath);
@@ -141,10 +158,10 @@ describe('JobHelper Scripts', () => {
     });
 
     it('testing method: getProductInfo', () => {
-        var currenciesMap = {'default':'USD', 'en_US':'USD', 'en':'USD'},
-            dataObject = [], 
-            defaultLocale = 'en', 
-            mappedFields = [{'field':'product.ID','placeholder':'item'},
+        var currenciesMap = {'default':'USD', 'en_US':'USD', 'en':'USD'};
+        var dataObject = [];
+        var defaultLocale = 'en';
+        var mappedFields = [{'field':'product.ID','placeholder':'item'},
                             {'field':'product.availability','placeholder':'available'},
                             {'field':'product.name','placeholder':'title_multilang'},
                             {'field':'product.url','placeholder':'link_multilang'},
@@ -154,14 +171,14 @@ describe('JobHelper Scripts', () => {
                             {'field':'product.brand','placeholder':'c_braand'},
                             {'field':'product.custom.color','placeholder':'coolor'},
                             {'field':'product.custom.size','placeholder':'size'}
-                        ],
-            product = new Variant(),
-            res = [ ['1234567', true, 'test product', 'test product', 'test product',
+                        ];
+        var product = new Variant();
+        var res = [ ['1234567', true, 'test product', 'test product', 'test product',
             'Product-Show/pid=1234567', 'Product-Show/pid=1234567', 'Product-Show/pid=1234567', 'testAbsUrl',
-            '', '', '', '20.00', '20.00', '20.00', '', 'color', 'size' ] ],
-            siteLocales = ['default', 'zh', 'en', 'en_US'];
+            '', '', '', '20.00', '20.00', '20.00', '', 'color', 'size' ] ];
+        var siteLocales = ['default', 'zh', 'en', 'en_US'];
 
-            JobHelper.getProductInfo(mappedFields, product, dataObject, siteLocales, defaultLocale, currenciesMap);
+        JobHelper.getProductInfo(mappedFields, product, dataObject, siteLocales, defaultLocale, currenciesMap);
         assert.deepEqual(dataObject, res);
     });
 });

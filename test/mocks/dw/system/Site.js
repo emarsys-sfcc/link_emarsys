@@ -117,6 +117,7 @@ function getCurrent() {
                 }),
                 emarsysCountryCodes: JSON.stringify({'us': 185,'uk': 184,'de': 65,'fr': 61}),
                 emarsysGenderCodes: JSON.stringify({'male': 1,'female': 2}),
+                emarsysProductImageSize:'small',
                 emarsysSFTPHost: 'test.emarsys.net',
                 emarsysSFTPUsername: 'Test',
                 emarsysSFTPPassword: 'test1234',

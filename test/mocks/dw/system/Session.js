@@ -26,7 +26,7 @@ class Session {
         };
     }
     setCurrency(currency) {
-        this.currency = currency;
+      //  this.currency = currency;
         return currency;
     }
 }

@@ -2,6 +2,7 @@ var assert = require('chai').assert;
 var proxyquire = require('proxyquire').noCallThru().noPreserveCache();
 
 var mockPath = './../../../../../mocks/';
+
 var io = require(mockPath + 'dw/io/Io');
 var order = require(mockPath + 'dw/order/Order');
 var web = require(mockPath + 'dw/web/Web');
@@ -19,6 +20,8 @@ var Status = require(mockPath + 'dw/system/Status');
 var ProductMgr = require(mockPath + 'dw/catalog/ProductMgr');
 var Money = require(mockPath + 'dw/value/Money');
 var Variant = require(mockPath + 'dw/catalog/Variant');
+var Request = require(mockPath + 'dw/system/Request');
+var Session = require(mockPath + 'dw/system/Session');
 
 var siteCustomPreferences = Site.current.preferences.custom;
 var cartridgePath = '../../../../../../cartridges/int_emarsys/';
@@ -57,17 +60,29 @@ var ExportCatalog = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/Expor
 });
 
 describe('ExportCatalog jobstep', () => {
+    global.empty = function(val) {
+        if (val === undefined || val == null || val.length <= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    global.request = new Request();
+    global.session = new Session();
 
     it('Testing method: execute', () => {
-       var args = {
-            exportFolderName: 'Test',
-            exportFileName: 'testN'
-       };
-      var result = ExportCatalog.execute(args);
-     assert.deepEqual(result,{
-        code: 'OK',
-        status: 2
+        var args = {
+             exportFolderName: 'Test',
+             exportFileName: ''
+        };
+       var result = ExportCatalog.execute(args);
+     
+       assert.deepEqual(result,{
+         code: 'OK',
+         status: 2
+      });
+
      });
-    });
 
 });

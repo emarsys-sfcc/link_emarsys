@@ -26,8 +26,9 @@ class File {
     list() {
         return ['Test.csv','Test.gh'];
     }
-    listFiles() {
+    listFiles(data) {
         return {
+            data: data,
             iterator: function() {
                 var i = 0;
                 return {

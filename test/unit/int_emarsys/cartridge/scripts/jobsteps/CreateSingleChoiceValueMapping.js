@@ -42,10 +42,6 @@ describe('CreateSingleChoiceValueMapping jobstep', () => {
     };
 
     it('Testing method: execute', () => {
-       var args = {
-            exportFolderName: 'Test',
-            exportFileName: 'testN'
-       };
       var result = CreateSingleChoice.execute();
       assert.deepEqual(result,{
             code: 'OK',

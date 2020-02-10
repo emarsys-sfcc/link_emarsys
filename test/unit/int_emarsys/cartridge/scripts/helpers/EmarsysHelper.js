@@ -38,7 +38,6 @@ describe('EmarsysHelper Scripts', () => {
             return false;
         }
     };
-    global.session = new Session();
 
     it('Testing method: triggerAPICall', () => {
         var result = emarsys.triggerAPICall('field', {}, 'GET');

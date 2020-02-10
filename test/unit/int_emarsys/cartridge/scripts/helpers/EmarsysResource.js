@@ -26,4 +26,10 @@ describe('EmarsysResource', () => {
             assert.lengthOf(Object.keys(preferences), 2);
         });
     });
+
+        it('testing method: emarsysResourceHelper', () => {
+             // Can not be tested
+            assert.isUndefined(EmarsysResource());
+        });
+
 });

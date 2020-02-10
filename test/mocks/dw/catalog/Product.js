@@ -67,6 +67,7 @@ class Product {
     getOnlineCategories() {
         var displayName = 'testCategory',
             length = 2,
+            online = true,
             parent = {
                 displayName: 'testCategoryParent',
                 parent: null,
@@ -74,11 +75,13 @@ class Product {
             };
         return {
             displayName: displayName,
+            online: online,
             parent: parent,
             length: length,
             toArray: function() {
                 return [{ 
                     displayName: displayName,
+                    online: true,
                     parent: parent,
                     length: length
                 }];

@@ -14,8 +14,6 @@ var emarsysService = require(mockPath + 'service/emarsysService');
 var template = require(mockPath + 'dw/util/Template');
 var hashMap = require(mockPath + 'dw/util/HashMap');
 var Mail = require(mockPath + 'dw/net/Mail');
-
-
 var system = require(mockPath + 'dw/system/system');
 var io = require(mockPath + 'dw/io/Io');
 var File = require(mockPath + 'dw/io/File');
@@ -87,10 +85,12 @@ describe('ExportCustomerInfo jobstep', () => {
             mailTo: 'marsik.tagManager@gmail.com',
             mailSubject: 'Export orders'
         };
+
         var result = ExportCustomerInfo.execute(args);
         assert.deepEqual(result, {
             code: 'OK',
             status: 2
         });
+
     });
 });

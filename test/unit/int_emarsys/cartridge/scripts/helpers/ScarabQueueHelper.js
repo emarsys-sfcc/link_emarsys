@@ -7,8 +7,6 @@ var Site = require('../../../../../mocks/dw/system/Site');
 var Order = require('../../../../../mocks/dw/order/Order');
 var Basket = require('../../../../../mocks/dw/order/Basket');
 
-
-
 let proxyquire = proxyquireModule.noCallThru();
 let ScarabQueueHelper = new (proxyquire('../../../../../../cartridges/int_emarsys/cartridge/scripts/helpers/scarabQueueHelper.js', {
     'dw/system/Site': Site
