@@ -15,6 +15,11 @@ instrumentation:
         "**/app_storefront_base/**", # sfcc cartridge is OOS
         "**/bm_app_storefront_base/**", # sfcc cartridge is OOS
         "**/bm_emarsys/**", # bm cartridge is OOS
-        "**/modules/**" # sfcc cartridge is OOS
+        "**/modules/**", # sfcc cartridge is OOS
+        "**/hooks/**", # Those are hooks, we don't test them
+        "**/service/**", # Those are service, we don't test them
+        "**/models/**", # Those are models, we don't test them
+        "**/helpers/ftpClientHelper.js", #Those service methods(upload files)
+        "**/codecept.conf.js", #Those file is config for acceptance test
     ]
     include-all-sources: true

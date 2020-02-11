@@ -2,6 +2,9 @@
 
 var File = require('dw/io/File');
 var Status = require('dw/system/Status');
+var ProductLineItem = require('dw/order/ProductLineItem');
+var GiftCertificateLineItem = require('dw/order/GiftCertificateLineItem');
+var Variant = require('dw/catalog/Variant');
 
 var EmarsysOrderTracking = {
     logger: require('dw/system/Logger').getLogger('emarsysOrderTracking', 'emarsysOrderTracking'),
@@ -254,17 +257,17 @@ var EmarsysOrderTracking = {
      */
     getMasterId: function (lineItem) {
         switch (true) {
-            case lineItem instanceof dw.order.ProductLineItem && !empty(lineItem.product) && lineItem.product instanceof dw.catalog.Variant:
+            case lineItem instanceof ProductLineItem && !empty(lineItem.product) && lineItem.product instanceof Variant:
                 return lineItem.product.masterProduct.ID;
             /*
             Render product ID if lineItem is ProductLineItem
             */
-            case lineItem instanceof dw.order.ProductLineItem:
+            case lineItem instanceof ProductLineItem:
                 return lineItem.productID;
             /*
             Render gift certificate ID if lineItem is GiftCertificateLineItem
             */
-            case lineItem instanceof dw.order.GiftCertificateLineItem:
+            case lineItem instanceof GiftCertificateLineItem:
                 return lineItem.getUUID();
             default:
                 return null;
@@ -281,12 +284,12 @@ var EmarsysOrderTracking = {
             /*
             Render product ID if lineItem is ProductLineItem
             */
-            case lineItem instanceof dw.order.ProductLineItem:
+            case lineItem instanceof ProductLineItem:
                 return lineItem.productID;
             /*
             Render gift certificate ID if lineItem is GiftCertificateLineItem
             */
-            case lineItem instanceof dw.order.GiftCertificateLineItem:
+            case lineItem instanceof GiftCertificateLineItem:
                 return lineItem.getUUID();
             default:
                 return null;
@@ -299,7 +302,7 @@ var EmarsysOrderTracking = {
      * @returns {number} value quantity
      */
     getQuantity: function (lineItem) {
-        if (lineItem instanceof dw.order.GiftCertificateLineItem) {
+        if (lineItem instanceof GiftCertificateLineItem) {
             return 1;
         }
         return lineItem.getQuantity().getValue();
@@ -318,7 +321,7 @@ var EmarsysOrderTracking = {
         var priceValue;
 
         switch (true) {
-            case lineItem instanceof dw.order.ProductLineItem:
+            case lineItem instanceof ProductLineItem:
 
                 var orderCurrencyCode = order.getCurrencyCode();
                 var currency;
@@ -354,7 +357,7 @@ var EmarsysOrderTracking = {
                 session.setCurrency(currency);
                 return null;
 
-            case lineItem instanceof dw.order.GiftCertificateLineItem:
+            case lineItem instanceof GiftCertificateLineItem:
                 priceValue = lineItem.getPrice().getValueOrNull();
 
                 if (!empty(priceValue)) {

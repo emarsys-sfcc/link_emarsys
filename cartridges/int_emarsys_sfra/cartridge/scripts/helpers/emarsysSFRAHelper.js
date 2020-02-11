@@ -386,7 +386,7 @@ function processor(args, res) {
  */
 function getCustomerData(args) {
     var Args = args;
-    Args.basket = dw.order.BasketMgr.getCurrentBasket();
+    Args.basket = require('dw/order/BasketMgr').getCurrentBasket();
     Args = newsletterHelper.getCustomerData(Args);
     return Args;
 }

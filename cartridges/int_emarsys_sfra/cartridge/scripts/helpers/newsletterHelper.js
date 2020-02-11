@@ -139,8 +139,8 @@ function doubleOptInSubscribe(args) {
     var Args = args;
     var updateData;
     var triggerEvent;
-    var updateRequest;
-    var triggerRequest;
+    var updateRequest = {};
+    var triggerRequest = {};
     var uid = request.httpParameterMap.uid.stringValue;
 
     try {
@@ -148,10 +148,10 @@ function doubleOptInSubscribe(args) {
         var getDataRequest = {};
         getDataRequest.keyId = 'uid';
         getDataRequest.keyValues = [uid];
-
+     
         var getData = emarsysHelper.triggerAPICall('contact/getdata', getDataRequest, 'POST');
         var dataObj;
-
+        
         // parse getData response to get email
         var email = null;
         if (getData.status === 'OK') {
@@ -234,7 +234,7 @@ function subscriptionTypeData(SubscriptionType) {
 
     try {
         var type = SubscriptionType;
-        var co = dw.object.CustomObjectMgr.getCustomObject('EmarsysNewsletterSubscription', type);
+        var co = require('dw/object/CustomObjectMgr').getCustomObject('EmarsysNewsletterSubscription', type);
 
         if (co.custom.optInStrategy) {
             args.Strategy = co.custom.optInStrategy;
