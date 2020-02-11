@@ -1,0 +1,10 @@
+<iscontent type="text/javascript" charset="UTF-8" compact="true"/>
+<isscript>
+    var emarsysResourceHelper = require('int_emarsys/cartridge/scripts/helpers/emarsysResource');
+</isscript>
+
+(function (){
+    window.EmarsysUrls = <isprint value="${JSON.stringify(emarsysResourceHelper.getUrls())}" encoding="off"/>;
+    window.EmarsysResources = <isprint value="${JSON.stringify(emarsysResourceHelper.getResources())}" encoding="off"/>;
+    window.EmarsysPreferences = <isprint value="${JSON.stringify(emarsysResourceHelper.getPreferences())}" encoding="off"/>;
+}());

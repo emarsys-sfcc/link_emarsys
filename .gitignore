@@ -1,0 +1,12 @@
+test/report/
+cartridges/app_storefront_base/
+cartridges/bm_app_storefront_base/
+cartridges/modules/
+bin/
+
+.eslintrc.json
+page-designer-components.md
+node_modules
+.vscode/launch.json
+dw.json
+coverage/
