@@ -1,0 +1,100 @@
+<isdecorate template="/pageWrapper">
+    <iscontent type="text/html" charset="UTF-8" />
+    <isinclude template="inc/Modules" />
+    <isinclude template="/components/modules" />
+
+    <link rel="stylesheet" type="text/css" href="${URLUtils.staticURL('css/global.css')}" />
+    <script src="${URLUtils.staticURL('js/main.js')}" defer="defer"></script>
+
+    <isinclude template="/components/pageHeader" />
+
+    <ismodule template="components/externalEventsTable.isml"
+        name="externalevents"
+        attribute="list"
+    />
+    <isexternalevents list="subscription" />
+    <isexternalevents list="other" />
+
+    <div class="js-page-data-block hide-content">
+        <div class="js-all-emarsys-events" 
+            data-all-emarsys-events="${JSON.stringify(pdict.response.allEmarsysEvents)}">
+        </div>
+        <div class="js-page-links"
+            data-get-list="${pdict.urls.show}"
+            data-create-event="${pdict.urls.addEvent}"
+            data-update-event="${pdict.urls.editEvent}"
+            data-delete-event="${pdict.urls.removeEvent}">
+        </div>
+        <div class="js-dialog-messages"
+            data-add-subscription="${Resource.msg("dialog.add.subscription.title", "externalEvents", null)}"
+            data-add-other="${Resource.msg("dialog.add.other.title", "externalEvents", null)}">
+        </div>
+        <div class="js-notification-messages"
+            data-success-event="${Resource.msg("success.message.event", "externalEvents", null)}"
+            data-success-created="${Resource.msg("success.message.created", "externalEvents", null)}"
+            data-success-edited="${Resource.msg("success.message.edited", "externalEvents", null)}"
+            data-success-removed="${Resource.msg("success.message.removed", "externalEvents", null)}"
+            data-request-error="${Resource.msg("request.error.message", "errorMessages", null)}"
+            data-emarsys-error="${Resource.msg("emarsys.error.message", "errorMessages", null)}"
+            data-server-error="${Resource.msg("server.error.message", "errorMessages", null)}"
+            data-empty-name-error="${Resource.msg("empty.name.error.message", "errorMessages", null)}">
+        </div>
+
+        <iscomment> create event template </iscomment>
+        <div class="js-create-event-dialog dialog-block">
+            <div class="dialog-header-block">
+                <span class="js-dialog-title dialog-title"></span>
+                <span class="js-close-button dialog-close-button"></span>
+            </div>
+            <div class="dialog-content-block">
+                <div class="dialog-select-block">
+                    <select class="js-sfcc-name-select select-basic">
+                        <option>
+                            ${Resource.msg("dialog.select.sfcc.label", "externalEvents", null)}
+                        </option>
+                    </select>
+                </div>
+                <div class="dialog-select-block">
+                    <select class="js-emarsys-name-select select-basic">
+                        <option>
+                            ${Resource.msg("dialog.select.emarsys.label", "externalEvents", null)}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="dialog-footer-block">
+                <button class="js-cancel-button button-basic dialog-cancel-button">
+                    ${Resource.msg("dialog.button.cancel", "externalEvents", null)}
+                </button>
+                <button class="js-confirm-button button-basic">
+                    ${Resource.msg("dialog.button.add", "externalEvents", null)}
+                </button>
+            </div>
+        </div>
+
+        <iscomment> row template </iscomment>
+        <div class="js-external-events-row row-basic">
+            <div class="column-basic sfcc-name-column">
+                <span class="js-sfcc-name-span"></span>
+            </div>
+            <div class="column-basic emarsys-name-column">
+                <select class="js-emarsys-name-select select-basic"></select>
+            </div>
+            <div class="column-basic button-column">
+                <iscomment> <button class="js-view-payload-button button-basic">
+                    ${Resource.msg("button.view.payload", "externalEvents", null)}
+                </button> </iscomment>
+            </div>
+            <div class="column-basic button-column">
+                <iscomment> <button class="js-edit-or-save-button js-edit-button button-basic">
+                    ${Resource.msg("button.edit", "externalEvents", null)}
+                </button> </iscomment>
+            </div>
+            <div class="column-basic button-column">
+                <iscomment> <button class="js-remove-button button-basic">
+                    ${Resource.msg("button.remove", "externalEvents", null)}
+                </button> </iscomment>
+            </div>
+        </div>
+    </div>
+</isdecorate>

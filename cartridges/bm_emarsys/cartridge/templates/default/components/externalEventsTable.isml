@@ -1,0 +1,92 @@
+<isset name="list" value="${pdict.list}" scope="page" />
+<isset name="sfccList" value="${list + 'SfccDescriptions'}" scope="page" />
+<isset name="notMappedList" value="${list + 'NotMappedEvents'}" scope="page" />
+<isset name="emarsysList" value="${list + 'EmarsysDescriptions'}" scope="page" />
+
+<div class="control-block">
+    <div class="column-basic table-title-column">
+        <span class="border-text">${Resource.msg(list + ".table.name", "externalEvents", null)}</span>
+    </div>
+    <div class="column-basic button-column">
+        <button class="js-add-${list}-event-button button-basic">${Resource.msg("button.add.event", "externalEvents", null)}</button>
+    </div>
+</div>
+
+<div class="external-events-content">
+    <div class="js-${list}-events-table events-table">
+        <div class="table-header">
+            <div class="column-basic sfcc-name-column">
+                <span class="border-text">
+                    ${Resource.msg("table.header.sfcc.name", "externalEvents", null)}
+                </span>
+            </div>
+            <div class="column-basic emarsys-name-column">
+                <span class="border-text">
+                    ${Resource.msg("table.header.emarsys.name", "externalEvents", null)}
+                </span>
+            </div>
+            <div class="column-basic button-column"></div>
+            <div class="column-basic button-column"></div>
+            <div class="column-basic button-column"></div>
+        </div>
+        <isloop items="${pdict.response[sfccList]}" var="event">
+            <isif condition="${event.emarsysId.length !== 0}">
+                <div class="js-external-events-row row-basic"
+                    data-emarsys-id="${event.emarsysId}"
+                    data-emarsys-name="${event.emarsysName}"
+                    data-sfcc-name="${event.sfccName}">
+                    <div class="column-basic sfcc-name-column">
+                        <span class="js-sfcc-name-span">${event.sfccName}</span>
+                    </div>
+                    <div class="column-basic emarsys-name-column">
+                        <select class="js-emarsys-name-select select-basic">
+                            <option value="${event.emarsysName}" data-emarsys-id="${event.emarsysId}">${event.emarsysName}</option>
+                        </select>
+                    </div>
+                    <div class="column-basic button-column">
+                        <iscomment> <button class="js-view-payload-button button-basic">
+                            ${Resource.msg("button.view.payload", "externalEvents", null)}
+                        </button> </iscomment>
+                    </div>
+                    <div class="column-basic button-column">
+                        <iscomment>
+                            <button class="js-edit-or-save-button js-edit-button button-basic">
+                                ${Resource.msg("button.edit", "externalEvents", null)}
+                            </button>
+                        </iscomment>
+                    </div>
+                    <div class="column-basic button-column">
+                        <iscomment>
+                            <button class="js-remove-button button-basic">
+                                ${Resource.msg("button.remove", "externalEvents", null)}
+                            </button>
+                        </iscomment>
+                    </div>
+                </div>
+            </isif>
+        </isloop>
+    </div>
+</div>
+
+<div class="js-page-data-block hide-content">
+    <div class="js-${list}-events">
+        <select class="js-sfcc-name-select select-basic">
+            <option>
+                ${Resource.msg("dialog.select.sfcc.label", "externalEvents", null)}
+            </option>
+            <isloop items="${pdict.response[notMappedList]}" var="eventName">
+                <option value="${eventName}">${eventName}</option>
+            </isloop>
+        </select>
+        <select class="js-emarsys-name-select select-basic">
+            <option>
+                ${Resource.msg("dialog.select.emarsys.label", "externalEvents", null)}
+            </option>
+            <isloop items="${pdict.response[emarsysList]}" var="event">
+                <isif condition="${event.emarsysId.length !== 0}">
+                    <option value="${event.emarsysName}" data-emarsys-id="${event.emarsysId}">${event.emarsysName}</option>
+                </isif>
+            </isloop>
+        </select>
+    </div>
+</div>
