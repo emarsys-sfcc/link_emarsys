@@ -8,13 +8,17 @@ var CustomObjectMgr = require('dw/object/CustomObjectMgr');
 
 var externalEvent = {
     logger: require('dw/system/Logger').getLogger('externalEvent', 'externalEvent'),
-    execute: function () {
+    execute: function (args) {
+        if (args.isDisabled) {
+            return new Status(Status.OK, 'OK', 'Step disabled, skip it...');
+        }
+
         try {
             this.emarsysHelper = new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))();
 
             this.getExternalEvents();
         } catch (err) {
-            this.logger.error('externalEvent: Error ' + err.message + '\n' + err.stack);
+            this.logger.error('[Emarsys GetExternalEventsJob.js] - ***externalEvent error message: ' + err.message + '\n' + err.stack);
 
             return new Status(Status.ERROR, 'ERROR');
         }

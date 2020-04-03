@@ -487,7 +487,7 @@ function EmarsysHelper() {
         var rebate = new Money(0, currencyCode);
         if (!empty(Order)) {
             var shippingMethod = Order.shipments[0].getShippingMethod();
-            var shippingModel = ShippingMgr.getShipmentShippingModel(order.shipments[0]);
+            var shippingModel = ShippingMgr.getShipmentShippingModel(Order.shipments[0]);
             var shippingCost = shippingModel.getShippingCost(shippingMethod).amount;
 
             currencyCode = Order.currencyCode;

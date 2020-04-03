@@ -18,7 +18,7 @@ var choiceValueMap = {
 
             this.createSingleChoiceValueMapping();
         } catch (err) {
-            this.logger.error('choiceValueMap: Error ' + err.message + '\n' + err.stack);
+            this.logger.error('[Emarsys CreateSingleChoiceValueMapping.js] - ***Emarsys choiceValueMap error message: ' + err.message + '\n' + err.stack);
 
             return new Status(Status.ERROR, 'ERROR');
         }

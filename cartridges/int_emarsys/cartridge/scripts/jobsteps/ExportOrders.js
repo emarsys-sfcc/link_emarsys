@@ -22,6 +22,7 @@ var EmarsysOrderTracking = {
             this.destinationFolder = args.destinationFolder;
             this.currencyToConvert = args.smartInsightCurrency;
             this.defaultRequestCurrency = session.currency.currencyCode;
+            this.queryString = args.queryString;
 
             this.jobHelper = require('int_emarsys/cartridge/scripts/helpers/jobHelper');
             this.fileName = this.jobHelper.createSmartInsightFeedName();
@@ -38,7 +39,7 @@ var EmarsysOrderTracking = {
             this.processOrders();
             this.cleanUp();
         } catch (err) {
-            this.logger.error('EmarsysOrderTracking: Error ' + err.message + '\n' + err.stack);
+            this.logger.error('[Emarsys ExportOrders.js] - ***Error message: ' + err.message + '\n' + err.stack);
 
             return new Status(Status.ERROR, 'ERROR');
         }
@@ -48,6 +49,7 @@ var EmarsysOrderTracking = {
 
     /**
      * @description Search for orders updated with emarsys status
+     * @returns {void} prepare orders
      */
     prepareOrders: function () {
         var OrderMgr = require('dw/order/OrderMgr');
@@ -64,7 +66,17 @@ var EmarsysOrderTracking = {
             query += ' AND (custom.exported = NULL OR custom.exported = false)';
         }
 
-        this.orders = OrderMgr.searchOrders(query, ORDER_BY, startDate, endDate);
+        if (this.queryString !== null) {
+            query += this.queryString;
+        }
+
+        try {
+            this.orders = OrderMgr.searchOrders(query, ORDER_BY, startDate, endDate);
+        } catch (err) {
+            this.logger.error('[Emarsys ExportOrders.js] - ***Error message: ' + err.message + '\n' + err.stack + 'check the step parameters');
+
+            return new Status(Status.ERROR, 'ERROR');
+        }
         this.needExportData = this.orders.hasNext();
     },
 
@@ -98,7 +110,7 @@ var EmarsysOrderTracking = {
 
         // throw error when can't load config
         if (!co) {
-            this.logger.error('EmarsysOrderTracking: *** Error occurred during reading SmartInsight stored fields mapping.');
+            this.logger.error('[Emarsys ExportOrders.js] - ***Error occurred during reading SmartInsight stored fields mapping.');
         }
 
         // parse mapped fields

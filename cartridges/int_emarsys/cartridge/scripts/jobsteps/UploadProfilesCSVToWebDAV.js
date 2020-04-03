@@ -11,8 +11,13 @@ var UploadProfilesCSVToWebDAV = {
     logger: require('dw/system/Logger').getLogger('emarsys'),
 
     /* exported execute */
-    execute: function () {
+    execute: function (args) {
         try {
+
+            if (args.isDisabled) {
+                return new Status(Status.OK, 'Step disabled, skip it...');
+            }
+
             var URL = Site.getCustomPreferenceValue('emarsysWebDAVURLString');
             var Username = Site.getCustomPreferenceValue('emarsysWebDAVUsernameString');
             var Password = Site.getCustomPreferenceValue('emarsysWebDAVPasswordString');
@@ -40,7 +45,7 @@ var UploadProfilesCSVToWebDAV = {
             this.logger.error('The CSV file upload failed. Error: CSV file was not found');
             return new Status(Status.ERROR, 'ERROR');
         } catch (err) {
-            this.logger.error('[UploadProfilesCSVToWebDAV.js #' + err.lineNumber + '] - ***Emarsys contact info csv upload to WebDAV error message: ' + err);
+            this.logger.error('[UploadProfilesCSVToWebDAV.js] - ***Emarsys contact info csv upload to WebDAV error message: ' + err.message + '\n' + err.stack);
             this.Logger.error('The CSV file upload failed. Error: ' + err.toString());
             return new Status(Status.ERROR, 'ERROR');
         }
