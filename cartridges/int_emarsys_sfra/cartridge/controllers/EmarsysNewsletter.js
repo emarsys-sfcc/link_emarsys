@@ -251,23 +251,8 @@ server.get(
     'RedirectToDisabledPage',
     server.middleware.https,
     function (req, res, next) {
-        switch (emarsysSFRAHelper.redirect(args)) { // test
-            case 'ajax':
-                var accountStatus = 'disabled';
-                // respond with ajax
-                var newObject = {};
-                newObject.success = true;
-                newObject.accountStatus = accountStatus;
-                res.json(newObject);
-                break;
-            case 'noAjax':
-                emarsysSFRAHelper.emarsysDisabledTemplate(res);
-                break;
-            case 'noRedirect':
-                return;
-            default:
-                break;
-        }
+        emarsysSFRAHelper.emarsysDisabledTemplate(res);
+
         next();
     }
 );

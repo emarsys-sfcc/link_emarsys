@@ -9,7 +9,7 @@ var StringUtils = require(mockPath + 'dw/util/StringUtils');
 
 var cartridgePath = '../../../../../../cartridges/int_emarsys/';
 
-var StepUtil = proxyquire(cartridgePath + 'cartridge/scripts/util/StepUtil.js', {
+var StepUtil = proxyquire(cartridgePath + 'cartridge/scripts/util/stepUtil.js', {
     'dw/util/Calendar': Calendar,
     'dw/util/StringUtils': StringUtils,
     'dw/system/Site': Site

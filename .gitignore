@@ -1,6 +1,8 @@
 test/report/
 cartridges/app_storefront_base/
 cartridges/bm_app_storefront_base/
+cartridges/app_storefront_core/
+cartridges/app_storefront_controllers/
 cartridges/modules/
 bin/
 

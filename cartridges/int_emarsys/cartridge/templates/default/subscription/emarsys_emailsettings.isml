@@ -1,5 +1,11 @@
 <iscontent type="text/html" charset="UTF-8" compact="true"/>
-<isdecorate template="common/layout/page">
+
+<isdecorate template="${Resource.msg('page.decorator.account', 'emarsys', 'common/layout/page')}">
+
+<isif condition="${Resource.msg('page.decorator.account', 'emarsys', false) !== false}">
+    <isinclude template="util/modules"/>
+</isif>
+
 <isif condition="${dw.system.Site.getCurrent().getCustomPreferenceValue('emarsysEnabled')}">
     <a id="account_subscribe" class="button subscribe" href="#">${Resource.msg('emarsys.subscribe','emarsys',null)}</a>
 </isif>

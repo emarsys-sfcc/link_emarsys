@@ -27,7 +27,8 @@ function getProductData(data) {
         trackingData: isSFRA
                         ? data.product.id
                         : data.pdict.Product.ID
-    }
+    };
+
     if (recommendationType !== 'disable') {
         analytics.logic = getEmarsysPreference('PDP');
     }
@@ -42,13 +43,14 @@ function getProductData(data) {
  */
 function getCategoryPageData(data) {
     var category = isSFRA
-                    ? data.productSearch.category 
+                    ? data.productSearch.category
                     : data.pdict.ProductSearchResult.category;
-                    
+
     var analytics = {
         nameTracking: 'category',
         trackingData: ScarabQueueHelper.getCategoryChain(category)
     };
+
     if (recommendationType !== 'disable') {
         analytics.logic = getEmarsysPreference('CategoryPage');
     }
@@ -164,7 +166,7 @@ function getCustomerInfo(data) {
 
 /**
  * @description Add new properties in object data with a analytics data
- * @param {Object || string} args string for SFRA approach or Object for SiteGenesis approach
+ * @param {string|Objcet} args string for SFRA approach or Object for SiteGenesis approach
  * @param {Object} data analytics data object, created in controller (SFRA)
  * @returns {void} inserted in data new property "analytics" with type "object"
  */
@@ -172,8 +174,8 @@ function PageData() {
     this.setPageData = function (args, data) {
         var isEnableEmarsys = customPreferences.emarsysPredictEnableJSTrackingCode;
         var emarsysAnalytics = {};
-        isSFRA = (typeof args === 'string') ? true : false;
-        var pageType =  isSFRA? args : args.ns;
+        isSFRA = (typeof args === 'string');
+        var pageType = isSFRA ? args : args.ns;
 
         if (isEnableEmarsys) {
             var mapping = {
@@ -184,13 +186,11 @@ function PageData() {
                 storefront: getStorefrontData
             };
 
-            emarsysAnalytics.predictMerchantID = customPreferences.emarsysPredictMerchantID;
-
             if (pageType in mapping) {
                 emarsysAnalytics = mapping[pageType](data || args);
                 emarsysAnalytics.locale = request.locale;
 
-                if (data) {
+                if (isSFRA) {
                     emarsysAnalytics.pageType = pageType;
                     emarsysAnalytics.customerData = getCustomerInfo(data);
                     emarsysAnalytics.currentBasket = ScarabQueueHelper.getCartData(require('dw/order/BasketMgr').getCurrentBasket());
@@ -198,6 +198,7 @@ function PageData() {
             }
         }
 
+        emarsysAnalytics.predictMerchantID = customPreferences.emarsysPredictMerchantID;
         emarsysAnalytics.isEnableEmarsys = isEnableEmarsys;
 
         return emarsysAnalytics;

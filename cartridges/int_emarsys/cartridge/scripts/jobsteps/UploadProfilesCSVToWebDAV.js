@@ -13,9 +13,8 @@ var UploadProfilesCSVToWebDAV = {
     /* exported execute */
     execute: function (args) {
         try {
-
             if (args.isDisabled) {
-                return new Status(Status.OK, 'Step disabled, skip it...');
+                return new Status(Status.OK, 'OK', 'Step disabled, skip it...');
             }
 
             var URL = Site.getCustomPreferenceValue('emarsysWebDAVURLString');

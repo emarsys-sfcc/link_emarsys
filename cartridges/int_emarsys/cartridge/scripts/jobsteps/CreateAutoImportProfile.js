@@ -13,7 +13,7 @@ var CreateAutoImportProfile = {
         this.emarsysHelper = new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))();
 
         if (params.isDisabled) {
-            return new Status(Status.OK, 'Step disabled, skip it...');
+            return new Status(Status.OK, 'OK', 'Step disabled, skip it...');
         }
 
         var FieldValueMapping = currentSite.getCustomPreferenceValue('emarsysSingleChoiceValueMapping');

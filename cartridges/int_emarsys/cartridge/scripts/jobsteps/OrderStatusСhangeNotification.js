@@ -18,7 +18,7 @@ var OrderStatusChangeNotification = {
         this.jobStatus = 'OK';
 
         if (args.isDisabled) {
-            return new Status(Status[this.jobStatus], 'Step disabled, skip it...');
+            return new Status(Status[this.jobStatus], 'OK', 'Step disabled, skip it...');
         }
 
         try {

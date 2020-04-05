@@ -221,6 +221,8 @@ var ExportCustomerInfo = {
                 this.ExportedProfiles = 0;
             }
         }
+
+        return new Status(Status.OK, 'OK');
     },
 
     /**

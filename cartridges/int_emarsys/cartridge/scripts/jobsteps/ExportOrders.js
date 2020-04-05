@@ -78,6 +78,8 @@ var EmarsysOrderTracking = {
             return new Status(Status.ERROR, 'ERROR');
         }
         this.needExportData = this.orders.hasNext();
+
+        return new Status(Status.OK, 'OK');
     },
 
     /**

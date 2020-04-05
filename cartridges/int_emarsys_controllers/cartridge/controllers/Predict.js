@@ -12,7 +12,7 @@ var guard = require('~/cartridge/scripts/guard');
  * @returns {void}
  */
 function getCartInfo() {
-    var ScarabQueueHelper = new (require('*/cartridge/scripts/util/ScarabQueueHelper'))();
+    var ScarabQueueHelper = new (require('*/cartridge/scripts/helpers/scarabQueueHelper'))();
     var currentBasket = ScarabQueueHelper.getCartData(dw.order.BasketMgr.getCurrentBasket());
 
     response.getWriter().print(JSON.stringify({
