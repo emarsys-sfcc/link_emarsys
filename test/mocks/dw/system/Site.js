@@ -53,7 +53,9 @@ var preferenceMap = {
     emarsysGetProfileFieldsLanguage: 'en',
     emarsysUseGrossPrice: false,
     emarsysEnabled: true,
-    emarsysPredictVariationAttributes:['product.custom.color', 'product.custom.size']
+    emarsysPredictVariationAttributes:['product.custom.color', 'product.custom.size'],
+    emarsysCatalogExportType: JSON.stringify([{"id" : "master", "name" : "master.export.type.label"},
+        {"id" : "variations", "name" : "variations.export.type.label"}])
 };
 
 

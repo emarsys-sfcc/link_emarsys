@@ -88,12 +88,21 @@ class Product {
             }
         };
     }
+    isVariant() {
+        return this.variant;
+    }
 
+    isMaster() {
+        return this.master;
+    }
 
     getPriceModel() {
         return this.priceModel;
     }
 
+    getVariationModel() {
+        return this.variationModel;
+    }
 }
 
 module.exports = Product;

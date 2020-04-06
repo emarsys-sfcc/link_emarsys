@@ -65,6 +65,30 @@ module.exports = {
                     status: 'OK',
                     object: JSON.stringify({data:[]})
                 }
+            case 'event/1000/trigger':
+                return {
+                    status: 'ERROR',
+                    errorMessage:JSON.stringify({"replyCode":1,"replyText":"ERROR"}),
+                    error: 400,
+                    msg: 'Bad request'
+                }
+            case 'event/5633/trigger':
+                return {
+                    status: 'OK',
+                    object: JSON.stringify({data:[]})
+                }
+            case 'event/badtest':
+                return {
+                    status: 'ERROR',
+                    errorMessage:JSON.stringify({"replyCode":1,"replyText":"ERROR"}),
+                    error: 400,
+                    msg: 'Bad request'
+                }
+            case 'event/test':
+                return {
+                    status: 'OK',
+                    object: JSON.stringify({data:[]})
+                }
             default: 
                 return {
                     status: 'ERROR',

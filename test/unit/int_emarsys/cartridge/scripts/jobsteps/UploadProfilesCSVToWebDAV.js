@@ -20,12 +20,25 @@ var UploadProfiles = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/Uplo
 });
 
 describe('UploadProfilesCSVToWebDAV jobstep', () => {
-    it('Testing method: execute', () => {
-    var result = UploadProfiles.execute();
-    assert.deepEqual(result, {
-        code: 'OK',
-        status: 2
-        });
+    it('Testing method: execute; isDisabled: true', () => {
+        var args = {
+            isDisabled: true
+        };
+        var result = UploadProfiles.execute(args);
+        assert.deepEqual(result, {
+            code: 'OK',
+            status: 2
+            });
     });
 
+    it('Testing method: execute; isDisabled: false', () => {
+        var args = {
+            isDisabled: false
+        };
+        var result = UploadProfiles.execute(args);
+        assert.deepEqual(result, {
+            code: 'OK',
+            status: 2
+            });
+    });
 });

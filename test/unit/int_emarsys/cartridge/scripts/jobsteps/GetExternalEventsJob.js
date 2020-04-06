@@ -43,12 +43,25 @@ describe('GetExternalEventsJob jobstep', () => {
         }
     };
 
-    it('Testing method: execute', () => {
-    var result = externalEvent.execute();
-    assert.deepEqual(result, {
-        code: 'OK',
-        status: 2
-        });
+    it('Testing method: execute; isDisabled:true', () => {
+        var args = {
+            isDisabled: true
+        };
+        var result = externalEvent.execute(args);
+        assert.deepEqual(result, {
+            code: 'OK',
+            status: 2
+            });
     });
 
+    it('Testing method: execute; isDisabled:false', () => {
+        var args = {
+            isDisabled: false
+        };
+        var result = externalEvent.execute(args);
+        assert.deepEqual(result, {
+            code: 'OK',
+            status: 2
+            });
+    });
 });

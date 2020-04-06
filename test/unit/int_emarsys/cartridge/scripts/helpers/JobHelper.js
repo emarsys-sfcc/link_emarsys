@@ -170,15 +170,23 @@ describe('JobHelper Scripts', () => {
                             {'field':'product.price','placeholder':'price_multilang'},
                             {'field':'product.brand','placeholder':'c_braand'},
                             {'field':'product.custom.color','placeholder':'coolor'},
-                            {'field':'product.custom.size','placeholder':'size'}
+                            {'field':'product.custom.size','placeholder':'size'},
+                            {'field':'product.group_id','placeholder':'group_id'}
                         ];
         var product = new Variant();
         var res = [ ['1234567', true, 'test product', 'test product', 'test product',
             'Product-Show/pid=1234567', 'Product-Show/pid=1234567', 'Product-Show/pid=1234567', 'testAbsUrl',
-            '', '', '', '20.00', '20.00', '20.00', '', 'color', 'size' ] ];
+            '', '', '', '20.00', '20.00', '20.00', '', 'color', 'size', '1111'] ];
         var siteLocales = ['default', 'zh', 'en', 'en_US'];
+        var addSecondLine = false;
 
-        JobHelper.getProductInfo(mappedFields, product, dataObject, siteLocales, defaultLocale, currenciesMap);
-        assert.deepEqual(dataObject, res);
+        var result = JobHelper.getProductInfo({
+            mappedFields: mappedFields,
+            siteLocales: siteLocales,
+            defaultLocale: defaultLocale,
+            currenciesMap: currenciesMap,
+            product: product
+        }, addSecondLine);
+        assert.deepEqual(result, res);
     });
 });
