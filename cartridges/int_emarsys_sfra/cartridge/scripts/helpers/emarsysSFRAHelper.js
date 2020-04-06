@@ -305,7 +305,7 @@ function handleOptInStrategy1(args, res) {
 function checkNotEmpty(args, res) {
     var status = false;
     if (empty(args)) {
-        redirectToErrorPage(args, res);
+        errorPage(args, res);
     } else {
         status = true;
     }

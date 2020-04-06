@@ -127,32 +127,6 @@ server.get(
 );
 
 /**
- * @description -  Subscription with account
- * @returns {void}
- */
-server.get(
-    'AccountSubscription',
-    server.middleware.https,
-    function (req, res, next) {
-        emarsysSFRAHelper.accountSubscription(res);
-        next();
-    }
-);
-
-/**
- * @description -  Subscription with checkout
- * @returns {void}
- */
-server.post(
-    'CheckoutSubscription',
-    server.middleware.https,
-    function (req, res, next) {
-        emarsysSFRAHelper.checkoutSubscription(res);
-        return next();
-    }
-);
-
-/**
  * @description -  Subscription with footer
  * @returns {void}
  */
@@ -197,7 +171,7 @@ server.get(
     'RedirectToDataSubmittedPage',
     server.middleware.https,
     function (req, res, next) {
-        emarsysSFRAHelper.redirectToDataSubmittedPage({}, res);
+        emarsysSFRAHelper.dataSubmittedPage(res);
         next();
     }
 );
@@ -211,7 +185,7 @@ server.get(
     'RedirectToThankYouPage',
     server.middleware.https,
     function (req, res, next) {
-        emarsysSFRAHelper.redirectToThankYouPage({}, res);
+        emarsysSFRAHelper.thankYouPage(res);
         next();
     }
 );
@@ -225,7 +199,7 @@ server.get(
     'RedirectToAlreadyRegisteredPage',
     server.middleware.https,
     function (req, res, next) {
-        emarsysSFRAHelper.redirectToAlreadyRegisteredPage({}, res);
+        emarsysSFRAHelper.alreadyRegisteredPage(res);
         next();
     }
 );
@@ -238,7 +212,7 @@ server.get(
 server.get(
     'RedirectToErrorPage',
     function (req, res, next) {
-        emarsysSFRAHelper.redirectToErrorPage({}, res);
+        emarsysSFRAHelper.errorPage({}, res);
         next();
     }
  );
@@ -395,7 +369,7 @@ server.get(
         if (Site.getCurrent().getCustomPreferenceValue('emarsysEnabled')) {
             args = NewsletterHelper.subscriptionTypeData('account');
             args = NewsletterHelper.doubleOptInSubscribe(args);
-            if (emarsysSFRAHelper.checkNotEmpty(args)) {
+            if (emarsysSFRAHelper.checkNotEmpty(args, res)) {
                 res.render('subscription/double_optin_thank_you_page');
             }
         } else {
@@ -417,7 +391,7 @@ server.get(
         if (Site.getCurrent().getCustomPreferenceValue('emarsysEnabled')) {
             args = NewsletterHelper.subscriptionTypeData('footer');
             args = NewsletterHelper.doubleOptInSubscribe(args);
-            if (emarsysSFRAHelper.checkNotEmpty(args)) {
+            if (emarsysSFRAHelper.checkNotEmpty(args, res)) {
                 res.render('subscription/double_optin_thank_you_page');
             }
         } else {
@@ -439,7 +413,7 @@ server.get(
         if (Site.getCurrent().getCustomPreferenceValue('emarsysEnabled')) {
             args = NewsletterHelper.subscriptionTypeData('checkout');
             args = NewsletterHelper.doubleOptInSubscribe(args);
-            if (emarsysSFRAHelper.checkNotEmpty(args)) {
+            if (emarsysSFRAHelper.checkNotEmpty(args, res)) {
                 res.render('subscription/double_optin_thank_you_page');
             }
         } else {
