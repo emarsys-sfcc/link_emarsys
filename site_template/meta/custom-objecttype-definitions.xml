@@ -1,5 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata xmlns="http://www.demandware.com/xml/impex/metadata/2006-10-31">
+    <custom-type type-id="EmarsysCatalogConfig">
+        <display-name xml:lang="x-default">Emarsys Catalog Condiguration</display-name>
+        <staging-mode>no-staging</staging-mode>
+        <storage-scope>site</storage-scope>
+        <key-definition attribute-id="EmarsysCatalogConfig">
+            <type>string</type>
+            <min-length>0</min-length>
+        </key-definition>
+        <attribute-definitions>
+            <attribute-definition attribute-id="exportType">
+                <display-name xml:lang="x-default">Export Type</display-name>
+                <type>string</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="mappedFields">
+                <display-name xml:lang="x-default">Mapped fields</display-name>
+                <type>text</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+        </attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="CatalogConfig">
+                <display-name xml:lang="x-default">Catalog Configuration</display-name>
+                <attribute attribute-id="mappedFields"/>
+                <attribute attribute-id="exportType"/>
+                <attribute attribute-id="lastModified" system="true"/>
+                <attribute attribute-id="EmarsysCatalogConfig"/>
+            </attribute-group>
+        </group-definitions>
+    </custom-type>
+
+    <custom-type type-id="EmarsysDBLoadConfig">
+        <display-name xml:lang="x-default">EmarsysDBLoadConfig</display-name>
+        <staging-mode>no-staging</staging-mode>
+        <storage-scope>site</storage-scope>
+        <key-definition attribute-id="EmarsysDBLoadConfig">
+            <type>string</type>
+            <min-length>0</min-length>
+        </key-definition>
+        <attribute-definitions>
+            <attribute-definition attribute-id="mappedFields">
+                <display-name xml:lang="x-default">Mapped fields</display-name>
+                <type>text</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+        </attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="DBLoadConfig">
+                <display-name xml:lang="x-default">Database Load Configuration</display-name>
+                <attribute attribute-id="mappedFields"/>
+                <attribute attribute-id="EmarsysDBLoadConfig"/>
+            </attribute-group>
+        </group-definitions>
+    </custom-type>
+
     <custom-type type-id="EmarsysExternalEvents">
         <staging-mode>no-staging</staging-mode>
         <storage-scope>site</storage-scope>
@@ -89,7 +151,59 @@
             </attribute-group>
         </group-definitions>
     </custom-type>
-	
+
+    <custom-type type-id="EmarsysProfileFields">
+        <display-name xml:lang="x-default">Emarsys Profile Fields</display-name>
+        <staging-mode>no-staging</staging-mode>
+        <storage-scope>site</storage-scope>
+        <key-definition attribute-id="EmarsysProfileFields">
+            <type>string</type>
+            <min-length>0</min-length>
+        </key-definition>
+        <attribute-definitions>
+            <attribute-definition attribute-id="result">
+                <display-name xml:lang="x-default">Retrieved fields</display-name>
+                <type>text</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+        </attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="ProfileFields">
+                <display-name xml:lang="x-default">Profile Fields</display-name>
+                <attribute attribute-id="EmarsysProfileFields"/>
+                <attribute attribute-id="result"/>
+            </attribute-group>
+        </group-definitions>
+    </custom-type>
+
+    <custom-type type-id="EmarsysSmartInsightConfiguration">
+        <staging-mode>no-staging</staging-mode>
+        <storage-scope>site</storage-scope>
+        <key-definition attribute-id="SmartInsightConfig">
+            <type>string</type>
+            <min-length>0</min-length>
+        </key-definition>
+        <attribute-definitions>
+            <attribute-definition attribute-id="mappedFields">
+                <display-name xml:lang="x-default">Mapped Fields</display-name>
+                <description xml:lang="x-default">JSON object of the chosen fields and placeholders</description>
+                <type>text</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+        </attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="EmarsysSmartInsightConfiguration">
+                <display-name xml:lang="x-default">Emarsys SmartInsight Configuration</display-name>
+                <attribute attribute-id="SmartInsightConfig"/>
+                <attribute attribute-id="mappedFields"/>
+            </attribute-group>
+        </group-definitions>
+    </custom-type>
+
     <custom-type type-id="EmarsysTransactionalEmailsConfig">
         <staging-mode>no-staging</staging-mode>
         <storage-scope>site</storage-scope>
@@ -124,118 +238,4 @@
         </group-definitions>
     </custom-type>
 
-    <custom-type type-id="EmarsysDBLoadConfig">
-        <display-name xml:lang="x-default">EmarsysDBLoadConfig</display-name>
-        <staging-mode>no-staging</staging-mode>
-        <storage-scope>site</storage-scope>
-        <key-definition attribute-id="EmarsysDBLoadConfig">
-            <type>string</type>
-            <min-length>0</min-length>
-        </key-definition>
-        <attribute-definitions>
-            <attribute-definition attribute-id="mappedFields">
-                <display-name xml:lang="x-default">Mapped fields</display-name>
-                <type>text</type>
-                <localizable-flag>false</localizable-flag>
-                <mandatory-flag>false</mandatory-flag>
-                <externally-managed-flag>false</externally-managed-flag>
-            </attribute-definition>
-        </attribute-definitions>
-        <group-definitions>
-            <attribute-group group-id="DBLoadConfig">
-                <display-name xml:lang="x-default">Database Load Configuration</display-name>
-                <attribute attribute-id="mappedFields"/>
-                <attribute attribute-id="EmarsysDBLoadConfig"/>
-            </attribute-group>
-        </group-definitions>
-    </custom-type>
-
-    <custom-type type-id="EmarsysSmartInsightConfiguration">
-        <staging-mode>no-staging</staging-mode>
-        <storage-scope>site</storage-scope>
-        <key-definition attribute-id="SmartInsightConfig">
-            <type>string</type>
-            <min-length>0</min-length>
-        </key-definition>
-        <attribute-definitions>
-            <attribute-definition attribute-id="mappedFields">
-                <display-name xml:lang="x-default">Mapped Fields</display-name>
-                <description xml:lang="x-default">JSON object of the chosen fields and placeholders</description>
-                <type>text</type>
-                <localizable-flag>false</localizable-flag>
-                <mandatory-flag>false</mandatory-flag>
-                <externally-managed-flag>false</externally-managed-flag>
-            </attribute-definition>
-        </attribute-definitions>
-        <group-definitions>
-            <attribute-group group-id="EmarsysSmartInsightConfiguration">
-                <display-name xml:lang="x-default">Emarsys SmartInsight Configuration</display-name>
-                <attribute attribute-id="SmartInsightConfig"/>
-                <attribute attribute-id="mappedFields"/>
-            </attribute-group>
-        </group-definitions>
-    </custom-type>
-
-    <custom-type type-id="EmarsysProfileFields">
-        <display-name xml:lang="x-default">Emarsys Profile Fields</display-name>
-        <staging-mode>no-staging</staging-mode>
-        <storage-scope>site</storage-scope>
-        <key-definition attribute-id="EmarsysProfileFields">
-            <type>string</type>
-            <min-length>0</min-length>
-        </key-definition>
-        <attribute-definitions>
-            <attribute-definition attribute-id="result">
-                <display-name xml:lang="x-default">Retrieved fields</display-name>
-                <type>text</type>
-                <localizable-flag>false</localizable-flag>
-                <mandatory-flag>false</mandatory-flag>
-                <externally-managed-flag>false</externally-managed-flag>
-            </attribute-definition>
-        </attribute-definitions>
-        <group-definitions>
-            <attribute-group group-id="ProfileFields">
-                <display-name xml:lang="x-default">Profile Fields</display-name>
-                <attribute attribute-id="EmarsysProfileFields"/>
-                <attribute attribute-id="result"/>
-            </attribute-group>
-        </group-definitions>
-    </custom-type>
-
-    <custom-type type-id="EmarsysPredictConfig">
-        <display-name xml:lang="x-default">Emarsys Predict Condiguration</display-name>
-        <staging-mode>no-staging</staging-mode>
-        <storage-scope>site</storage-scope>
-        <key-definition attribute-id="EmarsysPredictConfig">
-            <type>string</type>
-            <min-length>0</min-length>
-        </key-definition>
-        <attribute-definitions>
-            <attribute-definition attribute-id="exportType">
-                <display-name xml:lang="x-default">Export Type</display-name>
-                <type>string</type>
-                <localizable-flag>false</localizable-flag>
-                <mandatory-flag>false</mandatory-flag>
-                <externally-managed-flag>false</externally-managed-flag>
-                <min-length>0</min-length>
-            </attribute-definition>
-            <attribute-definition attribute-id="mappedFields">
-                <display-name xml:lang="x-default">Mapped fields</display-name>
-                <type>text</type>
-                <localizable-flag>false</localizable-flag>
-                <mandatory-flag>false</mandatory-flag>
-                <externally-managed-flag>false</externally-managed-flag>
-            </attribute-definition>
-        </attribute-definitions>
-        <group-definitions>
-            <attribute-group group-id="PredictConfig">
-                <display-name xml:lang="x-default">Predict Configuration</display-name>
-                <attribute attribute-id="mappedFields"/>
-                <attribute attribute-id="exportType"/>
-                <attribute attribute-id="lastModified" system="true"/>
-                <attribute attribute-id="EmarsysPredictConfig"/>
-            </attribute-group>
-        </group-definitions>
-    </custom-type>
-	
 </metadata>
