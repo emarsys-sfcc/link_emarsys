@@ -1,6 +1,7 @@
 'use strict';
 
-var emarsysService = require('int_emarsys/cartridge/scripts/service/emarsysService');
+var Resource = require('dw/web/Resource');
+var CustomObjectMgr = require('dw/object/CustomObjectMgr');
 
 /**
  * @description Make call to Emarsys
@@ -10,67 +11,108 @@ var emarsysService = require('int_emarsys/cartridge/scripts/service/emarsysServi
  * @return {Object} - object with response data
  */
 function makeCallToEmarsys(endpoint, requestBody, requestMethod) {
+    var emarsysService = require('int_emarsys/cartridge/scripts/service/emarsysService');
     var responseBody = {};
-    var resultObj = {};
+    var errorText = '';
 
     var response = emarsysService.call(endpoint, requestBody, requestMethod);
-    if (empty(response) || response.status === 'ERROR') {
-        resultObj = {
-            status: 'ERROR',
-            responseCode: response.error,
-            responseMessage: response.msg
-        };
+    if (!response || response.status === 'ERROR') {
+        errorText = response.msg + ' (' +
+            Resource.msg('emarsys.response.code', 'errorMessages', null) +
+            response.error + ')';
         if (response.errorMessage) {
             try {
                 responseBody = JSON.parse(response.errorMessage);
-                resultObj.replyCode = responseBody.replyCode;
-                resultObj.replyMessage = responseBody.replyText;
+                errorText = responseBody.replyText + ' (' +
+                    Resource.msg('emarsys.reply.code', 'errorMessages', null) +
+                    responseBody.replyCode + ')';
             } catch (err) {
-                resultObj.replyMessage = response.errorMessage;
+                errorText = response.errorMessage;
             }
         }
-        return resultObj;
+        throw new Error(errorText);
     }
-    return {
-        status: 'OK',
-        result: JSON.parse(response.object)
-    };
+    return JSON.parse(response.object);
 }
 
 /**
  * Parse string representation of array
  * @param {string} listText - string representation of Array (may be empty)
- * @return {Array} - parsed array
+ * @return {Array} - parsed array (null for parse error)
  */
 function parseList(listText) {
-    if (!listText.length) {
-        return [];
+    var list = [];
+    if (listText && listText.length) {
+        try {
+            list = JSON.parse(listText);
+        } catch (err) {
+            list = null;
+        }
     }
-    return JSON.parse(listText);
+    return list;
+}
+
+/**
+ * Reads specified fields of EmarsysExternalEvents custom object
+ * @param {Array} fieldsKeys - keys of fields to read
+ * @param {string} objectKey - EmarsysExternalEvents custom object key
+ * @return {Object} - custom object data
+ */
+function readEventsCustomObject(fieldsKeys, objectKey) {
+    var custom = {};
+    var customObjectKey = objectKey;
+
+    // get object which contain external events description (on BM side)
+    custom.object = CustomObjectMgr.getCustomObject('EmarsysExternalEvents', customObjectKey);
+    if (custom.object === null) {
+        throw new Error(
+            Resource.msg('custom.object.error1', 'errorMessages', null) +
+            customObjectKey +
+            Resource.msg('custom.object.error2', 'errorMessages', null)
+        );
+    }
+
+    custom.fields = {};
+    fieldsKeys.forEach(function (fieldKey) {
+        var list = parseList(custom.object.custom[fieldKey]);
+        var isFieldInvalid = false;
+        if (fieldKey === 'newsletterSubscriptionSource' || fieldKey === 'otherSource') {
+            isFieldInvalid = !list || list.length === 0;
+        } else {
+            isFieldInvalid = !list;
+        }
+        if (isFieldInvalid) {
+            throw new Error(
+                Resource.msg('invalid.field.error1', 'errorMessages', null) +
+                fieldKey +
+                Resource.msg('invalid.field.error2', 'errorMessages', null)
+            );
+        }
+        this.fields[fieldKey] = list;
+    }, custom);
+
+    return custom;
 }
 
 /**
  * Event name formatter for Emarsys side
- * @param {string} eventName - BM side event name
+ * @param {string} sfccName - BM side event name
  * @return {string} - Emarsys side event name
  */
-function eventNameFormatter(eventName) {
+function eventNameFormatter(sfccName) {
     var formattedName = '';
-    formattedName = eventName.replace(/[-\s]+/g, '_');
+    formattedName = sfccName.replace(/[-\s]+/g, '_');
     formattedName = formattedName.replace(/([a-z])([A-Z])/g, '$1_$2');
     return 'SFCC_' + formattedName.toUpperCase();
 }
 
 /**
  * Gets list of not mapped sfcc events
- * @param {dw.object.CustomObject} eventsCustomObject - all external events description
- * @param {string} namesKey - key of list with event names
+ * @param {Array} namesList - sfcc event names list
  * @param {Array} descriptionsList - mapped sfcc events descriptions
  * @return {Array} - not mapped events list
  */
-function getNotMappedEvents(eventsCustomObject, namesKey, descriptionsList) {
-    var namesList = parseList(eventsCustomObject.custom[namesKey]);
-
+function getNotMappedEvents(namesList, descriptionsList) {
     var notMappedEvents = namesList.filter(function (sfccName) {
         return this.every(function (eventObject) {
             return eventObject.sfccName !== this.sfccName;
@@ -82,32 +124,32 @@ function getNotMappedEvents(eventsCustomObject, namesKey, descriptionsList) {
 
 /**
  * Create descriptions collection for used Emarsys events
- * @param {Array} descriptionList - events description list
- * @return {Object} - descriptions collection for used Emarsys events
+ * @param {Array} allEmarsysEvents - description list from Emarsys
+ * @param {Array} sfccNames - sfcc event names list
+ * @return {Array} - all allowed Emarsys events descriptions
  */
-function collectEmarsysDescriptions(descriptionList) {
-    var uniqueDescriptionsCollection = {};
-    descriptionList.forEach(function (descriptionObj) {
-        this[descriptionObj.emarsysId] = {
-            emarsysId: descriptionObj.emarsysId,
-            emarsysName: descriptionObj.emarsysName
+function getEmarsysEvents(allEmarsysEvents, sfccNames) {
+    var allowedEmarsysDescriptions = sfccNames.map(function (name) {
+        var emarsysDescription = {
+            id: '',
+            name: eventNameFormatter(name)
         };
-    }, uniqueDescriptionsCollection);
+        this.some(function (descriptionObj) {
+            var isAppropriate = this.name === descriptionObj.name;
+            if (isAppropriate) { this.id = descriptionObj.id; }
+            return isAppropriate;
+        }, emarsysDescription);
+        return emarsysDescription;
+    }, allEmarsysEvents);
 
-    // rewrite results from object into array
-    var emarsysIds = Object.keys(uniqueDescriptionsCollection);
-    var uniqueDescriptionsList = [];
-    for (var i = 0; i < emarsysIds.length; i++) {
-        var currentId = emarsysIds[i];
-        uniqueDescriptionsList.push(uniqueDescriptionsCollection[currentId]);
-    }
-    return uniqueDescriptionsList;
+    return allowedEmarsysDescriptions;
 }
 
 module.exports = {
     makeCallToEmarsys: makeCallToEmarsys,
     parseList: parseList,
+    readEventsCustomObject: readEventsCustomObject,
     getNotMappedEvents: getNotMappedEvents,
-    collectEmarsysDescriptions: collectEmarsysDescriptions,
+    getEmarsysEvents: getEmarsysEvents,
     eventNameFormatter: eventNameFormatter
 };

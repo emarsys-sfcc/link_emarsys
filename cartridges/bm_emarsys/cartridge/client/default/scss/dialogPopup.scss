@@ -59,15 +59,15 @@
     float: right;
     margin-right: 10px;
     cursor: pointer;
-}
 
-.dialog-container .dialog-close-button::before {
-    content: '\2716';
-    color: #717171;
-    font-family: 'fontAwesome';
-    font-size: 16px;
-    height: 30px;
-    line-height: 28px;
+    &::before {
+        content: '\2716';
+        color: #717171;
+        font-family: 'fontAwesome';
+        font-size: 16px;
+        height: 30px;
+        line-height: 28px;
+    }
 }
 
 .dialog-container .dialog-content-block {
@@ -87,11 +87,11 @@
 .dialog-container .dialog-cancel-button {
     background-color: #fff;
     color: #009ddc;
-}
 
-.dialog-container .dialog-cancel-button:hover {
-    background-color: #d5e5f9;
-    text-decoration: none;
+    &:hover {
+        background-color: #d5e5f9;
+        text-decoration: none;
+    }
 }
 
 .dialog-container .dialog-footer-block .button-basic {

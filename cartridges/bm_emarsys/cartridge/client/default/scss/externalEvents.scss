@@ -1,4 +1,7 @@
-@import "popupDialog";
+@import "dialogPopup";
+
+$header-column-padding: 8px;
+$column-padding: 5px;
 
 .external-events-content {
     padding: 0.9375rem;
@@ -31,7 +34,7 @@ div.table-title-column {
 }
 
 .table-header .column-basic {
-    padding-left: 8px;
+    padding-left: $header-column-padding;
 }
 
 .row-basic {
@@ -55,7 +58,7 @@ div.table-title-column {
 }
 
 .sfcc-name-column {
-    padding-left: 5px;
+    padding-left: $column-padding;
     width: 42%;
 }
 
@@ -70,6 +73,18 @@ div.table-title-column {
     justify-content: center;
 }
 
+.empty-notification-block {
+    width: -webkit-fit-content;
+    width: fit-content;
+    height: -webkit-fit-content;
+    height: fit-content;
+    margin-left: 25px;
+}
+
+.empty-notification {
+    line-height: 40px;
+}
+
 /* Common styles */
 .input-placeholder {
     border: 0.5px solid transparent;
@@ -77,16 +92,16 @@ div.table-title-column {
     background: transparent;
     width: 100%;
     padding: 5px;
-}
 
-.input-placeholder:hover {
-    border: 0.5px solid #40a3f9;
-    box-shadow: 0 0 5px #bbb;
-}
+    &:hover {
+        border: 0.5px solid #40a3f9;
+        box-shadow: 0 0 5px #bbb;
+    }
 
-.input-placeholder:focus {
-    border-color: #40a3f9;
-    box-shadow: 0 0 5px #bbb;
+    &:focus {
+        border-color: #40a3f9;
+        box-shadow: 0 0 5px #bbb;
+    }
 }
 
 .button-basic {
@@ -109,10 +124,10 @@ div.table-title-column {
     -ms-user-select: none;
     user-select: none;
     cursor: pointer;
-}
 
-.button-basic:hover {
-    background-color: #40a3f9;
+    &:hover {
+        background-color: #40a3f9;
+    }
 }
 
 .select-basic {
@@ -123,25 +138,25 @@ div.table-title-column {
     font-size: 1.4rem;
     background-color: #fff;
     background-image: none;
-    padding: 1px 5px;
+    padding: 1px $column-padding;
     margin: 0;
     min-width: 129px;
-}
 
-.select-basic:focus {
-    outline: none;
-    border: 1px solid #40a3f9;
-}
+    &:focus {
+        outline: none;
+        border: 1px solid #40a3f9;
+    }
 
-.select-basic:hover {
-    border: 1px solid #40a3f9;
-}
+    &:hover {
+        border: 1px solid #40a3f9;
+    }
 
-.select-basic:disabled {
-    border: 0.5px solid transparent;
-    color: black;
-    background-color: transparent !important;
-    pointer-events: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
+    &:disabled {
+        border: 0.5px solid transparent;
+        color: black;
+        background-color: transparent !important;
+        pointer-events: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
 }

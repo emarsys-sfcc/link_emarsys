@@ -2,72 +2,84 @@
 
 var server = require('server');
 var Transaction = require('dw/system/Transaction');
-var CustomObjectMgr = require('dw/object/CustomObjectMgr');
 var URLUtils = require('dw/web/URLUtils');
-var eventsHelper = require('bm_emarsys/cartridge/scripts/helpers/BMEmarsysEventsHelper');
+var Resource = require('dw/web/Resource');
 
 server.get('Show',
     server.middleware.https,
     function (req, res, next) {
+        var eventsHelper = require('bm_emarsys/cartridge/scripts/helpers/BMEmarsysEventsHelper');
         var customObjectKey = 'StoredEvents';
+        var custom = {};
 
-        // get object which contain external events description (on BM side)
-        var eventsCustomObject = CustomObjectMgr.getCustomObject('EmarsysExternalEvents', customObjectKey);
-        if (eventsCustomObject === null) {
+        // read specified fields from custom object EmarsysExternalEvents
+        try {
+            custom = eventsHelper.readEventsCustomObject([
+                'newsletterSubscriptionSource',
+                'otherSource',
+                'newsletterSubscriptionResult',
+                'otherResult'
+            ], customObjectKey);
+        } catch (err) {
             res.render('components/errorPage', {
-                response: {
-                    status: 'ERROR',
-                    message: 'Custom object with id "' + customObjectKey + '"dos\'t exist'
-                }
+                message: Resource.msg('custom.object.message', 'errorMessages', null),
+                error: err
             });
             return next();
         }
 
-        // read sfcc events descriptions
-        var subscriptionSfccDescriptions = eventsHelper.parseList(eventsCustomObject.custom.newsletterSubscriptionResult);
-        var otherSfccDescriptions = eventsHelper.parseList(eventsCustomObject.custom.otherResult);
-
-        // separate not mapped sfcc events
+        // separate not mapped sfcc events (options for new event name)
         var subscriptionNotMappedEvents = eventsHelper.getNotMappedEvents(
-            eventsCustomObject,
-            'newsletterSubscriptionSource',
-            subscriptionSfccDescriptions
+            custom.fields.newsletterSubscriptionSource,
+            custom.fields.newsletterSubscriptionResult
         );
         var otherNotMappedEvents = eventsHelper.getNotMappedEvents(
-            eventsCustomObject,
-            'otherSource',
-            otherSfccDescriptions
+            custom.fields.otherSource,
+            custom.fields.otherResult
         );
 
-        // get Emarsys events descriptions collection
-        var subscriptionEmarsysDescriptions = eventsHelper.collectEmarsysDescriptions(subscriptionSfccDescriptions);
-        var otherEmarsysDescriptions = eventsHelper.collectEmarsysDescriptions(otherSfccDescriptions);
-
-        // send request to get all external events description from Emarsys
-        var response = eventsHelper.makeCallToEmarsys('event', null, 'GET');
-        if (response.status === 'ERROR') {
-            res.render('components/errorPage', { response: response });
+        var response = [];
+        try {
+            // send request to get all external events description from Emarsys
+            response = eventsHelper.makeCallToEmarsys('event', null, 'GET');
+        } catch (err) {
+            res.render('components/errorPage', {
+                message: Resource.msg('emarsys.request.message', 'errorMessages', null),
+                error: err,
+                continueUrl: URLUtils.url(
+                    'ExternalEvents-Show',
+                    'CurrentMenuItemId', 'emarsys_integration',
+                    'menuname', 'External Events',
+                    'mainmenuname', 'Emarsys Manager'
+                ).toString()
+            });
             return next();
         }
-        var allEmarsysEvents = response.result.data;
+        var allEmarsysEvents = response.data;
+
+        // get Emarsys events descriptions collection (emarsys names options for add and update functionality)
+        var subscriptionEmarsysDescriptions = eventsHelper.getEmarsysEvents(
+            allEmarsysEvents, custom.fields.newsletterSubscriptionSource
+        );
+        var otherEmarsysDescriptions = eventsHelper.getEmarsysEvents(
+            allEmarsysEvents, custom.fields.otherSource
+        );
 
         res.render('externalEvents', {
             contentTemplate: 'external.events.configurations',
             urls: {
                 show: URLUtils.url('ExternalEvents-Show').toString(),
                 addEvent: URLUtils.url('ExternalEvents-Add').toString(),
-                editEvent: URLUtils.url('ExternalEvents-Edit').toString(),
-                removeEvent: URLUtils.url('ExternalEvents-Remove').toString()
+                updateEvent: URLUtils.url('ExternalEvents-Update').toString()
             },
             response: {
                 status: 'OK',
-                subscriptionSfccDescriptions: subscriptionSfccDescriptions,
-                otherSfccDescriptions: otherSfccDescriptions,
+                subscriptionSfccDescriptions: custom.fields.newsletterSubscriptionResult,
+                otherSfccDescriptions: custom.fields.otherResult,
                 subscriptionNotMappedEvents: subscriptionNotMappedEvents,
                 otherNotMappedEvents: otherNotMappedEvents,
                 subscriptionEmarsysDescriptions: subscriptionEmarsysDescriptions,
-                otherEmarsysDescriptions: otherEmarsysDescriptions,
-                allEmarsysEvents: allEmarsysEvents
+                otherEmarsysDescriptions: otherEmarsysDescriptions
             }
         });
 
@@ -81,72 +93,69 @@ server.get('Show',
 server.post('Add',
     server.middleware.https,
     function (req, res, next) {
+        var eventsHelper = require('bm_emarsys/cartridge/scripts/helpers/BMEmarsysEventsHelper');
         var event = {
-            type: request.httpParameterMap.eventType.value,
-            emarsysId: request.httpParameterMap.emarsysId.value,
-            emarsysName: request.httpParameterMap.emarsysName.value,
+            type: request.httpParameterMap.type.value,
+            emarsysId: request.httpParameterMap.emarsysId.value || '',
+            emarsysName: request.httpParameterMap.emarsysName.value || '',
             sfccName: request.httpParameterMap.sfccName.value
         };
         var customObjectKey = 'StoredEvents';
+        var custom = {};
 
-        // get object which contain external events data (on BM side)
-        var eventsCustomObject = CustomObjectMgr.getCustomObject('EmarsysExternalEvents', customObjectKey);
-        if (eventsCustomObject === null) {
+        // read events descriptions list from custom object
+        var fieldId = (event.type === 'subscription') ? 'newsletterSubscriptionResult' : 'otherResult';
+        try {
+            custom = eventsHelper.readEventsCustomObject([fieldId], customObjectKey);
+        } catch (err) {
             res.json({
                 response: {
                     status: 'ERROR',
-                    message: 'Custom object with id "' + customObjectKey + '"dos\'t exist'
+                    message: err.errorText
                 }
             });
             return next();
         }
 
-        // get events descriptions list
-        var eventsDescriptionList = '';
-        if (event.type === 'subscription') {
-            eventsDescriptionList = JSON.parse(eventsCustomObject.custom.newsletterSubscriptionResult);
-        } else if (event.type === 'other') {
-            eventsDescriptionList = JSON.parse(eventsCustomObject.custom.otherResult);
+        var eventsDescriptionList = custom.fields[fieldId];
+        if (!empty(event.emarsysName) && empty(event.emarsysId)) {
+            event.emarsysStatus = 'new';
+            var response = [];
+            try {
+                // send request to create event with specified name
+                response = eventsHelper.makeCallToEmarsys('event', { name: event.emarsysName }, 'POST');
+            } catch (err) {
+                res.json({
+                    response: {
+                        status: 'ERROR',
+                        message: Resource.msg('emarsys.error', 'errorMessages', null) +
+                            err.errorText
+                    }
+                });
+                return next();
+            }
+
+            event.emarsysId = response.data.id;
+            event.emarsysName = response.data.name;
+        } else {
+            event.emarsysStatus = 'specified';
         }
 
-        // to find out index of the event object in events descrptions list
+        // prepare description object for the event
+        var descriptionObject = {
+            sfccName: event.sfccName,
+            emarsysId: event.emarsysId,
+            emarsysName: event.emarsysName
+        };
+
+        // get event description index (to prevent names duplication)
         eventsDescriptionList.forEach(function (descriptionObj, i) {
             if (descriptionObj.sfccName === this.sfccName) {
                 this.descriptionIndex = i;
             }
         }, event);
 
-        if (event.emarsysId && event.emarsysName) {
-            // is this emarsys event unique or mapped to another sfcc event
-            event.emarsysEventStatus = 'unique';
-            eventsDescriptionList.forEach(function (descriptionObj) {
-                if (descriptionObj.sfccName !== this.sfccName &&
-                    descriptionObj.emarsysId === this.emarsysId) {
-                    this.emarsysEventStatus = 'not unique';
-                }
-            }, event);
-        } else {
-            var emarsysEventName = eventsHelper.eventNameFormatter(event.sfccName);
-            // send request to create event with specified name
-            var response = eventsHelper.makeCallToEmarsys('event', { name: emarsysEventName }, 'POST');
-            if (response.status === 'ERROR') {
-                res.json({ response: response });
-                return next();
-            }
-
-            event.emarsysId = response.result.data.id;
-            event.emarsysName = response.result.data.name;
-            event.emarsysEventStatus = 'new';
-        }
-
-        // prepare description object for the event
-        var descriptionObject = {
-            emarsysId: event.emarsysId,
-            emarsysName: event.emarsysName,
-            sfccName: event.sfccName
-        };
-
-        // rewrite created event description
+        // add or update external event description
         if (event.descriptionIndex) {
             eventsDescriptionList.splice(event.descriptionIndex, 1, descriptionObject);
         } else {
@@ -156,9 +165,100 @@ server.post('Add',
         // store events description list to custom object field
         Transaction.wrap(function () {
             if (event.type === 'subscription') {
-                eventsCustomObject.custom.newsletterSubscriptionResult = JSON.stringify(eventsDescriptionList);
+                custom.object.custom.newsletterSubscriptionResult = JSON.stringify(eventsDescriptionList);
             } else if (event.type === 'other') {
-                eventsCustomObject.custom.otherResult = JSON.stringify(eventsDescriptionList);
+                custom.object.custom.otherResult = JSON.stringify(eventsDescriptionList);
+            }
+        });
+
+        res.json({
+            response: {
+                status: 'OK',
+                result: event
+            }
+        });
+        return next();
+    }
+);
+
+/**
+ * @description Update new Emarsys external event
+ */
+server.post('Update',
+    server.middleware.https,
+    function (req, res, next) {
+        var eventsHelper = require('bm_emarsys/cartridge/scripts/helpers/BMEmarsysEventsHelper');
+        var event = {
+            type: request.httpParameterMap.type.value,
+            sfccName: request.httpParameterMap.sfccName.value,
+            emarsysId: request.httpParameterMap.emarsysId.value || '',
+            emarsysName: request.httpParameterMap.emarsysName.value || ''
+        };
+        var customObjectKey = 'StoredEvents';
+        var custom = {};
+
+        // read events descriptions list from custom object
+        var fieldId = (event.type === 'subscription') ? 'newsletterSubscriptionResult' : 'otherResult';
+        try {
+            custom = eventsHelper.readEventsCustomObject([fieldId], customObjectKey);
+        } catch (err) {
+            res.json({
+                response: {
+                    status: 'ERROR',
+                    message: err.errorText
+                }
+            });
+            return next();
+        }
+
+        var eventsDescriptionList = custom.fields[fieldId];
+        if (!empty(event.emarsysName) && empty(event.emarsysId)) {
+            event.emarsysStatus = 'new';
+            var response = [];
+            try {
+                // send request to create event with specified name
+                response = eventsHelper.makeCallToEmarsys('event', { name: event.emarsysName }, 'POST');
+            } catch (err) {
+                res.json({
+                    response: {
+                        status: 'ERROR',
+                        message: Resource.msg('emarsys.error', 'errorMessages', null) +
+                            err.errorText
+                    }
+                });
+                return next();
+            }
+
+            event.emarsysId = response.data.id;
+            event.emarsysName = response.data.name;
+        } else {
+            event.emarsysStatus = 'specified';
+        }
+
+        // get event description index
+        event.descriptionIndex = eventsDescriptionList.length;
+        eventsDescriptionList.forEach(function (descriptionObj, i) {
+            if (descriptionObj.sfccName === this.sfccName) {
+                this.descriptionIndex = i;
+            }
+        }, event);
+
+        // prepare description object for the event
+        var descriptionObject = {
+            sfccName: event.sfccName,
+            emarsysId: event.emarsysId,
+            emarsysName: event.emarsysName
+        };
+
+        // update external event description in the list
+        eventsDescriptionList.splice(event.descriptionIndex, 1, descriptionObject);
+
+        // store events description list to custom object field
+        Transaction.wrap(function () {
+            if (event.type === 'subscription') {
+                custom.object.custom.newsletterSubscriptionResult = JSON.stringify(eventsDescriptionList);
+            } else if (event.type === 'other') {
+                custom.object.custom.otherResult = JSON.stringify(eventsDescriptionList);
             }
         });
 

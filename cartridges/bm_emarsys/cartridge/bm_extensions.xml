@@ -146,6 +146,7 @@
 		<sub-pipelines>
             <pipeline name="ExternalEvents-Show" />
             <pipeline name="ExternalEvents-Add" />
+            <pipeline name="ExternalEvents-Update" />
 		</sub-pipelines>
         <parameters>
             <parameter name="menuname" value="External Events" />

@@ -4,36 +4,46 @@
 * @output ErrorMsg : String
 */
 var Status = require('dw/system/Status');
-var CustomObjectMgr = require('dw/object/CustomObjectMgr');
-var eventsHelper = require('bm_emarsys/cartridge/scripts/helpers/BMEmarsysEventsHelper');
 
 var externalEvent = {
+    eventsHelper: require('bm_emarsys/cartridge/scripts/helpers/BMEmarsysEventsHelper'),
     logger: require('dw/system/Logger').getLogger('externalEvent', 'externalEvent'),
     execute: function (params) {
         try {
             var customObjectKey = params.customObjectKey || 'StoredEvents';
+            var custom = {};
 
-            // get object which contain external events data (on BM side)
-            var eventsCustomObject = CustomObjectMgr.getCustomObject('EmarsysExternalEvents', customObjectKey);
-            if (eventsCustomObject === null) {
-                throw new Error('Custom object with id "' + customObjectKey + '"dos\'t exist');
-            }
+            // read specified fields from custom object EmarsysExternalEvents
+            custom = this.eventsHelper.readEventsCustomObject([
+                'newsletterSubscriptionSource',
+                'otherSource'
+            ], customObjectKey);
+
+            var subscriptionNames = custom.fields.newsletterSubscriptionSource;
+            var otherNames = custom.fields.otherSource;
+
+            this.eventsDescriptionList = this.getEventsDescription();
 
             // create newsletter subscription external events
-            var subscriptionNames = JSON.parse(eventsCustomObject.custom.newsletterSubscriptionSource);
-            eventsCustomObject.custom.newsletterSubscriptionResult = this.createEvents(subscriptionNames);
-
-            // create newsletter subscription external events
-            var otherNames = JSON.parse(eventsCustomObject.custom.otherSource);
-            eventsCustomObject.custom.otherResult = this.createEvents(otherNames);
-
-            this.logger.error('externalEvent: All events were succesfully created');
+            custom.object.custom.newsletterSubscriptionResult = this.createEvents(subscriptionNames);
+            // create other external events
+            custom.object.custom.otherResult = this.createEvents(otherNames);
         } catch (err) {
             this.logger.error('externalEvent: Error ' + err.message + '\n' + err.stack);
             return new Status(Status.ERROR, 'ERROR');
         }
 
+        this.logger.error('externalEvent: All events were succesfully created');
         return new Status(Status.OK, 'OK');
+    },
+    /**
+     * @description get description of all Emarsys external events
+     * @return {Array} list of objects with external events description
+     */
+    getEventsDescription: function () {
+        // send request to get events description list
+        var response = this.eventsHelper.makeCallToEmarsys('event', null, 'GET');
+        return response.data;
     },
     /**
      * Create events and prepare their description
@@ -41,18 +51,16 @@ var externalEvent = {
      * @return {string} - created events description
      */
     createEvents: function (namesList) {
-        this.eventsDescriptionList = this.getEventsDescription();
-
         var descriptionsList = namesList.map(function (eventName) {
-            var formattedName = eventsHelper.eventNameFormatter(eventName);
+            var formattedName = this.eventsHelper.eventNameFormatter(eventName);
             var eventDescription = this.queryEventDescription(formattedName);
             if (!eventDescription) {
                 eventDescription = this.createExternalEvent(formattedName);
             }
             return {
+                sfccName: eventName,
                 emarsysId: eventDescription.id,
-                emarsysName: eventDescription.name,
-                sfccName: eventName
+                emarsysName: eventDescription.name
             };
         }, this);
 
@@ -79,44 +87,11 @@ var externalEvent = {
         var eventDescription = {};
 
         // send request to create event with specified name
-        var response = eventsHelper.makeCallToEmarsys('event', { name: eventName }, 'POST');
-        if (response.status === 'ERROR') {
-            if (response.replyCode) {
-                if (response.replyCode === 5003) {
-                    // event with such name already exists
-                    eventDescription = this.queryExternalEvent(eventName);
-                } else {
-                    throw new Error('Create event error: ' + response.replyMessage + '; Reply code: ' + response.replyCode + ';');
-                }
-            } else {
-                throw new Error('Response error: ' + response.responseMessage + '; Response code: ' + response.responseCode + ';');
-            }
-        } else {
-            eventDescription = response.result.data;
-        }
+        var response = this.eventsHelper.makeCallToEmarsys('event', { name: eventName }, 'POST');
+        eventDescription = response.data;
+        this.eventsDescriptionList.push(eventDescription);
 
         return eventDescription;
-    },
-    /**
-     * @description get description of all Emarsys external events
-     * @return {Array} list of objects with external events description
-     */
-    getEventsDescription: function () {
-        var eventsDescriptionList = [];
-
-        // send request to get events description list
-        var response = eventsHelper.makeCallToEmarsys('event', null, 'GET');
-        if (response.status === 'ERROR') {
-            if (response.replyCode) {
-                throw new Error('Get events list error: ' + response.replyMessage + '; Reply code: ' + response.replyCode + ';');
-            } else {
-                throw new Error('Response error: ' + response.responseMessage + '; Response code: ' + response.responseCode + ';');
-            }
-        } else {
-            eventsDescriptionList = response.result.data;
-        }
-
-        return eventsDescriptionList;
     }
 };
 
