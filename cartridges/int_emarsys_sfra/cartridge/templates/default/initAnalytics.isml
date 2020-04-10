@@ -1,4 +1,4 @@
 <script>
-    window.analyticsData = {};
-    analyticsData.emarsysAnalytics = <isprint value="${JSON.stringify(pdict.analyticsData)}" encoding="off"/> || {isEnableEmarsys: false};
+    window.emarsysAnalyticsData = {};
+    emarsysAnalyticsData.emarsysAnalytics = <isprint value="${JSON.stringify(pdict.analyticsData)}" encoding="off"/> || {isEnableEmarsys: false};
 </script>

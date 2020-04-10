@@ -148,8 +148,9 @@ function getStorefrontData() {
  */
 function getCustomerInfo(data) {
     var isCustomer = (customer.authenticated && customer.registered);
+    var order = isSFRA ? data.order : data.pdict.Order;
     var customerData = {
-        guestEmail: Object.hasOwnProperty.call(data, 'order') ? data.order.getCustomerEmail() : '',
+        guestEmail: !empty(order) ? order.getCustomerEmail() : false,
         isCustomer: isCustomer
     };
 
@@ -176,6 +177,7 @@ function PageData() {
         var emarsysAnalytics = {};
         isSFRA = (typeof args === 'string');
         var pageType = isSFRA ? args : args.ns;
+        var isAnalyticPage = false;
 
         if (isEnableEmarsys) {
             var mapping = {
@@ -186,20 +188,21 @@ function PageData() {
                 storefront: getStorefrontData
             };
 
-            if (pageType in mapping) {
-                emarsysAnalytics = mapping[pageType](data || args);
-                emarsysAnalytics.locale = request.locale;
+            isAnalyticPage = Object.prototype.hasOwnProperty.call(mapping, pageType);
 
-                if (isSFRA) {
-                    emarsysAnalytics.pageType = pageType;
-                    emarsysAnalytics.customerData = getCustomerInfo(data);
-                    emarsysAnalytics.currentBasket = ScarabQueueHelper.getCartData(require('dw/order/BasketMgr').getCurrentBasket());
-                }
+            if (isAnalyticPage) {
+                emarsysAnalytics = mapping[pageType](data || args);
+                emarsysAnalytics.currentBasket = ScarabQueueHelper.getCartData(require('dw/order/BasketMgr').getCurrentBasket());
+                emarsysAnalytics.customerData = getCustomerInfo(data || args);
+                emarsysAnalytics.pageType = pageType;
+                emarsysAnalytics.predictMerchantID = customPreferences.emarsysPredictMerchantID;
+                emarsysAnalytics.locale = request.locale;
+                emarsysAnalytics.isSFRA = isSFRA;
             }
         }
 
-        emarsysAnalytics.predictMerchantID = customPreferences.emarsysPredictMerchantID;
         emarsysAnalytics.isEnableEmarsys = isEnableEmarsys;
+        emarsysAnalytics.isAnalyticPage = isAnalyticPage;
 
         return emarsysAnalytics;
     };

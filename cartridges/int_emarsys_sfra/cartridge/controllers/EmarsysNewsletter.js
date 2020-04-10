@@ -226,7 +226,6 @@ server.get(
     server.middleware.https,
     function (req, res, next) {
         emarsysSFRAHelper.emarsysDisabledTemplate(res);
-
         next();
     }
 );
