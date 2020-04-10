@@ -4,11 +4,11 @@ var server = require('server');
 var Transaction = require('dw/system/Transaction');
 var URLUtils = require('dw/web/URLUtils');
 var Resource = require('dw/web/Resource');
+var eventsHelper = require('*/cartridge/scripts/helpers/emarsysEventsHelper');
 
 server.get('Show',
     server.middleware.https,
     function (req, res, next) {
-        var eventsHelper = require('bm_emarsys/cartridge/scripts/helpers/BMEmarsysEventsHelper');
         var customObjectKey = 'StoredEvents';
         var custom = {};
 
@@ -93,7 +93,6 @@ server.get('Show',
 server.post('Add',
     server.middleware.https,
     function (req, res, next) {
-        var eventsHelper = require('bm_emarsys/cartridge/scripts/helpers/BMEmarsysEventsHelper');
         var event = {
             type: request.httpParameterMap.type.value,
             emarsysId: request.httpParameterMap.emarsysId.value || '',
@@ -187,7 +186,6 @@ server.post('Add',
 server.post('Update',
     server.middleware.https,
     function (req, res, next) {
-        var eventsHelper = require('bm_emarsys/cartridge/scripts/helpers/BMEmarsysEventsHelper');
         var event = {
             type: request.httpParameterMap.type.value,
             sfccName: request.httpParameterMap.sfccName.value,

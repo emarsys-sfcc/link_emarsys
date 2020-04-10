@@ -6,7 +6,7 @@
 var Status = require('dw/system/Status');
 
 var externalEvent = {
-    eventsHelper: require('bm_emarsys/cartridge/scripts/helpers/BMEmarsysEventsHelper'),
+    eventsHelper: require('*/cartridge/scripts/helpers/emarsysEventsHelper'),
     logger: require('dw/system/Logger').getLogger('externalEvent', 'externalEvent'),
     execute: function (params) {
         try {
