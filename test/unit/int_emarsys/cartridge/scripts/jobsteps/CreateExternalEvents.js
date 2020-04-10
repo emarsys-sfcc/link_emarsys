@@ -11,10 +11,9 @@ var CustomObjectMgr = require(mockPath + 'dw/object/CustomObjectMgr');
 var emarsysService = require(mockPath + 'service/emarsysService');
 var Site = require(mockPath + 'dw/system/Site');
 
-var cartridgePath = '../../../../../../cartridges/bm_emarsys/';
 var cartridgePathE = '../../../../../../cartridges/int_emarsys/';
 
-var BMEmarsysEventsHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/BMEmarsysEventsHelper.js', {
+var EmarsysEventsHelper = proxyquire(cartridgePathE + 'cartridge/scripts/helpers/emarsysEventsHelper.js', {
     'int_emarsys/cartridge/scripts/service/emarsysService': emarsysService,
     'dw/system/Site': Site
 });
@@ -23,7 +22,7 @@ var CreateExternalEvents = proxyquire(cartridgePathE + 'cartridge/scripts/jobste
     'dw/object/CustomObjectMgr': CustomObjectMgr,
     'dw/system/Status': Status,
     'dw/system/Logger': Logger,
-    'bm_emarsys/cartridge/scripts/helpers/BMEmarsysEventsHelper': BMEmarsysEventsHelper
+    '*/cartridge/scripts/helpers/emarsysEventsHelper': EmarsysEventsHelper
 });
 
 describe('CreateExternalEvents jobstep', () => {
