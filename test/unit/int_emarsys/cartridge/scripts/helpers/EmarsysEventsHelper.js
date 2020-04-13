@@ -4,11 +4,15 @@ var assert = require('chai').assert;
 var proxyquire = require('proxyquire').noCallThru().noPreserveCache();
 
 var mockPath = '../../../../../mocks/';
+var Resource = require(mockPath +'dw/web/Resource');
+var CustomObjectMgr = require(mockPath +'dw/object/CustomObjectMgr');
 var emarsysService = require(mockPath + 'service/emarsysService');
 
 var cartridgePath = '../../../../../../cartridges/int_emarsys/';
 
 var emarsysEventsHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsysEventsHelper.js', {
+    'dw/web/Resource': Resource,
+    'dw/object/CustomObjectMgr': CustomObjectMgr,
     'int_emarsys/cartridge/scripts/service/emarsysService': emarsysService
 });
 
@@ -37,10 +41,7 @@ describe('emarsysEventsHelper Helpers', () => {
         var result = emarsysEventsHelper.makeCallToEmarsys('event/test', {}, 'PUT');
 
         assert.deepEqual(result,{
-            result: {
-                data: []
-            },
-            status: 'OK'
+            data: []
         });
     });
 
@@ -73,24 +74,5 @@ describe('emarsysEventsHelper Helpers', () => {
         var nameKey = 'otherSource';
         var result = emarsysEventsHelper.getNotMappedEvents(eventsCustomObject, nameKey, descriptionsList);
         assert.deepEqual(result,['single']);
-    });
-
-    it('Testing method: collectEmarsysDescriptions', () => {
-        var descriptionList = [
-            {"emarsysId":"1234","emarsysName":"SFCC_CANCELLED_ORDER","sfccName":"cancelled_order"},
-            {"emarsysId":"1244","emarsysName":"SFCC_SINGLE","sfccName":"single"},
-            {"emarsysId":"1278","emarsysName":"SFCC_DOUBLE_OPTIN","sfccName":"double-optin"}];
-        var result = emarsysEventsHelper.collectEmarsysDescriptions(descriptionList);
-        assert.deepEqual(result, [{
-                "emarsysId": "1234",
-                "emarsysName": "SFCC_CANCELLED_ORDER"},
-            {
-                "emarsysId": "1244",
-                "emarsysName": "SFCC_SINGLE"},
-            {
-                "emarsysId": "1278",
-                "emarsysName": "SFCC_DOUBLE_OPTIN"
-            }
-        ]);
     });
 });

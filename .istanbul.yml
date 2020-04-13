@@ -13,6 +13,8 @@ instrumentation:
         "**/scripts/payment/processor/*", # Those are payment processor files, we don't test them
         "webpack.config.js", # This is webpack config for javascript
         "**/app_storefront_base/**", # sfcc cartridge is OOS
+        "**/app_storefront_core/**", # sfcc cartridge is OOS
+        "**/app_storefront_controllers/**", # sfcc cartridge is OOS
         "**/bm_app_storefront_base/**", # sfcc cartridge is OOS
         "**/modules/**", # sfcc cartridge is OOS
         "**/hooks/**", # Those are hooks, we don't test them

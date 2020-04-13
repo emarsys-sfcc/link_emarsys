@@ -5,41 +5,6 @@ var CustomObjectMgr = require('dw/object/CustomObjectMgr');
 var emarsysHelper = new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))();
 
 /**
- * @description triggers external event
- * @param {Object} context - main context object
- * @param {Function} onError - error handler
- * @return {Object} context object
- */
-function triggerExternalEvent(context, onError) {
-    var response = {};
-    var requestObj = {};
-
-    if (!empty(context.externalEventId)) {
-        try {
-            var endpoint = 'event/' + context.externalEventId + '/trigger';
-
-            // context.additionalParams = { first_name: 'Pavel', last_name: 'Kovalyov', optin: 'True' };
-            if (context.additionalParams) {
-                requestObj = setAdditionalParams(context);
-            }
-
-            requestObj.key_id = context.profileFields.email.id;
-            requestObj.external_id = context.email;
-
-            response = emarsysHelper.triggerAPICall(endpoint, requestObj, 'POST');
-
-            if (response.status !== 'OK') {
-                throw new Error(response.errorMessage);
-            }
-        } catch (err) {
-            if (onError) { return onError(err); }
-            throw new Error('[Emarsys triggerEventHelper.js triggerExternalEvent()] - ***Emarsys trigger event data error message:' + err.message + '\n' + err.stack);
-        }
-    }
-    return context;
-}
-
-/**
  * @description Set additional parameters into request object
  * @param {Object} context - main context object
  * @param {Object} requestObject - object with request parameters
@@ -73,6 +38,41 @@ function setAdditionalParams(context, requestObject) {
         });
     }
     return requestObj;
+}
+
+/**
+ * @description triggers external event
+ * @param {Object} context - main context object
+ * @param {Function} onError - error handler
+ * @return {Object} context object
+ */
+function triggerExternalEvent(context, onError) {
+    var response = {};
+    var requestObj = {};
+
+    if (!empty(context.externalEventId)) {
+        try {
+            var endpoint = 'event/' + context.externalEventId + '/trigger';
+
+            // context.additionalParams = { first_name: 'Pavel', last_name: 'Kovalyov', optin: 'True' };
+            if (context.additionalParams) {
+                requestObj = setAdditionalParams(context);
+            }
+
+            requestObj.key_id = context.profileFields.email.id;
+            requestObj.external_id = context.email;
+
+            response = emarsysHelper.triggerAPICall(endpoint, requestObj, 'POST');
+
+            if (response.status !== 'OK') {
+                throw new Error(response.errorMessage);
+            }
+        } catch (err) {
+            if (onError) { return onError(err); }
+            throw new Error('[Emarsys triggerEventHelper.js triggerExternalEvent()] - ***Emarsys trigger event data error message:' + err.message + '\n' + err.stack);
+        }
+    }
+    return context;
 }
 
 /**

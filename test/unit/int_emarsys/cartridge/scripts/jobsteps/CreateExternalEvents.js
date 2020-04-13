@@ -7,6 +7,7 @@ var mockPath = './../../../../../mocks/';
 
 var Logger = require(mockPath + 'dw/system/Logger');
 var Status = require(mockPath + 'dw/system/Status');
+var Resource = require(mockPath +'dw/web/Resource');
 var CustomObjectMgr = require(mockPath + 'dw/object/CustomObjectMgr');
 var emarsysService = require(mockPath + 'service/emarsysService');
 var Site = require(mockPath + 'dw/system/Site');
@@ -14,6 +15,8 @@ var Site = require(mockPath + 'dw/system/Site');
 var cartridgePathE = '../../../../../../cartridges/int_emarsys/';
 
 var EmarsysEventsHelper = proxyquire(cartridgePathE + 'cartridge/scripts/helpers/emarsysEventsHelper.js', {
+    'dw/web/Resource': Resource,
+    'dw/object/CustomObjectMgr': CustomObjectMgr,
     'int_emarsys/cartridge/scripts/service/emarsysService': emarsysService,
     'dw/system/Site': Site
 });
