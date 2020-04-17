@@ -535,6 +535,13 @@
                 <mandatory-flag>false</mandatory-flag>
                 <externally-managed-flag>false</externally-managed-flag>
             </attribute-definition>
+            <attribute-definition attribute-id="emarsysAppId">
+                <display-name xml:lang="x-default">Emarsys appId</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
             <attribute-definition attribute-id="emarsysAsList">
                 <display-name xml:lang="x-default">Create a list with imported contacts</display-name>
                 <type>boolean</type>
@@ -581,6 +588,13 @@
                 <type>set-of-string</type>
                 <mandatory-flag>false</mandatory-flag>
                 <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="emarsysCustomerId">
+                <display-name xml:lang="x-default">emarsys customerId</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
             </attribute-definition>
             <attribute-definition attribute-id="emarsysDBLoadAttributes">
                 <display-name xml:lang="x-default">Attributes for initial database load</display-name>
@@ -646,6 +660,12 @@
                 <externally-managed-flag>false</externally-managed-flag>
                 <min-length>0</min-length>
                 <default-value>en</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="emarsysLoyaltyWalletEnabled">
+                <display-name xml:lang="x-default">Emarsys Loyalty Wallet Enabled</display-name>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
             </attribute-definition>
             <attribute-definition attribute-id="emarsysNewsletter">
                 <display-name xml:lang="x-default">Create auto import with newsletter</display-name>
@@ -804,6 +824,10 @@ Example: {"default":"USD", "en_US":"USD", "it_IT":"EUR", "en_GB":"GBP"}</descrip
                         <display xml:lang="x-default">ALSO_BOUGHT</display>
                         <value>ALSO_BOUGHT</value>
                     </value-definition>
+                    <value-definition>
+                        <display xml:lang="x-default">PERSONAL_REC</display>
+                        <value>PERSONAL_REC</value>
+                    </value-definition>
                 </value-definitions>
             </attribute-definition>
             <attribute-definition attribute-id="emarsysPredictProductAttributes">
@@ -836,6 +860,10 @@ Example: {"default":"USD", "en_US":"USD", "it_IT":"EUR", "en_GB":"GBP"}</descrip
                         <display xml:lang="x-default">CATEGORY</display>
                         <value>CATEGORY</value>
                     </value-definition>
+                    <value-definition>
+                        <display xml:lang="x-default">PERSONAL_REC</display>
+                        <value>PERSONAL_REC</value>
+                    </value-definition>
                 </value-definitions>
             </attribute-definition>
             <attribute-definition attribute-id="emarsysPredictThankYouForOrderPageRecommendationType">
@@ -856,6 +884,10 @@ Example: {"default":"USD", "en_US":"USD", "it_IT":"EUR", "en_GB":"GBP"}</descrip
                     <value-definition>
                         <display xml:lang="x-default">TOPICAL</display>
                         <value>TOPICAL</value>
+                    </value-definition>
+                    <value-definition>
+                        <display xml:lang="x-default">PERSONAL_REC</display>
+                        <value>PERSONAL_REC</value>
                     </value-definition>
                 </value-definitions>
             </attribute-definition>
@@ -891,28 +923,18 @@ Example: {"default":"USD", "en_US":"USD", "it_IT":"EUR", "en_GB":"GBP"}</descrip
                     </value-definition>
                 </value-definitions>
             </attribute-definition>
-            <attribute-definition attribute-id="emarsysSFTPHost">
-                <display-name xml:lang="x-default">SFTP host</display-name>
-                <description xml:lang="x-default">Emarsys SFTP hostname</description>
+            <attribute-definition attribute-id="emarsysRegion">
+                <display-name xml:lang="x-default">Emarsys Region</display-name>
                 <type>string</type>
                 <mandatory-flag>false</mandatory-flag>
                 <externally-managed-flag>false</externally-managed-flag>
                 <min-length>0</min-length>
             </attribute-definition>
-            <attribute-definition attribute-id="emarsysSFTPPassword">
-                <display-name xml:lang="x-default">SFTP Password</display-name>
-                <description xml:lang="x-default">Emarsys SFTP password</description>
+            <attribute-definition attribute-id="emarsysSecret">
+                <display-name xml:lang="x-default">Emarsys Secret</display-name>
                 <type>password</type>
                 <mandatory-flag>false</mandatory-flag>
                 <externally-managed-flag>false</externally-managed-flag>
-            </attribute-definition>
-            <attribute-definition attribute-id="emarsysSFTPUsername">
-                <display-name xml:lang="x-default">SFTP username</display-name>
-                <description xml:lang="x-default">Emarsys SFTP username</description>
-                <type>string</type>
-                <mandatory-flag>false</mandatory-flag>
-                <externally-managed-flag>false</externally-managed-flag>
-                <min-length>0</min-length>
             </attribute-definition>
             <attribute-definition attribute-id="emarsysShippingInformationElements">
                 <display-name xml:lang="x-default">Shipping Information Elements</display-name>
@@ -1006,6 +1028,7 @@ Example: {"default":"USD", "en_US":"USD", "it_IT":"EUR", "en_GB":"GBP"}</descrip
                 <display-name xml:lang="x-default">Emarsys Transactional Emails Setup</display-name>
                 <attribute attribute-id="emarsysOrderConfirmationElements"/>
                 <attribute attribute-id="emarsysShippingInformationElements"/>
+                <attribute attribute-id="emarsysCancelledOrderInformationElements"/>
             </attribute-group>
             <attribute-group group-id="Emarsys">
                 <display-name xml:lang="x-default">Emarsys</display-name>
@@ -1022,10 +1045,6 @@ Example: {"default":"USD", "en_US":"USD", "it_IT":"EUR", "en_GB":"GBP"}</descrip
             <attribute-group group-id="EmarsysSmartInsight">
                 <display-name xml:lang="x-default">Emarsys SmartInsight Configuration</display-name>
                 <description xml:lang="x-default">Configure Emarsys Smart Insight solution integration</description>
-                <attribute attribute-id="emarsysSmartInsightIMPEXFolder"/>
-                <attribute attribute-id="emarsysSFTPHost"/>
-                <attribute attribute-id="emarsysSFTPPassword"/>
-                <attribute attribute-id="emarsysSFTPUsername"/>
                 <attribute attribute-id="emarsysSmartInsightAvailableElements"/>
             </attribute-group>
             <attribute-group group-id="EmarsysDBInitConfiguration">
@@ -1047,20 +1066,31 @@ Example: {"default":"USD", "en_US":"USD", "it_IT":"EUR", "en_GB":"GBP"}</descrip
                 <attribute attribute-id="emarsysWebDAVPasswordString"/>
                 <attribute attribute-id="emarsysDBLoadExportStatus"/>
             </attribute-group>
-            <attribute-group group-id="EmarsysPredict">
-                <display-name xml:lang="x-default">Emarsys Predict Configuration</display-name>
-                <description xml:lang="x-default">Configure Emarsys predictive recommendation solutions</description>
+            <attribute-group group-id="EmarsysCatalog">
+                <display-name xml:lang="x-default">Emarsys Catalog Configuration</display-name>
+                <description xml:lang="x-default">Configure Emarsys catalog recommendation solutions</description>
                 <attribute attribute-id="emarsysPredictMerchantID"/>
                 <attribute attribute-id="emarsysPredictEnableJSTrackingCode"/>
-                 <attribute attribute-id="emarsysPredictThankYouForOrderPageRecommendationType"/>
+                <attribute attribute-id="emarsysPredictThankYouForOrderPageRecommendationType"/>
                 <attribute attribute-id="emarsysPredictPDPRecommendationType"/>
-                 <attribute attribute-id="emarsysPredictHomePageRecommendationType"/>
+                <attribute attribute-id="emarsysPredictHomePageRecommendationType"/>
                 <attribute attribute-id="emarsysPredictCartPageRecommendationType"/>
                 <attribute attribute-id="emarsysPredictSearchPageRecommendationType"/>
                 <attribute attribute-id="emarsysPredictCategoryPageRecommendationType"/>
                 <attribute attribute-id="emarsysPredictProductAttributes"/>
                 <attribute attribute-id="emarsysPredictVariationAttributes"/>
                 <attribute attribute-id="emarsysPredictLocCurMap"/>
+                <attribute attribute-id="emarsysCustomObjectList"/>
+                <attribute attribute-id="emarsysCatalogExportType"/>
+            </attribute-group>
+            <attribute-group group-id="EmarsysLoyaltyWallet">
+                <display-name xml:lang="x-default">Emarsys Loyalty Wallet</display-name>
+                <description xml:lang="x-default">Configure Emarsys Loyalty Wallet</description>
+                <attribute attribute-id="emarsysLoyaltyWalletEnabled"/>
+                <attribute attribute-id="emarsysAppId"/>
+                <attribute attribute-id="emarsysCustomerId"/>
+                <attribute attribute-id="emarsysRegion"/>
+                <attribute attribute-id="emarsysSecret"/>
             </attribute-group>
         </group-definitions>
     </type-extension>

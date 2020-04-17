@@ -29,6 +29,149 @@
     "18_2": "companyName"
   }
 }</preference>
+            <preference preference-id="emarsysAppId"></preference>
+            <preference preference-id="emarsysCancelledOrderInformationElements">[
+        {
+			"value" : "billingAddress.address1",
+			"name"  : "Billing: Address 1"
+		},
+        {
+			"value" : "billingAddress.address2",
+			"name"  : "Billing: Address 2"
+		},
+        {
+			"value" : "billingAddress.postalCode",
+			"name"  : "Billing: Postal Code"
+		},
+        {
+			"value" : "billingAddress.city",
+			"name"  : "Billing: City"
+		},
+        {
+			"value" : "billingAddress.countryCode.displayValue",
+			"name"  : "Billing: Country"
+		},
+        {
+			"value" : "billingAddress.phone",
+			"name"  : "Billing: Phone"
+		},
+        {
+			"value" : "shippingAddress.address1",
+			"name"  : "Shipping: Address 1"
+		},
+        {
+			"value" : "shippingAddress.address2",
+			"name"  : "Shipping: Address 2"
+		},
+        {
+			"value" : "shippingAddress.postalCode",
+			"name"  : "Shipping: Postal Code"
+		},
+        {
+			"value" : "shippingAddress.city",
+			"name"  : "Shipping: City"
+		},
+        {
+			"value" : "shippingAddress.countryCode.displayValue",
+			"name"  : "Shipping: Country"
+		},
+        {
+			"value" : "shippingAddress.phone",
+			"name"  : "Shipping: Phone"
+		},
+        {
+			"value" : "order.customerEmail",
+			"name"  : "Customer email"
+		},
+        {
+			"value" : "order.orderNo",
+			"name"  : "Order number"
+		},
+        {
+			"value" : "order.creationDate",
+			"name"  : "Order date"
+		},
+        {
+			"value" : "deliveryMethod.display",
+			"name"  : "Delivery method"
+		},
+        {
+			"value" : "paymentMethod.display",
+			"name"  : "Payment method"
+		},
+        {
+			"value" : "shippingCosts.display",
+			"name"  : "Shipping costs"
+		},
+        {
+			"value" : "order.totalNetPrice",
+			"name"  : "Order: Total NET price"
+		},
+        {
+			"value" : "order.totalGrossPrice",
+			"name"  : "Order: Total GROSS price"
+		},
+        {
+			"value" : "order.totalTax",
+			"name"  : "Order taxes"
+		},
+        {
+			"value" : "orderRebate.display",
+			"name"  : "Order rebate"
+		},
+        {
+			"value" : "product.productName",
+			"name"  : "Products: Product name"
+		},
+        {
+			"value" : "product.quantityValue",
+			"name"  : "Products: Product quantity"
+		},
+        {
+			"value" : "product.url",
+			"name"  : "Products: Product URL"
+		},
+        {
+			"value" : "product.image",
+			"name"  : "Products: Product image"
+		},
+        {
+			"value" : "product.tax",
+			"name"  : "Products: Product tax"
+		},
+        {
+			"value" : "product.price.currencyCode",
+			"name"  : "Products: Product price currency"
+		},
+        {
+			"value" : "product.adjustedPrice",
+			"name"  : "Products: Product price"
+		},
+        {
+			"value" : "product.rebate",
+			"name"  : "Products: Product rebate"
+		},
+        {
+			"value" : "product.adjustedGrossPrice",
+			"name"  : "Products: Product gross price"
+		},
+        {
+			"value" : "trackingNumber",
+			"name"  : "Tracking number"
+		},
+        {
+			"value" : "custom.shippingCompany",
+			"name"  : "Custom: Shipping company"
+		},
+        {
+			"value" : "custom.arrivalDate",
+			"name"  : "Custom: Arrival date"
+		},
+        {
+			"value" : "custom.trackingLink",
+			"name"  : "Custom: Tracking URL"
+		}
+]</preference>
             <preference preference-id="emarsysCatalogExportType">[
         {
             "id" : "master",
@@ -56,6 +199,7 @@
 				"46": "salutation"
 			}</preference>
             <preference preference-id="emarsysCountryCodes">{"us": 185,"uk": 184,"de": 65,"fr": 61}</preference>
+            <preference preference-id="emarsysCustomerId"></preference>
             <preference preference-id="emarsysDBLoadAttributes">[
 	{
 		"value" : "firstName",
@@ -124,6 +268,7 @@
             <preference preference-id="emarsysGenderCodes">{"male": 1,"female": 2}</preference>
             <preference preference-id="emarsysGetProfileFieldsLanguage">en</preference>
             <preference preference-id="emarsysIMPEXFolderString">inidb/RefArch</preference>
+            <preference preference-id="emarsysLoyaltyWalletEnabled">true</preference>
             <preference preference-id="emarsysOrderConfirmationElements">[
         {
 			"value" : "billingAddress.address1",
@@ -275,6 +420,8 @@
                 <value>product.custom.size</value>
             </preference>
             <preference preference-id="emarsysProductImageSize">small</preference>
+            <preference preference-id="emarsysRegion">eu</preference>
+            <preference preference-id="emarsysSecret"></preference>
             <preference preference-id="emarsysShippingInformationElements">[
         {
 			"value" : "billingAddress.address1",

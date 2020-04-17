@@ -1,0 +1,17 @@
+<iscontent type="text/html" charset="UTF-8" compact="true"/>
+
+<isset name="loyalityCustomerDataModel" value="${JSON.stringify(new (require('int_emarsys/cartridge/models/loyaltyCustomerData'))())}" scope="page"/>
+<isset name="isLoyalty" value="${loyalityCustomerDataModel.length > 2}" scope="page" />
+
+<script>
+    var loyalty = <isprint value=" ${loyalityCustomerDataModel}" encoding="off"/>; 
+
+   if(<isprint value=" ${isLoyalty}" encoding="off"/>) {
+        window.loyalsysSettings = window.loyalsysSettingsEA = loyalty;
+    }
+</script>
+
+<isif condition="${isLoyalty}">
+    <script src = "${'https://ui-elements.loyalsys.io/v1.0.1/embed.min.js?x='+ (new Date).getTime()}"> </script>
+    <script src = "${'https://exaccess.loyalsys.io/v1.0.1/ls_ea.min.js?x='+ (new Date).getTime()}"> </script>
+</isif>
