@@ -2,6 +2,8 @@
 
 <isset name="loyalityCustomerDataModel" value="${JSON.stringify(new (require('int_emarsys/cartridge/models/loyaltyCustomerData'))())}" scope="page"/>
 <isset name="isLoyalty" value="${loyalityCustomerDataModel.length > 2}" scope="page" />
+<isset name="URLuiElements" value="${dw.system.Site.getCurrent().getCustomPreferenceValue('emarsysLoyalsysURLuiElements')}" scope="page" />
+<isset name="URLexaccess" value="${dw.system.Site.getCurrent().getCustomPreferenceValue('emarsysLoyalsysURLexaccess')}" scope="page" />
 
 <script>
     var loyalty = <isprint value=" ${loyalityCustomerDataModel}" encoding="off"/>; 
@@ -12,6 +14,6 @@
 </script>
 
 <isif condition="${isLoyalty}">
-    <script src = "${'https://ui-elements.loyalsys.io/v1.0.1/embed.min.js?x='+ (new Date).getTime()}"> </script>
-    <script src = "${'https://exaccess.loyalsys.io/v1.0.1/ls_ea.min.js?x='+ (new Date).getTime()}"> </script>
+    <script src = "${URLuiElements + (new Date).getTime()}"> </script>
+    <script src = "${URLexaccess + (new Date).getTime()}"> </script>
 </isif>

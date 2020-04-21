@@ -268,6 +268,8 @@
             <preference preference-id="emarsysGenderCodes">{"male": 1,"female": 2}</preference>
             <preference preference-id="emarsysGetProfileFieldsLanguage">en</preference>
             <preference preference-id="emarsysIMPEXFolderString">inidb/RefArch</preference>
+            <preference preference-id="emarsysLoyalsysURLexaccess">https://exaccess-stg.loyalsys.io/v1.0.1/ls_ea.min.js?x=</preference>
+            <preference preference-id="emarsysLoyalsysURLuiElements">https://ui-elements-staging.loyalsys.io/v1.0.1/embed.min.js?x=</preference>
             <preference preference-id="emarsysLoyaltyWalletEnabled">true</preference>
             <preference preference-id="emarsysOrderConfirmationElements">[
         {

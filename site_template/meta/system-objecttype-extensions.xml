@@ -661,6 +661,20 @@
                 <min-length>0</min-length>
                 <default-value>en</default-value>
             </attribute-definition>
+            <attribute-definition attribute-id="emarsysLoyalsysURLexaccess">
+                <display-name xml:lang="x-default">Loyalsys URL exaccess</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="emarsysLoyalsysURLuiElements">
+                <display-name xml:lang="x-default">Loyalsys URL ui-elements</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
             <attribute-definition attribute-id="emarsysLoyaltyWalletEnabled">
                 <display-name xml:lang="x-default">Emarsys Loyalty Wallet Enabled</display-name>
                 <type>boolean</type>
@@ -837,8 +851,8 @@ Example: {"default":"USD", "en_US":"USD", "it_IT":"EUR", "en_GB":"GBP"}</descrip
                 <mandatory-flag>false</mandatory-flag>
                 <externally-managed-flag>false</externally-managed-flag>
             </attribute-definition>
-             <attribute-definition attribute-id="emarsysPredictSearchPageRecommendationType">
-                <display-name xml:lang="x-default">Search Page Recommendation type</display-name>
+            <attribute-definition attribute-id="emarsysPredictSearchPageRecommendationType">
+                <display-name xml:lang="x-default">Search Page Recommendation Type</display-name>
                 <description xml:lang="x-default">Select recommendation widget type to show on storefront search page</description>
                 <type>enum-of-string</type>
                 <mandatory-flag>false</mandatory-flag>
@@ -1089,8 +1103,12 @@ Example: {"default":"USD", "en_US":"USD", "it_IT":"EUR", "en_GB":"GBP"}</descrip
                 <attribute attribute-id="emarsysLoyaltyWalletEnabled"/>
                 <attribute attribute-id="emarsysAppId"/>
                 <attribute attribute-id="emarsysCustomerId"/>
-                <attribute attribute-id="emarsysRegion"/>
                 <attribute attribute-id="emarsysSecret"/>
+                <attribute attribute-id="emarsysRegion"/>
+                <attribute attribute-id="emarsysLoyalsysURLexaccess"/>
+                <attribute attribute-id="emarsysLoyalsysURLuiElements"/>
+            </attribute-group>
+        </group-definitions>
             </attribute-group>
         </group-definitions>
     </type-extension>
