@@ -54,7 +54,7 @@ function triggerExternalEvent(context, onError) {
         try {
             var endpoint = 'event/' + context.externalEventId + '/trigger';
 
-            // context.additionalParams = { first_name: 'Pavel', last_name: 'Kovalyov', optin: 'True' };
+            // context.additionalParams = { first_name: 'John', last_name: 'Snow', optin: 'True' };
             if (context.additionalParams) {
                 requestObj = setAdditionalParams(context);
             }
