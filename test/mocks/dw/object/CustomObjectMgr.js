@@ -88,17 +88,36 @@ var objects = {
     'EmarsysExternalEvents': {
         'StoredEvents': {
             custom: {
-                result: JSON.stringify([{"id":"5633","name":"single"},{"id":"5634","name":"double"},
-                {"id":"5636","name":"single account"},{"id":"5637","name":"double account"},
-                {"id":"5638","name":"single checkout"},{"id":"5639","name":"double checkout"}]),
-                otherResult: JSON.stringify([{"emarsysId":"1234","emarsysName":"SFCC_CANCELLED_ORDER","sfccName":"cancelled_order"},
-                    {"emarsysId":"1278","emarsysName":"SFCC_DOUBLE_OPTIN","sfccName":"double-optin"}]),
-                otherSource: JSON.stringify(["cancelled_order","double-optin"]),
-                newsletterSubscriptionSource: JSON.stringify(["single","double-optin"])
+                result: JSON.stringify([
+                    {"id":"5633","name":"single"},
+                    {"id":"5634","name":"double"},
+                    {"id":"12561","name":"SFCC_FORGOT_PASSWORD_SUBMITTED"},
+                    {"id":"12563","name":"SFCC_CONTACT_FORM_SUBMITTED"},
+                    {"id":"12644","name":"SFCC_NEWSLETTER_SUBSCRIPTION_CONFIRMATION"},
+                    {"id":"12646","name":"SFCC_NEWSLETTER_UNSUBSCRIBE_SUCCESS"}
+                ]),
+                otherSource: JSON.stringify(["forgot_password_submitted","contact_form_submitted"]),
+                newsletterSubscriptionSource: JSON.stringify(["newsletter_subscription_confirmation","newsletter_unsubscribe_success"]),
+                otherResult: JSON.stringify([
+                    {"sfccName":"forgot_password_submitted","emarsysId":"12561","emarsysName":"SFCC_FORGOT_PASSWORD_SUBMITTED"},
+                    {"sfccName":"contact_form_submitted","emarsysId":"12563","emarsysName":"SFCC_CONTACT_FORM_SUBMITTED"}
+                ]),
+                newsletterSubscriptionResult: JSON.stringify([
+                    {"sfccName":"newsletter_subscription_confirmation","emarsysId":"12644","emarsysName":"SFCC_NEWSLETTER_SUBSCRIPTION_CONFIRMATION"},
+                    {"sfccName":"newsletter_unsubscribe_success","emarsysId":"12646","emarsysName":"SFCC_NEWSLETTER_UNSUBSCRIBE_SUCCESS"}
+                ])
             },
             name: 'StoredEvents'
         },
         'emptyObject': {},
+        'invalidFields': {
+            custom: {
+                otherSource: "[]",
+                newsletterSubscriptionSource: "[]",
+                otherResult: "{invalid_list}",
+                newsletterSubscriptionResult: "{invalid_list}"
+            }
+        },
         'testObject': {
             otherResult: JSON.stringify([{"emarsysId":"1234","emarsysName":"SFCC_CANCELLED_ORDER","sfccName":"cancelled_order"},
                 {"emarsysId":"1278","emarsysName":"SFCC_DOUBLE_OPTIN","sfccName":"double-optin"}]),
@@ -194,7 +213,7 @@ class CustomObjectMgr {
     getCustomObject(type, key) {
         var creator = objects[type];
         var newObject = creator[key];
-        return newObject;
+        return newObject || null;
     }
 
     queryCustomObjects(type) {
