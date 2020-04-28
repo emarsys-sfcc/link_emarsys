@@ -109,9 +109,8 @@ module.exports = {
                 $emarsysSelectTemplate.children(':first').prop('selected', true);
                 $emarsysSelect.replaceWith($emarsysSelectTemplate);
             } else {
-                // remove all options except for "appropriate"
-                $emarsysSelect = $dialog.find('.js-emarsys-name-select');
-                $emarsysSelect.children(':not([value="appropriate"])').remove();
+                // hide Emarsys names select
+                $dialog.find('.js-emarsys-name-select').addClass('hide-content');
             }
 
             dialogPopup.applyReplacementsList($dialog, this.replaceList);

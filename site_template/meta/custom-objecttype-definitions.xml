@@ -86,6 +86,38 @@
                 <externally-managed-flag>false</externally-managed-flag>
                 <min-length>0</min-length>
             </attribute-definition>
+            <attribute-definition attribute-id="newsletterSubscriptionResult">
+                <display-name xml:lang="x-default">Newsletter Subscription Result</display-name>
+                <description xml:lang="x-default">Description list for newsletter subscription events on Emarsys side</description>
+                <type>text</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="newsletterSubscriptionSource">
+                <display-name xml:lang="x-default">Newsletter Subscription Source</display-name>
+                <description xml:lang="x-default">Newsletter subscribtion events identifier list</description>
+                <type>text</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="otherResult">
+                <display-name xml:lang="x-default">Other Result</display-name>
+                <description xml:lang="x-default">Description list for other events on Emarsys side</description>
+                <type>text</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="otherSource">
+                <display-name xml:lang="x-default">Other Source</display-name>
+                <description xml:lang="x-default">Other events identifier list</description>
+                <type>text</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
             <attribute-definition attribute-id="result">
                 <display-name xml:lang="x-default">Result</display-name>
                 <description xml:lang="x-default">Stores external events</description>
@@ -101,6 +133,10 @@
                 <attribute attribute-id="id"/>
                 <attribute attribute-id="name"/>
                 <attribute attribute-id="result"/>
+                <attribute attribute-id="newsletterSubscriptionSource"/>
+                <attribute attribute-id="otherSource"/>
+                <attribute attribute-id="newsletterSubscriptionResult"/>
+                <attribute attribute-id="otherResult"/>
                 <attribute attribute-id="externalEvents"/>
             </attribute-group>
         </group-definitions>

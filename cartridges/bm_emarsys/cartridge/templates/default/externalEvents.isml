@@ -53,7 +53,7 @@
             <div class="dialog-content-block">
                 <div class="dialog-select-block">
                     <select class="js-sfcc-name-select select-basic">
-                        <option value="">
+                        <option value="" class="title-option">
                             ${Resource.msg("dialog.select.sfcc.title", "externalEvents", null)}
                         </option>
                     </select>

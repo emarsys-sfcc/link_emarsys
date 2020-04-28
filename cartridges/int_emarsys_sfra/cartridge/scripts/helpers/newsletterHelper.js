@@ -291,7 +291,7 @@ function triggerExternalEvent(args) {
         if (externalEventId) {
             var endpoint = 'event/' + externalEventId + '/trigger';
 
-            requestObj.keyId = '3';
+            requestObj.key_id = '3';
             requestObj.external_id = Args.Email;
             triggerEvent = emarsysHelper.triggerAPICall(endpoint, requestObj, 'POST');
 

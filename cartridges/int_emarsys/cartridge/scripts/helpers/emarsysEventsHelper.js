@@ -13,26 +13,42 @@ var CustomObjectMgr = require('dw/object/CustomObjectMgr');
 function makeCallToEmarsys(endpoint, requestBody, requestMethod) {
     var emarsysService = require('int_emarsys/cartridge/scripts/service/emarsysService');
     var responseBody = {};
-    var errorText = '';
+    var resultObj = {};
 
     var response = emarsysService.call(endpoint, requestBody, requestMethod);
-    if (!response || response.status === 'ERROR') {
-        errorText = response.msg + ' (' +
-            Resource.msg('emarsys.response.code', 'errorMessages', null) +
-            response.error + ')';
+    if (empty(response) || response.status === 'ERROR') {
+        resultObj = { status: 'ERROR' };
         if (response.errorMessage) {
             try {
                 responseBody = JSON.parse(response.errorMessage);
-                errorText = responseBody.replyText + ' (' +
+                resultObj.replyCode = responseBody.replyCode;
+                resultObj.replyMessage = responseBody.replyText;
+                resultObj.message = responseBody.replyText + ' (' +
                     Resource.msg('emarsys.reply.code', 'errorMessages', null) +
                     responseBody.replyCode + ')';
             } catch (err) {
-                errorText = response.errorMessage;
+                resultObj.message = Resource.msg('parsing.error', 'errorMessages', null);
             }
+        } else {
+            resultObj.responseCode = response.error;
+            resultObj.responseMessage = response.msg;
+            resultObj.message = response.msg + ' (' +
+                Resource.msg('emarsys.response.code', 'errorMessages', null) +
+                response.error + ')';
         }
-        throw new Error(errorText);
+        return resultObj;
     }
-    return JSON.parse(response.object);
+    try {
+        return {
+            status: 'OK',
+            result: JSON.parse(response.object)
+        };
+    } catch (err) {
+        return {
+            status: 'ERROR',
+            message: Resource.msg('parsing.error', 'errorMessages', null)
+        };
+    }
 }
 
 /**

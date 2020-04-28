@@ -29,7 +29,7 @@ var externalEvent = {
             // create other external events
             custom.object.custom.otherResult = this.createEvents(otherNames);
         } catch (err) {
-            this.logger.error('externalEvent: Error ' + err.message + '\n' + err.stack);
+            this.logger.error('[Emarsys CreateExternalEvents.js] - ' + err.message + '\n' + err.stack);
             return new Status(Status.ERROR, 'ERROR');
         }
 
@@ -43,7 +43,10 @@ var externalEvent = {
     getEventsDescription: function () {
         // send request to get events description list
         var response = this.eventsHelper.makeCallToEmarsys('event', null, 'GET');
-        return response.data;
+        if (response.status === 'ERROR') {
+            throw new Error('***Emarsys get events error: ' + response.message);
+        }
+        return response.result.data;
     },
     /**
      * Create events and prepare their description
@@ -88,7 +91,10 @@ var externalEvent = {
 
         // send request to create event with specified name
         var response = this.eventsHelper.makeCallToEmarsys('event', { name: eventName }, 'POST');
-        eventDescription = response.data;
+        if (response.status === 'ERROR') {
+            throw new Error('***Emarsys create event error: ' + response.message);
+        }
+        eventDescription = response.result.data;
         this.eventsDescriptionList.push(eventDescription);
 
         return eventDescription;

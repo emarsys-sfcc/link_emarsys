@@ -28,16 +28,17 @@ function loyaltyCustomerData() {
     var emarsysCustomerId = currentSite.getCustomPreferenceValue('emarsysCustomerId');
     var emarsysRegion = currentSite.getCustomPreferenceValue('emarsysRegion');
 
-    if (loyaltyWalletEnabled && customer.authenticated && customer.registered
-         && (!empty(emarsysAppId) && !empty(emarsysCustomerId) && !empty(emarsysRegion))) {
-        this.appId = emarsysAppId;
-        this.contactId = customer.profile.email || '';
-        this.customerId = emarsysCustomerId;
-        this.timestamp = Math.floor((new Date()).getTime() / 1000);
-        this.token = getToken(this.contactId + this.timestamp);
-        this.region = emarsysRegion;
-    } else {
-        logger.error('[model/loyaltyCustomerData.js] - ***Check the details in Custom Site Preference Groups - Emarsys Loyalty Wallet');
+    if (loyaltyWalletEnabled && customer.authenticated && customer.registered) {
+        if (!empty(emarsysAppId) && !empty(emarsysCustomerId) && !empty(emarsysRegion)) {
+            this.appId = emarsysAppId;
+            this.contactId = customer.profile.email || '';
+            this.customerId = emarsysCustomerId;
+            this.timestamp = Math.floor((new Date()).getTime() / 1000);
+            this.token = getToken(this.contactId + this.timestamp);
+            this.region = emarsysRegion;
+        } else {
+            logger.error('[model/loyaltyCustomerData.js] - ***Check the details in Custom Site Preference Groups - Emarsys Loyalty Wallet');
+        }
     }
 }
 

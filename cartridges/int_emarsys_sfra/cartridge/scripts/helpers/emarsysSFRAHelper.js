@@ -330,6 +330,9 @@ function processor(args, res) {
             redirectToErrorPage(Args, res);
             return;
         }
+        Args.Strategy = TypeData.Strategy;
+        Args.ExternalEvent = TypeData.ExternalEvent;
+        Args.ExternalEventAfterConfirmation = TypeData.ExternalEventAfterConfirmation;
 
         if (TypeData.Strategy === '1') {
             handleOptInStrategy1(Args, res);

@@ -41,7 +41,7 @@ function setAdditionalParams(context, requestObject) {
 }
 
 /**
- * @description triggers external event
+ * @description Triggers specified external event to transmit customer data
  * @param {Object} context - main context object
  * @param {Function} onError - error handler
  * @return {Object} context object
@@ -160,8 +160,38 @@ function prepareFieldsDescriptions() {
     return profileFields;
 }
 
+/**
+ * @description Collect additional data and run trigger function
+ * @param {string} sfccEventName - Emarsys external event
+ * @param {Function} extendFunc - extend or assign function to rewrite all properties from incomming object
+ * @param {Object} initialData - initial data to set in context object
+ */
+function processEventTriggering(sfccEventName, extendFunc, initialData) {
+    var logger = require('dw/system/Logger').getLogger('emarsys');
+    var isEmarsysEnable = Site.getCurrent().getCustomPreferenceValue('emarsysEnabled');
+    if (isEmarsysEnable) {
+        try {
+            var context = {};
+            extendFunc(context, initialData);
+
+            // get emarsys side external event name and it's id
+            context.externalEventId = getExternalEventData(sfccEventName).emarsysId;
+
+            // get Emarsys profile fields descriptions
+            context.profileFields = prepareFieldsDescriptions();
+
+            if (!empty(context.externalEventId)) {
+                triggerExternalEvent(context);
+            }
+        } catch (err) {
+            logger.error(err.errorMessage);
+        }
+    }
+}
+
 module.exports = {
     triggerExternalEvent: triggerExternalEvent,
     getExternalEventData: getExternalEventData,
-    prepareFieldsDescriptions: prepareFieldsDescriptions
+    prepareFieldsDescriptions: prepareFieldsDescriptions,
+    processEventTriggering: processEventTriggering
 };

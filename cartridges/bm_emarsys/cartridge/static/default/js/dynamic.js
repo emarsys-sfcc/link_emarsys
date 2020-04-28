@@ -1,1 +1,364 @@
-!function(e){var t={};function a(s){if(t[s])return t[s].exports;var r=t[s]={i:s,l:!1,exports:{}};return e[s].call(r.exports,r,r.exports,a),r.l=!0,r.exports}a.m=e,a.c=t,a.d=function(e,t,s){a.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:s})},a.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},a.t=function(e,t){if(1&t&&(e=a(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var s=Object.create(null);if(a.r(s),Object.defineProperty(s,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var r in e)a.d(s,r,function(t){return e[t]}.bind(null,r));return s},a.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return a.d(t,"a",t),t},a.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},a.p="",a(a.s=1)}([function(e,t,a){"use strict";e.exports=function(e,t){var a=$(".js-notification-message");if(e){var s=$(".js-"+e+"-message");a.removeClass("js-d-flex"),$(s).addClass("js-d-flex"),t&&(a.find(".js-body-"+e+"-message").text(""),$(s).find(".js-body-"+e+"-message").text(t)),$("body,html").animate({scrollTop:0},250)}else a.removeClass("js-d-flex"),a.find(".js-body-"+e+"-message").text("")}},function(e,t,a){"use strict";var s=a(0);function r(e,t,a,s,r){var o='<div class="'+t+'">',n='<select class="'+a+'">',l='<label class="js-error-message-'+s+' hide-content">'+r+"</label>",i=$(".js-page-params").attr("data-first-option"),c='<option value="">'+i+"</option>";return e.forEach((function(e){var t;t=Object.prototype.hasOwnProperty.call(e,"value")?e.value:Object.prototype.hasOwnProperty.call(e,"id")?e.id:e;var a="object"==typeof e?e.name:e;c+='<option value="'+t+'">'+a+"</option>"})),o+n+i+c+"</select>"+l+"</div>"}e.exports={addNewFields:function(){$(document).on("click",".js-add-fields",(function(e){var t,a=$(e.currentTarget).closest(".js-tabcontent").find(".js-filds-configuration");t=a,JSON.parse($(".js-page-params").attr("data-general-attrs")).length>$(t).find(".js-fild-configuration").length?($(a).append(function(){var e,t=JSON.parse($(".js-page-params").attr("data-general-attrs")),a=JSON.parse($(".js-page-params").attr("data-select-placeholder")),s=$(".js-page-params").attr("data-error-select-field"),o=$(".js-page-params").attr("data-error-placeholder-message"),n=r(t,"selects-attr available-col","js-fields select-fields","select",s);if(a)e=r(a,"js-mappedFilds mappedFilds placeholder-col","js-placeholder select-fields","input",s);else{e='<div class="js-mappedFilds mappedFilds placeholder-col"><input type="text" class="js-placeholder input-placeholder" value="" />'+('<label class="js-error-message-input hide-content">'+o+"</label>")+"</div>"}return'<div class="js-fild-configuration fild-configuration text-position">'+n+e+'<div class="remove-col"><input class="js-remove-check-box remove-check-box" type="checkbox" /></div></div>'}()),s()):s("error",$(".js-body-error-message").attr("data-max-fields"))}))},saveCustomObject:function(){$(document).on("click",".js-apply-button",(function(e){var t=$(e.currentTarget).closest(".js-tabcontent").find(".js-filds-configuration");if(function(e){var t=!0;return $(e).find(".js-fild-configuration").each((function(e,a){var s=$(a).find(".js-fields"),r=$(a).find(".js-placeholder"),o=$(a).find(".js-error-message-select"),n=$(a).find(".js-error-message-input");if($(a).find(".js-remove-check-box").is(":checked"))$(s).removeClass("select-input-error"),$(o).removeClass("show-label"),$(r).removeClass("input-error"),$(n).removeClass("show-label");else{var l=""===s.val();$(s).toggleClass("select-input-error",l),$(o).toggleClass("show-label",l),$(r).toggleClass("input-error",!r.val()),$(n).toggleClass("show-label",!r.val()),!l&&r.val()||(t=!1)}})),t}(t)){var a=function(e,t){var a={},s=[],r=$(t.currentTarget).closest(".js-tabcontent");return $(e).find(".js-fild-configuration").each((function(e,t){$(t).find(".js-remove-check-box").is(":checked")||s.push({field:$(t).find(".js-fields").val(),placeholder:$(t).find(".js-placeholder").val()})})),a.fields=s,r.find(".js-additional-value").length&&(a.additionalValue=r.find(".js-additional-value").val()),a.typeCustomObject=r.attr("id"),a}(t,e);$.ajax({url:$(".js-page-params").attr("data-controller-url"),type:"post",dataType:"json",data:{data:JSON.stringify(a)},success:function(e){e.success?(!function(e){$(e).find(".js-fild-configuration").each((function(e,t){$(t).find(".js-remove-check-box").is(":checked")&&$(t).remove()}))}(t),s("success")):s("error",e.responseText)},error:function(){s("error",$(".js-body-error-message").attr("data-check-logs"))}})}}))}}}]);
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var showStatus = __webpack_require__(1);
+
+
+/**
+ * @description create new select document element
+ * @param {array} optionParams params for option
+ * @param {string} divClasses slasses for div
+ * @param {string} selectClasses  slasses for select element
+ * @param {string} labelTypeClass type slass for label
+ * @param {string} labelText label text
+ * @returns {string} return new select element
+ */
+function createSelectElement(optionParams, divClasses, selectClasses, labelTypeClass, labelText) {
+    var wrapperAboveSelects = '<div class="' + divClasses + '">';
+    var select = '<select class="' + selectClasses + '">';
+    var selectLabel = '<label class="js-error-message-' + labelTypeClass + ' hide-content">' + labelText + '</label>';
+    var firstOptionValue = $('.js-page-params').attr('data-first-option');
+    var options = '<option value="">' + firstOptionValue + '</option>';
+    var selectEnd = '</select>';
+    var divEnd = '</div>';
+
+    optionParams.forEach(function (elem) {
+        var value;
+
+        if (Object.prototype.hasOwnProperty.call(elem, 'value')) {
+            value = elem.value;
+        } else if (Object.prototype.hasOwnProperty.call(elem, 'id')) {
+            value = elem.id;
+        } else {
+            value = elem;
+        }
+
+        var showValue = (typeof elem) === 'object' ? elem.name : elem;
+
+        options += '<option value="'
+        + value
+        + '">'
+        + showValue
+        + '</option>';
+    });
+
+    return wrapperAboveSelects
+            + select
+            + firstOptionValue
+            + options
+            + selectEnd
+            + selectLabel
+            + divEnd;
+}
+/**
+ *@description create new document element
+ *@returns {string} new element
+ */
+function createFieldElement() {
+    var optionValues = JSON.parse($('.js-page-params').attr('data-general-attrs'));
+    var selectPlaceholderValue = JSON.parse($('.js-page-params').attr('data-select-placeholder'));
+
+    var fieldElement = '<div class="js-fild-configuration fild-configuration text-position">';
+    var divEnd = '</div>';
+
+    var classesForFieldDiv = 'selects-attr available-col';
+    var classesForPlaceholderDiv = 'js-mappedFilds mappedFilds placeholder-col';
+
+    var classesForFieldSelect = 'js-fields select-fields';
+    var classesForPlaceholderSelect = 'js-placeholder select-fields';
+
+    var selectErrorLabelText = $('.js-page-params').attr('data-error-select-field');
+    var inputErrorLabelText = $('.js-page-params').attr('data-error-placeholder-message');
+
+    var selectField = createSelectElement(optionValues,
+                                            classesForFieldDiv,
+                                            classesForFieldSelect,
+                                            'select',
+                                            selectErrorLabelText);
+    var placeholderElement;
+
+    if (selectPlaceholderValue) {
+        placeholderElement = createSelectElement(selectPlaceholderValue,
+                                                    classesForPlaceholderDiv,
+                                                    classesForPlaceholderSelect,
+                                                    'input',
+                                                    selectErrorLabelText);
+    } else {
+        var mappedFild = '<div class="' + classesForPlaceholderDiv + '">';
+        var input = '<input type="text" class="js-placeholder input-placeholder" value="" />';
+        var inputLabel = '<label class="js-error-message-input hide-content">' + inputErrorLabelText + '</label>';
+
+        placeholderElement = mappedFild + input + inputLabel + divEnd;
+    }
+
+    var removDiv = '<div class="remove-col">'
+                    + '<input class="js-remove-check-box remove-check-box" type="checkbox" />'
+                    + '</div>';
+
+    return fieldElement
+                + selectField
+                + placeholderElement
+                + removDiv
+            + divEnd;
+}
+
+/**
+ *@description checks whether the limit is exceeded fields
+ *@param {Object} targetTeg target teg
+ *@returns {boolean} returns a boolean value
+ */
+function checkMaxNumFields(targetTeg) {
+    var lengthAttrs = JSON.parse($('.js-page-params').attr('data-general-attrs')).length;
+    var lengthFields = $(targetTeg).find('.js-fild-configuration').length;
+
+    return lengthAttrs > lengthFields;
+}
+
+/**
+ * @description remove all fields with cheched true
+ * @param {Object} target current event
+ */
+function removeFields(target) {
+    $(target).find('.js-fild-configuration').each(function (i, field) {
+        if ($(field).find('.js-remove-check-box').is(':checked')) {
+            $(field).remove();
+        }
+    });
+}
+
+/**
+ * @description create object request for ajax
+ * @param {Object} target object target teg
+ * @param {Object} event click event
+ * @returns {Object} request for ajax
+ */
+function createRequest(target, event) {
+    var request = {};
+    var arrFields = [];
+    var $tabContent = $(event.currentTarget).closest('.js-tabcontent');
+
+    $(target).find('.js-fild-configuration').each(function (i, field) {
+        if (!$(field).find('.js-remove-check-box').is(':checked')) {
+            arrFields.push({
+                field: $(field).find('.js-fields').val(),
+                placeholder: $(field).find('.js-placeholder').val()
+            });
+        }
+    });
+
+    request.fields = arrFields;
+
+    if ($tabContent.find('.js-additional-value').length) {
+        request.additionalValue = $tabContent.find('.js-additional-value').val();
+    }
+
+    request.typeCustomObject = $tabContent.attr('id');
+
+    return request;
+}
+
+/**
+ * @description check data
+ * @param {Object} target object target teg
+ * @returns {Object} validation status
+ */
+function validationData(target) {
+    var isValid = true;
+    $(target).find('.js-fild-configuration').each(function (i, field) {
+        var selectElem = $(field).find('.js-fields');
+        var inputElem = $(field).find('.js-placeholder');
+        var selectLabel = $(field).find('.js-error-message-select');
+        var inputLabel = $(field).find('.js-error-message-input');
+
+        if (!$(field).find('.js-remove-check-box').is(':checked')) {
+            var isValidSelect = selectElem.val() === '';
+
+            $(selectElem).toggleClass('select-input-error', isValidSelect);
+            $(selectLabel).toggleClass('show-label', isValidSelect);
+
+            $(inputElem).toggleClass('input-error', !inputElem.val());
+            $(inputLabel).toggleClass('show-label', !inputElem.val());
+
+            if (isValidSelect || !inputElem.val()) {
+                isValid = false;
+            }
+        } else {
+            $(selectElem).removeClass('select-input-error');
+            $(selectLabel).removeClass('show-label');
+
+            $(inputElem).removeClass('input-error');
+            $(inputLabel).removeClass('show-label');
+        }
+    });
+
+    return isValid;
+}
+
+module.exports = {
+    addNewFields: function () {
+        $(document).on('click', '.js-add-fields', function (event) {
+            var target = $(event.currentTarget).closest('.js-tabcontent').find('.js-filds-configuration');
+
+            if (checkMaxNumFields(target)) {
+                $(target).append(createFieldElement());
+                showStatus();
+            } else {
+                showStatus('error', $('.js-body-error-message').attr('data-max-fields'));
+            }
+        });
+    },
+    saveCustomObject: function () {
+        $(document).on('click', '.js-apply-button', function (event) {
+            var target = $(event.currentTarget).closest('.js-tabcontent').find('.js-filds-configuration');
+            if (validationData(target)) {
+                var request = createRequest(target, event);
+
+                $.ajax({
+                    url: $('.js-page-params').attr('data-controller-url'),
+                    type: 'post',
+                    dataType: 'json',
+                    data: { data: JSON.stringify(request) },
+                    success: function (data) {
+                        if (data.success) {
+                            removeFields(target);
+                            showStatus('success');
+                        } else {
+                            showStatus('error', data.responseText);
+                        }
+                    },
+                    error: function () {
+                        showStatus('error', $('.js-body-error-message').attr('data-check-logs'));
+                    }
+                });
+            }
+        });
+    }
+};
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * @description show status for user
+ * @param {string} typeNotify type notification
+ * @param {string} responseText response message
+ */
+module.exports = function (typeNotify, responseText) {
+    var notifications = $('.js-notification-message');
+
+    if (typeNotify) {
+        var notifyElement = $('.js-' + typeNotify + '-message');
+
+        notifications.removeClass('js-d-flex');
+        $(notifyElement).addClass('js-d-flex');
+
+        if (responseText) {
+            notifications.find('.js-body-' + typeNotify + '-message').text('');
+            $(notifyElement).find('.js-body-' + typeNotify + '-message').text(responseText);
+        }
+
+        $('body,html').animate({ scrollTop: 0 }, 250);
+    } else {
+        notifications.removeClass('js-d-flex');
+        notifications.find('.js-body-' + typeNotify + '-message').text('');
+    }
+};
+
+
+/***/ })
+/******/ ]);

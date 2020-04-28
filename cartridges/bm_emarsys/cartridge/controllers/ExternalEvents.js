@@ -38,14 +38,12 @@ server.get('Show',
             custom.fields.otherResult
         );
 
-        var response = [];
-        try {
-            // send request to get all external events description from Emarsys
-            response = eventsHelper.makeCallToEmarsys('event', null, 'GET');
-        } catch (err) {
+        // send request to get all external events description from Emarsys
+        var response = eventsHelper.makeCallToEmarsys('event', null, 'GET');
+        if (response.status === 'ERROR') {
             res.render('components/errorPage', {
                 message: Resource.msg('emarsys.request.message', 'errorMessages', null),
-                error: err,
+                error: new Error(response.message),
                 continueUrl: URLUtils.url(
                     'ExternalEvents-Show',
                     'CurrentMenuItemId', 'emarsys_integration',
@@ -55,7 +53,7 @@ server.get('Show',
             });
             return next();
         }
-        var allEmarsysEvents = response.data;
+        var allEmarsysEvents = response.result.data;
 
         // get Emarsys events descriptions collection (emarsys names options for add and update functionality)
         var subscriptionEmarsysDescriptions = eventsHelper.getEmarsysEvents(
@@ -119,23 +117,17 @@ server.post('Add',
         var eventsDescriptionList = custom.fields[fieldId];
         if (!empty(event.emarsysName) && empty(event.emarsysId)) {
             event.emarsysStatus = 'new';
-            var response = [];
-            try {
-                // send request to create event with specified name
-                response = eventsHelper.makeCallToEmarsys('event', { name: event.emarsysName }, 'POST');
-            } catch (err) {
-                res.json({
-                    response: {
-                        status: 'ERROR',
-                        message: Resource.msg('emarsys.error', 'errorMessages', null) +
-                            err.errorText
-                    }
-                });
+
+            // send request to create event with specified name
+            var response = eventsHelper.makeCallToEmarsys('event', { name: event.emarsysName }, 'POST');
+            if (response.status === 'ERROR') {
+                response.message = Resource.msg('emarsys.error', 'errorMessages', null) + response.message;
+                res.json({ response: response });
                 return next();
             }
 
-            event.emarsysId = response.data.id;
-            event.emarsysName = response.data.name;
+            event.emarsysId = response.result.data.id;
+            event.emarsysName = response.result.data.name;
         } else {
             event.emarsysStatus = 'specified';
         }
@@ -212,23 +204,17 @@ server.post('Update',
         var eventsDescriptionList = custom.fields[fieldId];
         if (!empty(event.emarsysName) && empty(event.emarsysId)) {
             event.emarsysStatus = 'new';
-            var response = [];
-            try {
-                // send request to create event with specified name
-                response = eventsHelper.makeCallToEmarsys('event', { name: event.emarsysName }, 'POST');
-            } catch (err) {
-                res.json({
-                    response: {
-                        status: 'ERROR',
-                        message: Resource.msg('emarsys.error', 'errorMessages', null) +
-                            err.errorText
-                    }
-                });
+
+            // send request to create event with specified name
+            var response = eventsHelper.makeCallToEmarsys('event', { name: event.emarsysName }, 'POST');
+            if (response.status === 'ERROR') {
+                response.message = Resource.msg('emarsys.error', 'errorMessages', null) + response.message;
+                res.json({ response: response });
                 return next();
             }
 
-            event.emarsysId = response.data.id;
-            event.emarsysName = response.data.name;
+            event.emarsysId = response.result.data.id;
+            event.emarsysName = response.result.data.name;
         } else {
             event.emarsysStatus = 'specified';
         }
