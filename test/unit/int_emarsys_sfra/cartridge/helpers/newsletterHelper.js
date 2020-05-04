@@ -146,8 +146,8 @@ describe('newsletterHelper Helpers', () => {
         var result = newsletterHelper.subscriptionTypeData('account');
         assert.deepEqual(result, {
             Strategy: '2',
-            ExternalEvent: '11883',
-            ExternalEventAfterConfirmation: '11884'
+            ExternalEventName: 'newsletter_subscription_confirmation',
+            ExternalEventAfterConfirmationName: 'newsletter_subscription_confirmation'
         });
     });
 
@@ -155,8 +155,8 @@ describe('newsletterHelper Helpers', () => {
         var result = newsletterHelper.subscriptionTypeData('test');
         assert.deepEqual(result, {
             Strategy: null,
-            ExternalEvent: null,
-            ExternalEventAfterConfirmation: null
+            ExternalEventName: null,
+            ExternalEventAfterConfirmationName: null
         });
     });
 
@@ -302,6 +302,11 @@ describe('newsletterHelper Helpers', () => {
     it('Testing method: accountUnsubscribe', () => {
         var result = newsletterHelper.accountUnsubscribe('test@test.com');
         assert.equal(result.status,'SUCCESS');
+    });
+
+    it('Testing method: accountUnsubscribe; Empty Email', () => {
+        var result = newsletterHelper.accountUnsubscribe('');
+        assert.equal(result.status,'NO EMAIL');
     });
 
 });

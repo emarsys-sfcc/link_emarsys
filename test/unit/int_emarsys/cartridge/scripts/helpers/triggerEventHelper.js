@@ -120,9 +120,9 @@ describe('triggerEventHelper Scripts', function() {
         assert.deepEqual(result, context);
     });
 
-    it('testing method: getExternalEventData',function () {
+    it('testing method: getExternalEventData #1',function () {
         var sfccEventName = 'contact_form_submitted';
-        var result = triggerEventHelper.getExternalEventData(sfccEventName);
+        var result = triggerEventHelper.getExternalEventData(sfccEventName, 'otherResult');
 
         assert.deepEqual(result, {
             emarsysId: '12563',
@@ -130,7 +130,16 @@ describe('triggerEventHelper Scripts', function() {
             sfccName: 'contact_form_submitted'
         });
     });
+    it('testing method: getExternalEventData #2',function () {
+        var sfccEventName = '';
+        var result = triggerEventHelper.getExternalEventData(sfccEventName, 'otherResult');
 
+        assert.deepEqual(result, {
+            emarsysId: null,
+            emarsysName: null,
+            sfccName: null
+        });
+    });
     it('testing method: processEventTriggering',function () {
         var sfccEventName = 'cancelled_order';
         var extendFunc = function () {

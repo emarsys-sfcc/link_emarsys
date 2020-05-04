@@ -2,6 +2,7 @@
 
 var Logger = require('dw/system/Logger').getLogger('emarsys');
 var newsletterHelper = require('~/cartridge/scripts/helpers/newsletterHelper');
+var eventsHelper = require('*/cartridge/scripts/helpers/triggerEventHelper');
 var Site = require('dw/system/Site');
 
 /**
@@ -324,6 +325,10 @@ function processor(args, res) {
         // get subscription data type info
         var TypeData = newsletterHelper.subscriptionTypeData(args.SubscriptionType);
         var accountStatus;
+        var fieldKey = 'newsletterSubscriptionResult';
+
+        TypeData.ExternalEvent = eventsHelper.getExternalEventData(TypeData.ExternalEventName, fieldKey).emarsysId;
+        TypeData.ExternalEventAfterConfirmation = eventsHelper.getExternalEventData(TypeData.ExternalEventAfterConfirmationName, fieldKey).emarsysId;
 
         // redirect in case of error
         if (empty(TypeData) || empty(TypeData.Strategy)) {

@@ -78,24 +78,35 @@ function triggerExternalEvent(context, onError) {
 /**
  * @description Set external events data to the passed object
  * @param {string} sfccEventName - name of event on sfcc side
+ * @param {string} fieldKey - key of field to read in CustomObject
  * @return {Object} specified external event description (mapping)
  */
-function getExternalEventData(sfccEventName) {
+function getExternalEventData(sfccEventName, fieldKey) {
     var BMEventsHelper = require('*/cartridge/scripts/helpers/emarsysEventsHelper');
     var context = {};
+    var fieldKeyCO = fieldKey || '';
     try {
+        if (empty(sfccEventName)) {
+            var eventDesc = {
+                emarsysId: null,
+                emarsysName: null,
+                sfccName: null
+            };
+            return eventDesc;
+        }
+
         // read other external events description
-        var custom = BMEventsHelper.readEventsCustomObject(['otherResult'], 'StoredEvents');
+        var custom = BMEventsHelper.readEventsCustomObject([fieldKeyCO], 'StoredEvents');
 
         context = {
             sfccEventName: sfccEventName,
-            otherResult: custom.fields.otherResult
+            result: custom.fields[fieldKeyCO]
         };
 
         // get emarsys side event name and it's id for Forgot password submitted
-        Object.keys(custom.fields.otherResult).forEach(function (id) {
-            if (this.otherResult[id].sfccName === this.sfccEventName) {
-                this.eventDescription = this.otherResult[id];
+        Object.keys(custom.fields[fieldKeyCO]).forEach(function (id) {
+            if (this.result[id].sfccName === this.sfccEventName) {
+                this.eventDescription = this.result[id];
             }
         }, context);
 
@@ -172,10 +183,10 @@ function processEventTriggering(sfccEventName, extendFunc, initialData) {
     if (isEmarsysEnable) {
         try {
             var context = {};
-            extendFunc(context, initialData);
+            context = extendFunc(context, initialData);
 
             // get emarsys side external event name and it's id
-            context.externalEventId = getExternalEventData(sfccEventName).emarsysId;
+            context.externalEventId = getExternalEventData(sfccEventName, 'otherResult').emarsysId;
 
             // get Emarsys profile fields descriptions
             context.profileFields = prepareFieldsDescriptions();

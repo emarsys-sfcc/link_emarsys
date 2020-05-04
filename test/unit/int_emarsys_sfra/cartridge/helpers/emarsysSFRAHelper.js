@@ -7,6 +7,7 @@ var mockPath = './../../../../mocks/';
 
 var BasketMgr = require(mockPath + 'dw/order/BasketMgr');
 var Money = require(mockPath + 'dw/value/Money');
+var Resource = require(mockPath +'dw/web/Resource');
 var emarsysService = require(mockPath + 'service/emarsysService');
 var ShippingMgr = require(mockPath + 'dw/order/ShippingMgr');
 var order = require(mockPath + 'dw/order/Order');
@@ -42,11 +43,27 @@ var newsletterHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/new
     'int_emarsys/cartridge/scripts/helpers/emarsysHelper': emarsysHelper
 });
 
+var emarsysEventsHelper = proxyquire(cartridgePathE + 'cartridge/scripts/helpers/emarsysEventsHelper.js', {
+    'dw/web/Resource': Resource,
+    'dw/object/CustomObjectMgr': CustomObjectMgr,
+    'int_emarsys/cartridge/scripts/service/emarsysService': emarsysService
+});
+
+var triggerEventHelper = proxyquire(cartridgePathE + 'cartridge/scripts/helpers/triggerEventHelper.js', {
+    'dw/object/CustomObjectMgr': CustomObjectMgr,
+    'dw/system/Site': Site,
+    'dw/system/Logger': Logger,
+    'int_emarsys/cartridge/scripts/helpers/emarsysHelper': emarsysHelper,
+    '*/cartridge/scripts/helpers/emarsysEventsHelper': emarsysEventsHelper
+});
+
+
 var emarsysSFRAHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsysSFRAHelper.js', {
     'dw/system/Site': Site,
     'dw/system/Logger': Logger,
     'dw/order/BasketMgr': BasketMgr,
-    '~/cartridge/scripts/helpers/newsletterHelper': newsletterHelper
+    '~/cartridge/scripts/helpers/newsletterHelper': newsletterHelper,
+    '*/cartridge/scripts/helpers/triggerEventHelper': triggerEventHelper
 });
 
 describe('emarsysSFRA Helpers', () => {
@@ -345,6 +362,20 @@ describe('emarsysSFRA Helpers', () => {
              var result = emarsysSFRAHelper.processor(args, res);
              assert.isUndefined(result);
 
+         });
+
+         it('should OptInStrategy handle; Empty TypeData ', () => {
+            var args = {
+                  Email: 'test@test.com',
+                  SubscriptionType: 'test',
+            };
+             var res = {
+                 json: function(data) {},
+                 render: function(data) {}
+             };
+
+             var result = emarsysSFRAHelper.processor(args, res);
+             assert.isUndefined(result);
          });
         });
 

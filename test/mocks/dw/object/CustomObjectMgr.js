@@ -99,6 +99,7 @@ var objects = {
                 otherSource: JSON.stringify(["forgot_password_submitted","contact_form_submitted"]),
                 newsletterSubscriptionSource: JSON.stringify(["newsletter_subscription_confirmation","newsletter_unsubscribe_success"]),
                 otherResult: JSON.stringify([
+                    {"sfccName":"cancelled_order","emarsysId":"12678","emarsysName":"SFCC_CANCELLED_ORDER"},
                     {"sfccName":"forgot_password_submitted","emarsysId":"12561","emarsysName":"SFCC_FORGOT_PASSWORD_SUBMITTED"},
                     {"sfccName":"contact_form_submitted","emarsysId":"12563","emarsysName":"SFCC_CONTACT_FORM_SUBMITTED"}
                 ]),
@@ -186,16 +187,16 @@ var objects = {
             custom: {
                 EmarsysSubscriptionType: 'footer',
                 optInStrategy: '1',
-                optInExternalEvent: '11884',
-                optInExternalEventAfterConfirmation: '11884'
+                optInExternalEvent: 'newsletter_subscription_confirmation',
+                optInExternalEventAfterConfirmation: 'newsletter_subscription_confirmation'
             }
         },
         'account': {
             custom: {
                 EmarsysSubscriptionType: 'account',
                 optInStrategy: '2',
-                optInExternalEvent: '11883',
-                optInExternalEventAfterConfirmation: '11884'
+                optInExternalEvent: 'newsletter_subscription_confirmation',
+                optInExternalEventAfterConfirmation: 'newsletter_subscription_confirmation'
             }
         },
         'test': {

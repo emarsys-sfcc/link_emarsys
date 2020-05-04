@@ -179,12 +179,12 @@ function subscriptionTypeData(SubscriptionType) {
 
         if (co.custom.optInStrategy) {
             args.Strategy = co.custom.optInStrategy;
-            args.ExternalEvent = co.custom.optInExternalEvent;
-            args.ExternalEventAfterConfirmation = co.custom.optInExternalEventAfterConfirmation;
+            args.ExternalEventName = co.custom.optInExternalEvent; // name
+            args.ExternalEventAfterConfirmationName = co.custom.optInExternalEventAfterConfirmation;
         } else {
             args.Strategy = null;
-            args.ExternalEvent = null;
-            args.ExternalEventAfterConfirmation = null;
+            args.ExternalEventName = null;
+            args.ExternalEventAfterConfirmationName = null;
         }
         // commit the CO modifications and return the processed args
         return args;
