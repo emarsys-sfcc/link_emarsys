@@ -21,6 +21,7 @@ var ExportCustomerInfo = {
         this.emarsysHelper = new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))();
 
         var enableCustomTimeFrame = params.enableCustomTimeFrame;
+        var queryString = params.queryString;
         var timeframeStart = params.timeframeStart;
         var timeframeEnd = params.timeframeEnd;
         var day = 24 * 60 * 60 * 1000;// 24hrs in millis
@@ -29,7 +30,9 @@ var ExportCustomerInfo = {
         // subtract number of milliseconds in 24h from today presentation im millis as well and create a new date with it
         yesterday = new Date(yesterday.setTime(yesterday.getTime() - day));
 
+        var enableAPI = params.enableAPI;
         var Separator = params.csvFileColumnsDelimiter;
+        var profilesExportLimit = params.profilesExportThreshold;
         var FileName = this.createFileName();
         var FolderName = Site.getCustomPreferenceValue('emarsysIMPEXFolderString');
 
@@ -37,91 +40,76 @@ var ExportCustomerInfo = {
 
         var folderPath = File.IMPEX + '/src/' + FolderName;
         var filePath = folderPath + '/' + FileName + '.csv';
-        var folder = new File(folderPath);
         var currentSiteId = Site.getID();
-        var Profiles;
         var exportFileWriter;
-        var exportCSVStreamWriter;
 
         try {
             var FieldConfigurationCO = CustomObjectMgr.getCustomObject('EmarsysDBLoadConfig', 'dbloadConfig');
-            var FieldConfiguration = JSON.parse(FieldConfigurationCO.custom.mappedFields);
             var ProfileFieldsCO = CustomObjectMgr.getCustomObject('EmarsysProfileFields', 'profileFields');
             var ProfileFields = JSON.parse(ProfileFieldsCO.custom.result);
-            var OptInStatus = params.optInStatus;
-            var OptInStatusAttribute = params.customAttributeId;
-            var CountryValueCodes = JSON.parse(Site.getCustomPreferenceValue('emarsysCountryCodes'));
-            var GenderValueCodes = JSON.parse(Site.getCustomPreferenceValue('emarsysGenderCodes'));
-            var FieldValueMapping = JSON.parse(Site.getCustomPreferenceValue('emarsysSingleChoiceValueMapping'));
-            if (!folder.exists()) {
-                folder.mkdirs();
+
+            this.OptInStatus = params.optInStatus;
+            this.OptInStatusAttribute = params.customAttributeId;
+            this.FieldConfiguration = JSON.parse(FieldConfigurationCO.custom.mappedFields);
+            this.CountryValueCodes = JSON.parse(Site.getCustomPreferenceValue('emarsysCountryCodes'));
+            this.GenderValueCodes = JSON.parse(Site.getCustomPreferenceValue('emarsysGenderCodes'));
+            this.FieldValueMapping = JSON.parse(Site.getCustomPreferenceValue('emarsysSingleChoiceValueMapping'));
+
+            if (!enableAPI) {
+                var folder = new File(folderPath);
+                if (!folder.exists()) {
+                    folder.mkdirs();
+                }
+
+                var exportFile = new File(filePath);
+                exportFileWriter = new io.FileWriter(exportFile);
+                this.exportCSVStreamWriter = new io.CSVStreamWriter(exportFileWriter, Separator, '"');
+
+                var ProfileInfoHeader = this.makeCSVHeader(this.FieldConfiguration, ProfileFields);
+                if (ProfileInfoHeader.indexOf('Opt-In') === -1) {
+                    ProfileInfoHeader.push('Opt-In');
+                }
+                this.exportCSVStreamWriter.writeNext(ProfileInfoHeader);
+                this.ProfilesExportThreshold = profilesExportLimit;
+            } else {
+                this.ProfilesExportThreshold = profilesExportLimit <= 1000 ? profilesExportLimit : 1000;
             }
 
-            var exportFile = new File(filePath);
-            exportFileWriter = new io.FileWriter(exportFile);
-            exportCSVStreamWriter = new io.CSVStreamWriter(exportFileWriter, Separator, '"');
-
-            var ProfileInfoHeader = this.makeCSVHeader(FieldConfiguration, ProfileFields);
-            if (ProfileInfoHeader.indexOf('Opt-In') === -1) {
-                ProfileInfoHeader.push('Opt-In');
-            }
-            exportCSVStreamWriter.writeNext(ProfileInfoHeader);
-
-            var ProfilesExportThreshold = params.profilesExportThreshold;
-
-            var ExportedProfiles = 0;
+            this.ExportedProfiles = 0;
 
             // start date for export timeframe
             var startDate = enableCustomTimeFrame ? timeframeStart : yesterday;
             // end date for export timeframe
             var endDate = enableCustomTimeFrame ? timeframeEnd : today;
 
-            var customExportAttribute = 'emarsysExportedProfileFlag' + currentSiteId;
+            this.customExportAttribute = 'emarsysExportedProfileFlag' + currentSiteId;
             var customExportFlag = 'custom.emarsysExportedProfileFlag' + currentSiteId;
             var query = '(NOT ' + customExportFlag + ' = true)';
             var PROFILE_BY = 'creationDate desc';
-            if (enableCustomTimeFrame && startDate && endDate) {
-                query += ' AND (creationDate >= {0} AND creationDate <= {1})';
-                Profiles = customerMgr.searchProfiles(query, PROFILE_BY, startDate, endDate);
-            } else {
-                Profiles = customerMgr.searchProfiles(query, PROFILE_BY);
+
+            if (queryString !== null) {
+                query += queryString;
             }
-            var ProfileInfo = [];
-            var Address;
-            var Profile;
 
-            var writeLine = function (indexField) {
-                var Field = FieldConfiguration[indexField];
-                if (Field.field !== '31') {
-                    ProfileInfo.push(this.getAttributeValue(Address, Profile, Field, CountryValueCodes, GenderValueCodes, FieldValueMapping));
-                }
-            };
-
-            while (Profiles.hasNext()) {
-                Profile = Profiles.next();
-
-                if (Profile.addressBook.preferredAddress !== null) {
-                    Address = Profile.addressBook.preferredAddress;
-                } else if (Profile.addressBook.addresses.length > 0) {
-                    Address = Profile.addressBook.addresses[0];
+            try {
+                if (enableCustomTimeFrame && startDate && endDate) {
+                    query += ' AND (creationDate >= {0} AND creationDate <= {1})';
+                    this.Profiles = customerMgr.searchProfiles(query, PROFILE_BY, startDate, endDate);
                 } else {
-                    Address = {};
+                    this.Profiles = customerMgr.searchProfiles(query, PROFILE_BY);
                 }
-
-                Object.keys(FieldConfiguration).forEach(writeLine, this);
-
-                this.selectOptInStatus(Profile, OptInStatus, OptInStatusAttribute, ProfileInfo);
-
-                exportCSVStreamWriter.writeNext(ProfileInfo);
-                ExportedProfiles++;
-                Profile.custom[customExportAttribute] = true;
-
-                if (ExportedProfiles === ProfilesExportThreshold) {
-                    break;
-                }
+            } catch (err) {
+                this.logger.error('[Emarsys ExportCustomerInfo.js] - ***Error message: ' + err.message + '\n' + err.stack + 'check the step parameters');
+                return new Status(Status.ERROR, 'ERROR');
             }
 
-            if (ExportedProfiles < ProfilesExportThreshold) {
+            if (enableAPI) {
+                this.processExportDataAPI();
+            } else {
+                this.processExportDataCSV();
+            }
+
+            if (this.ExportedProfiles < this.ProfilesExportThreshold) {
                 Site.setCustomPreferenceValue('emarsysDBLoadExportStatus', true);
             }
 
@@ -129,13 +117,112 @@ var ExportCustomerInfo = {
 
             return new Status(Status.OK, 'OK');
         } catch (err) {
-            this.logger.error('[ExportProfilesAsCSV.js #' + err.lineNumber + '] - ***Emarsys CSV profile data export error message: ' + err);
+            this.logger.error('[ExportCustomerInfo.js #' + err.lineNumber + '] - ***Emarsys CSV profile data export error message: ' + err);
             return new Status(Status.ERROR, 'ERROR');
         } finally {
-            exportCSVStreamWriter.close();
-            exportFileWriter.close();
-            Profiles.close();
+            if (!enableAPI) {
+                this.exportCSVStreamWriter.close();
+                exportFileWriter.close();
+            }
+            this.Profiles.close();
         }
+    },
+
+    /**
+     * @description Process customers data and write to csv file
+     * @returns {void} write customer data
+     */
+    processExportDataCSV: function () {
+        var ProfileInfo = [];
+        var Address;
+        var Profile;
+        var writeLine = function (indexField) {
+            var Field = this.FieldConfiguration[indexField];
+            if (+Field.field !== 31) {
+                ProfileInfo.push(this.getAttributeValue(Address, Profile, Field, this.CountryValueCodes, this.GenderValueCodes, this.FieldValueMapping));
+            }
+        };
+
+        while (this.Profiles.hasNext()) {
+            Profile = this.Profiles.next();
+            ProfileInfo = [];
+            if (Profile.addressBook.preferredAddress !== null) {
+                Address = Profile.addressBook.preferredAddress;
+            } else if (Profile.addressBook.addresses.length > 0) {
+                Address = Profile.addressBook.addresses[0];
+            } else {
+                Address = {};
+            }
+
+            Object.keys(this.FieldConfiguration).forEach(writeLine, this);
+
+            ProfileInfo.push(this.selectOptInStatus(Profile, this.OptInStatus, this.OptInStatusAttribute));
+
+            this.exportCSVStreamWriter.writeNext(ProfileInfo);
+
+            this.ExportedProfiles++;
+            Profile.custom[this.customExportAttribute] = true;
+
+            if (this.ExportedProfiles === this.ProfilesExportThreshold) {
+                break;
+            }
+        }
+    },
+
+    /**
+     * @description create data customer using API
+     * @returns {void} Process customers data
+     */
+    processExportDataAPI: function () {
+        var Address;
+        var Profile;
+        var contactData;
+        var customer = {};
+        var customerContactList = [];
+
+        var customerData = function (indexField) {
+            var Field = this.FieldConfiguration[indexField];
+            var key = Field.field;
+            if (+Field.field !== 31) {
+                customer[key] = this.getAttributeValue(Address, Profile, Field, this.CountryValueCodes, this.GenderValueCodes, this.FieldValueMapping);
+            }
+        };
+
+        while (this.Profiles.hasNext()) {
+            Profile = this.Profiles.next();
+            customer = {};
+            if (Profile.addressBook.preferredAddress !== null) {
+                Address = Profile.addressBook.preferredAddress;
+            } else if (Profile.addressBook.addresses.length > 0) {
+                Address = Profile.addressBook.addresses[0];
+            } else {
+                Address = {};
+            }
+
+            Object.keys(this.FieldConfiguration).forEach(customerData, this);
+
+            customer['31'] = this.selectOptInStatus(Profile, this.OptInStatus, this.OptInStatusAttribute);
+
+            customerContactList.push(customer);
+            this.ExportedProfiles++;
+            Profile.custom[this.customExportAttribute] = true;
+
+            if (this.ExportedProfiles === this.ProfilesExportThreshold || !this.Profiles.hasNext()) {
+                var request = {
+                    keyId: '3',
+                    contacts: customerContactList
+                };
+
+                contactData = this.emarsysHelper.triggerAPICall('contact', request, 'POST');
+                if (contactData.status !== 'OK') {
+                    this.logger.error('[Emarsys ExportCustomerInfo.js - contact data error:' + contactData.error + '] - ***Emarsys error message: ' + contactData.errorMessage);
+                    return new Status(Status.ERROR, 'info');
+                }
+                this.ExportedProfiles = 0;
+            }
+        }
+
+        return new Status(Status.OK, 'OK');
     },
 
     /**
@@ -185,7 +272,7 @@ var ExportCustomerInfo = {
     exportStatus: function () {
         var ExportStatus = Site.getCustomPreferenceValue('emarsysDBLoadExportStatus');
         if (!ExportStatus) {
-            this.logger.error('[ExportProfilesAsCSV.js] - ***emarsysDBLoadExportStatus is: ' + ExportStatus);
+            this.logger.error('[Emarsys ExportCustomerInfo.js] - ***emarsysDBLoadExportStatus is: ' + ExportStatus);
             return new Status(Status.ERROR, 'ERROR');
         }
         return new Status(Status.OK, 'OK');
@@ -229,7 +316,7 @@ var ExportCustomerInfo = {
         var attributeValue = '';
         if (assignedValue) {
             var listOfValues = [];    // list of all possible values for specified field
-           
+
             if (FieldValueMapping[Field.field]) {
                 listOfValues = FieldValueMapping[Field.field];
             }
@@ -297,7 +384,7 @@ var ExportCustomerInfo = {
 
             Object.keys(FieldValueMapping[attributeId]).forEach(function (keyGender) {
                 var gender = FieldValueMapping[attributeId][keyGender];
-                if (gender.value === genderCode) {
+                if (+gender.value === +genderCode) {
                     genderValue = gender.choice;
                 }
             }, this);
@@ -354,27 +441,22 @@ var ExportCustomerInfo = {
      * @param {Object} Profile current profile
      * @param {string} OptInStatus OptInStatus
      * @param {string} OptInStatusAttribute OptInStatusAttribute
-     * @param {Object} ProfileInfo ProfileInfo
      * @return {void}
      */
-    selectOptInStatus: function (Profile, OptInStatus, OptInStatusAttribute, ProfileInfo) {
+    selectOptInStatus: function (Profile, OptInStatus, OptInStatusAttribute) {
         switch (OptInStatus) {
             case 0 : // All users empty
-                ProfileInfo.push('');
-                break;
+                return '';
             case 1 : // All users true
-                ProfileInfo.push(1);
-                break;
+                return 1;
             case 2 : // Depending on attribute
                 if (Profile.custom[OptInStatusAttribute] !== null && Profile.custom[OptInStatusAttribute]) {
-                    ProfileInfo.push(1);
-                } else {
-                    ProfileInfo.push(1);
+                    return 1;
                 }
-                break;
+                return 1;
+
             default :
-                ProfileInfo.push('');
-                break;
+                return '';
         }
     }
 };

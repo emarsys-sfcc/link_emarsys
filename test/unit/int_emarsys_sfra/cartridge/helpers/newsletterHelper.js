@@ -122,10 +122,6 @@ describe('newsletterHelper Helpers', () => {
         var result = newsletterHelper.getCustomerData(args);
         assert.deepEqual(result.Map, {});
     });
-    it('Testing method: getSourceID', () => {
-        var result = newsletterHelper.getSourceID({});
-        assert.deepEqual(result, {});
-    });
 
     it('Testing method: doubleOptInSubscribe', () => {
         var args = {
@@ -137,12 +133,30 @@ describe('newsletterHelper Helpers', () => {
         assert.deepEqual(result, args);
     });
 
+    it('Testing method: doubleOptInSubscribe; bad event', () => {
+        var args = {
+            ExternalEvent: 1000,
+            ExternalEventAfterConfirmation: 1000,
+            Strategy: 1
+        };
+        var result = newsletterHelper.doubleOptInSubscribe(args);
+        assert.isNull(result);
+    });
     it('Testing method: subscriptionTypeData', () => {
         var result = newsletterHelper.subscriptionTypeData('account');
         assert.deepEqual(result, {
             Strategy: '2',
-            ExternalEvent: '11883',
-            ExternalEventAfterConfirmation: '11884'
+            ExternalEventName: 'newsletter_subscription_confirmation',
+            ExternalEventAfterConfirmationName: 'newsletter_subscription_confirmation'
+        });
+    });
+
+    it('Testing method: subscriptionTypeData', () => {
+        var result = newsletterHelper.subscriptionTypeData('test');
+        assert.deepEqual(result, {
+            Strategy: null,
+            ExternalEventName: null,
+            ExternalEventAfterConfirmationName: null
         });
     });
 
@@ -162,6 +176,15 @@ describe('newsletterHelper Helpers', () => {
     it('Testing method: triggerExternalEvent', () => {
         var args = {
             ExternalEvent: 5634,
+            Email: 'test@test.com'
+        };
+        var result = newsletterHelper.triggerExternalEvent(args);
+        assert.deepEqual(result,args);
+    });
+
+    it('Testing method: triggerExternalEvent; bad event', () => {
+        var args = {
+            ExternalEvent: 1000,
             Email: 'test@test.com'
         };
         var result = newsletterHelper.triggerExternalEvent(args);
@@ -226,9 +249,64 @@ describe('newsletterHelper Helpers', () => {
         });
     });
 
+    it('Testing method: newsletterUnsubscribe; empty passedParams', () => {
+        var args = {
+                uid: 'iduser123',
+                cid: 'idcampaign123',
+                lid: 'idlist123',
+                confirmation: {
+                    triggeredAction:{
+                        formId: 'newsletter_unsubscribe'
+                    }
+            }
+        };
+        var result = newsletterHelper.newsletterUnsubscribe(args);
+        assert.deepEqual(result, {
+            cid: 'idcampaign123',
+            confirmation: {
+            triggeredAction: {
+                formId: 'newsletter_unsubscribe'
+                }
+            },
+            errorText: 'ERROR',
+            errors: true,
+            lid: 'idlist123',
+            showConfirmation: false,
+            uid: 'iduser123'
+        });
+    });
+
+    it('Testing method: newsletterUnsubscribe; empty confirmation', () => {
+        var args = {
+                uid: 'iduser123',
+                cid: 'idcampaign123',
+                lid: 'idlist123',
+                direct: 'n'
+        };
+        var result = newsletterHelper.newsletterUnsubscribe(args);
+        assert.deepEqual(result, {
+            cid: 'idcampaign123',
+            lid: 'idlist123',
+            direct: 'n',
+            params: {
+                cid: 'idcampaign123',
+                direct: 'y',
+                lid: 'idlist123',
+                uid: 'iduser123'
+            },
+            showConfirmation: true,
+            uid: 'iduser123'
+        });
+    });
+
     it('Testing method: accountUnsubscribe', () => {
         var result = newsletterHelper.accountUnsubscribe('test@test.com');
         assert.equal(result.status,'SUCCESS');
+    });
+
+    it('Testing method: accountUnsubscribe; Empty Email', () => {
+        var result = newsletterHelper.accountUnsubscribe('');
+        assert.equal(result.status,'NO EMAIL');
     });
 
 });

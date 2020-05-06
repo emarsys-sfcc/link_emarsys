@@ -130,22 +130,30 @@
         <description>Setup job for Emarsys implementation.</description>
         <parameters/>
         <flow>
-            <context site-id="SiteGenesis"/>
-            <step step-id="get available profile fields" type="custom.EmarsysComponents.GetAvailableProfileFields" enforce-restart="false">
-                <description>Retrieve all profile fields from Emarsys</description>
+            <context site-id="RefArch"/>
+            <step step-id="GetSourceID" type="custom.EmarsysComponents.GetSourceID" enforce-restart="false">
+                <description/>
                 <parameters/>
             </step>
-            <step step-id="Get Available Events" type="custom.EmarsysComponents.GetAvailableEvents" enforce-restart="false">
-                <description>Retrieve Emarsys events</description>
+            <step step-id="GetAvailableProfileFields" type="custom.EmarsysComponents.GetAvailableProfileFields" enforce-restart="false">
+                <description/>
                 <parameters/>
             </step>
-            <step step-id="Get Source ID" type="custom.EmarsysComponents.GetSourceID" enforce-restart="false">
-                <description>Get source id on Emarsys side</description>
+            <step step-id="CreateSingleChoiceValueMapping" type="custom.EmarsysComponents.CreateSingleChoiceValueMapping" enforce-restart="false">
+                <description/>
                 <parameters/>
             </step>
-            <step step-id="create single choice value mapping" type="custom.EmarsysComponents.CreateSingleChoiceValueMapping" enforce-restart="false">
-                <description>Create Single Choice Value Mapping</description>
-                <parameters/>
+            <step step-id="CreateExternalEvents" type="custom.EmarsysComponents.CreateExternalEvents" enforce-restart="false">
+                <description/>
+                <parameters>
+                    <parameter name="customObjectKey">StoredEvents</parameter>
+                </parameters>
+            </step>
+            <step step-id="GetAvailableEvents" type="custom.EmarsysComponents.GetAvailableEvents" enforce-restart="false">
+                <description/>
+                <parameters>
+                    <parameter name="isDisabled">true</parameter>
+                </parameters>
             </step>
         </flow>
         <rules/>

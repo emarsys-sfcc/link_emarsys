@@ -25,9 +25,15 @@
                             "default-value": "USD"
                         },
                         {
-                            "@name":"enableCustomTimeFrame",
-                            "@type":"boolean",
-                            "description":"Enable timeframe for exported orders"
+                            "@name": "queryString",
+                            "@type": "string",
+                            "@required": "false",
+                            "description": "Add a query addendum for searchOrders. Start with AND"
+                        },
+                        {
+                            "@name": "enableCustomTimeFrame",
+                            "@type": "boolean",
+                            "description": "Enable timeframe for exported orders"
                         },
                         {
                             "@name": "timeframeStart",
@@ -76,6 +82,13 @@
                             "@required": "false",
                             "@trim": "true",
                             "description": "Export file name"
+                        },
+                        {
+                            "@name": "catalogConfigKey",
+                            "@type": "string",
+                            "@required": "true",
+                            "@trim": "true",
+                            "description": "Add the unique key value for custom object"
                         }
                     ]
                 },
@@ -204,6 +217,18 @@
                 "description": "Retrieve all profile fields from Emarsys",
                 "function": "execute",
                 "transactional":"true",
+                "parameters": {
+                    "parameters": [
+                        {
+                            "@name": "isDisabled",
+                            "description": "Mark the step as disabled. This will skip the step and returns a OK status",
+                            "@type": "boolean",
+                            "@required": false,
+                            "@trim": true,
+                            "default-value": false
+                        }
+                    ]
+                },
                 "status-codes": {
                     "status": [{
                             "@code": "ERROR",
@@ -261,6 +286,12 @@
                 "parameters": {
                     "parameter": [
                         {
+                            "@name":"enableAPI",
+                            "@type":"boolean",
+                            "@required": "false",
+                            "description":"Enable API call on Emarsys for exported customer data"
+                        },
+                        {
                             "@name": "csvFileColumnsDelimiter",
                             "@type": "string",
                             "@required": "true",
@@ -297,8 +328,15 @@
                             "default-value": "1000"
                         },
                         {
+                            "@name": "queryString",
+                            "@type": "string",
+                            "@required": "false",
+                            "description": "Add a query addendum for searchOrders. Start with AND"
+                        },
+                        {
                             "@name":"enableCustomTimeFrame",
                             "@type":"boolean",
+                            "@required": "false",
                             "description":"Enable timeframe for exported orders"
                         },
                         {
@@ -362,6 +400,18 @@
                             "@required": "true",
                             "description": "Character used to separate columns in the csv file.",
                             "default-value": ";"
+                        },
+                        {
+                            "@name": "keyField",
+                            "@type": "string",
+                            "@required": "false",
+                            "description": "Key that will be used to identify the customer"
+                        },
+                        {
+                            "@name": "isDisabled",
+                            "@type":"boolean",
+                            "@required": "false",
+                            "description": "Used to exclude the step"
                         }
                     ]
                 },
@@ -382,6 +432,16 @@
                 "module": "int_emarsys/cartridge/scripts/jobsteps/UploadProfilesCSVToWebDAV.js",
                 "description": "Exports customer info for Emarsys",
                 "function": "execute",
+                "parameters": {
+                    "parameter": [
+                        {
+                            "@name": "isDisabled",
+                            "@type":"boolean",
+                            "@required": "false",
+                            "description": "Used to exclude the step"
+                        }
+                    ]
+                },
                 "status-codes": {
                     "status": [{
                             "@code": "ERROR",
@@ -395,11 +455,63 @@
                 }
             },
             {
-                "@type-id": "custom.EmarsysComponents.ShippingConfirmation",
-                "module": "int_emarsys/cartridge/scripts/jobsteps/SendShippingData.js",
+                "@type-id": "custom.EmarsysComponents.OrderStatusСhangeNotification",
+                "module": "int_emarsys/cartridge/scripts/jobsteps/OrderStatusСhangeNotification.js",
                 "description": "Send a confirmation emails through campaign on Emarsys",
                 "function": "execute",
                 "transactional":"true",
+                "parameters": {
+                    "parameter": [
+                        {
+                            "@name": "isDisabled",
+                            "@type":"boolean",
+                            "@required": "false",
+                            "description": "Used to exclude the step"
+                        },
+                        {
+                            "@name": "stepFunctional",
+                            "@type": "long",
+                            "@required": "true",
+                            "description": "0 - send shipping data for Emarsys; 1 - send cancelled orders for Emarsys",
+                            "enum-values": {
+                                "value": [
+                                    "0",
+                                    "1"
+                                ]
+                            },
+                            "default-value": "0"
+                        }
+                    ]
+                },
+                "status-codes": {
+                    "status": [{
+                            "@code": "ERROR",
+                            "description": "Used when an error occurred."
+                        },
+                        {
+                            "@code": "OK",
+                            "description": "Used when execution was successful."
+                        }
+                    ]
+                }
+            },
+            {
+                "@type-id": "custom.EmarsysComponents.CreateExternalEvents",
+                "module": "int_emarsys/cartridge/scripts/jobsteps/CreateExternalEvents.js",
+                "description": "Creates external events on Emarsys",
+                "function": "execute",
+                "transactional":"true",
+                "parameters": {
+                    "parameter": [
+                        {
+                            "@name": "customObjectKey",
+                            "@type": "string",
+                            "@trim": "true",
+                            "description": "Key for custom object with events description",
+                            "default-value": "StoredEvents"
+                        }
+                    ]
+                },
                 "status-codes": {
                     "status": [{
                             "@code": "ERROR",
@@ -412,6 +524,7 @@
                     ]
                 }
             }
+
         ]
     }
 }

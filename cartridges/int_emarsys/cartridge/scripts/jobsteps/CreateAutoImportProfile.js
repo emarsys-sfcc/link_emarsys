@@ -12,10 +12,15 @@ var CreateAutoImportProfile = {
     execute: function (params) {
         this.emarsysHelper = new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))();
 
+        if (params.isDisabled) {
+            return new Status(Status.OK, 'OK', 'Step disabled, skip it...');
+        }
+
         var FieldValueMapping = currentSite.getCustomPreferenceValue('emarsysSingleChoiceValueMapping');
         var FileName = currentSite.getCustomPreferenceValue('emarsysFileNameString');
 
         var Separator = params.csvFileColumnsDelimiter;
+        var keyField = params.keyField ? params.keyField : 'E-Mail';
         var request = {};
         var response;
 
@@ -66,7 +71,7 @@ var CreateAutoImportProfile = {
                         var newObject = {};
                         newObject.id = index;
                         newObject.field_name = profileField.name;
-                        newObject.is_key = (profileField.name === 'E-Mail');
+                        newObject.is_key = (profileField.name === keyField);
                         newObject.element_name = profileField.name;
                         newObject.element_id = profileField.id;
                         newObject.values = values;
@@ -94,7 +99,7 @@ var CreateAutoImportProfile = {
                 return new Status(Status.ERROR, 'info');
             }
         } catch (err) {
-            this.logger.error('[CreateAutoImportProfile.js #' + err.lineNumber + '] - ***Emarsys Auto import error message: ' + err);
+            this.logger.error('[Emarsys CreateAutoImportProfile.js] - ***Emarsys Auto import error message: ' + err.message + '\n' + err.stack);
             return new Status(Status.ERROR, 'ERROR');
         }
 

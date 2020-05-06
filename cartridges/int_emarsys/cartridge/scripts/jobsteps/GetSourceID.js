@@ -13,51 +13,52 @@ var SourceID = {
         try {
             this.emarsysHelper = new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))();
 
-            this.getSourceId();
+            var sourceName = Site.current.preferences.custom.emarsysSourceName;
+            var createSource;
+            var sourceId;
+            var request = {
+                name: sourceName
+            };
+            var getAllSources = this.emarsysHelper.triggerAPICall('source', {}, 'GET');
+
+            if (getAllSources.status === 'OK') {
+                // if source exists the id will be returned
+                sourceId = this.emarsysHelper.getSourceId(getAllSources, sourceName);
+            } else {
+                this.logger.error('[Emarsys GetSourceID.js - Get resources error:' + getAllSources.error + '] - ***Emarsys error message: ' + getAllSources.errorMessage);
+                return new Status(Status.ERROR, 'ERROR');
+            }
+
+            if (!sourceId) {
+                // create a source
+                createSource = this.emarsysHelper.triggerAPICall('source/create', request, 'POST');
+
+                if (createSource.status === 'OK') {
+                    // if source exists the id will be returned
+                    getAllSources = this.emarsysHelper.triggerAPICall('source', {}, 'GET');
+
+                    if (getAllSources.status === 'OK') {
+                        // if source exists the id will be returned
+                        sourceId = this.emarsysHelper.getSourceId(getAllSources, sourceName);
+                    } else {
+                        this.logger.error('[Emarsys GetSourceID.js - Get sources error:' + getAllSources.error + '] - ***Emarsys error message: ' + getAllSources.errorMessage);
+                        return new Status(Status.ERROR, 'ERROR');
+                    }
+                } else {
+                    this.logger.error('[Emarsys GetSourceID.js - Create source error:' + getAllSources.error + '] - ***Emarsys error message: ' + getAllSources.errorMessage);
+                    return new Status(Status.ERROR, 'ERROR');
+                }
+            }
+
+            Site.current.setCustomPreferenceValue('emarsysSourceID', sourceId);
         } catch (err) {
-            this.logger.error('SourceID: Error ' + err.message + '\n' + err.stack);
+            this.logger.error('[Emarsys GetSourceID.js] - ***Emarsys get source data error message: ' + err.message + '\n' + err.stack);
 
             return new Status(Status.ERROR, 'ERROR');
         }
 
         return new Status(Status.OK, 'OK');
-    },
-    /**
-     * @description creates a source, gets id source and store it in custom preference
-     * @returns {void} set custom preference value
-     */
-    getSourceId: function () {
-        var sourceName = Site.current.preferences.custom.emarsysSourceName;
-        var createSource;
-        var sourceId;
-        var request = {
-            name: sourceName
-        };
-        var getAllSources = this.emarsysHelper.triggerAPICall('source', {}, 'GET');
-
-        if (getAllSources.status === 'OK') {
-            // if source exists the id will be returned
-            sourceId = this.emarsysHelper.getSourceId(getAllSources, sourceName);
-        }
-
-        if (!sourceId) {
-            // create a source
-            createSource = this.emarsysHelper.triggerAPICall('source/create', request, 'POST');
-
-            if (createSource.status === 'OK') {
-                // if source exists the id will be returned
-                getAllSources = this.emarsysHelper.triggerAPICall('source', {}, 'GET');
-
-                if (getAllSources.status === 'OK') {
-                    // if source exists the id will be returned
-                    sourceId = this.emarsysHelper.getSourceId(getAllSources, sourceName);
-                }
-            }
-        }
-
-        Site.current.setCustomPreferenceValue('emarsysSourceID', sourceId);
     }
-
 };
 
 exports.execute = SourceID.execute.bind(SourceID);

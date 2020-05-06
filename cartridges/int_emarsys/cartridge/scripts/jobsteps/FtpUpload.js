@@ -24,7 +24,7 @@ var Status = require('dw/system/Status');
 var run = function run() {
     var jobHelper = require('int_emarsys/cartridge/scripts/helpers/jobHelper');
     var emarsysFTPService = require('int_emarsys/cartridge/scripts/service/emarsysFTPService');
-    var StepUtil = require('int_emarsys/cartridge/scripts/util/stepUtil');
+    var StepUtil = require('int_emarsys/cartridge/scripts/util/StepUtil');
     var args = arguments[0];
 
     if (StepUtil.isDisabled(args)) {

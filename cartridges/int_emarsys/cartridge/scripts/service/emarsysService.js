@@ -76,7 +76,12 @@ module.exports = {
                 var authorization = self.getAuthorizationData(service);
                 var requestUrl = service.getURL() + params.endpoint;
 
+                var version = require('dw/system/System').getCompatibilityMode();
+                var emarsysVersion = require('dw/web/Resource').msg('emarsys.version', 'emarsysinfo', null);
+                var plugin = 'SFRA-' + emarsysVersion + '-' + version;
+
                 service.addHeader('X-WSSE', authorization);
+                service.addHeader('x-plugin', plugin);
                 service.setRequestMethod(params.requestMethod);
                 service.setURL(requestUrl);
 

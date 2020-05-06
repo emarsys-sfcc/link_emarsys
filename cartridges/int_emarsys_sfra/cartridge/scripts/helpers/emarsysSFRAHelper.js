@@ -2,6 +2,7 @@
 
 var Logger = require('dw/system/Logger').getLogger('emarsys');
 var newsletterHelper = require('~/cartridge/scripts/helpers/newsletterHelper');
+var eventsHelper = require('*/cartridge/scripts/helpers/triggerEventHelper');
 var Site = require('dw/system/Site');
 
 /**
@@ -305,7 +306,7 @@ function handleOptInStrategy1(args, res) {
 function checkNotEmpty(args, res) {
     var status = false;
     if (empty(args)) {
-        redirectToErrorPage(args, res);
+        errorPage(args, res);
     } else {
         status = true;
     }
@@ -324,12 +325,19 @@ function processor(args, res) {
         // get subscription data type info
         var TypeData = newsletterHelper.subscriptionTypeData(args.SubscriptionType);
         var accountStatus;
+        var fieldKey = 'newsletterSubscriptionResult';
+
+        TypeData.ExternalEvent = eventsHelper.getExternalEventData(TypeData.ExternalEventName, fieldKey).emarsysId;
+        TypeData.ExternalEventAfterConfirmation = eventsHelper.getExternalEventData(TypeData.ExternalEventAfterConfirmationName, fieldKey).emarsysId;
 
         // redirect in case of error
         if (empty(TypeData) || empty(TypeData.Strategy)) {
             redirectToErrorPage(Args, res);
             return;
         }
+        Args.Strategy = TypeData.Strategy;
+        Args.ExternalEvent = TypeData.ExternalEvent;
+        Args.ExternalEventAfterConfirmation = TypeData.ExternalEventAfterConfirmation;
 
         if (TypeData.Strategy === '1') {
             handleOptInStrategy1(Args, res);

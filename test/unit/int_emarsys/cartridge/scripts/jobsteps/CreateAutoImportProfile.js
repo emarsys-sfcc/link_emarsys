@@ -36,9 +36,10 @@ var createAutoImportProfile = proxyquire(cartridgePath + 'cartridge/scripts/jobs
 
 describe('CreateAutoImportProfile jobstep', () => {
 
-    it('Testing method: execute', () => {
+    it('Testing method: execute; isDisabled: true', () => {
        var args = {
-        csvFileColumnsDelimiter: ';'
+        csvFileColumnsDelimiter: ';',
+        isDisabled: true
        };
       var result = createAutoImportProfile.execute(args);
       assert.deepEqual(result,{
@@ -47,4 +48,15 @@ describe('CreateAutoImportProfile jobstep', () => {
         });
     });
 
+    it('Testing method: execute; isDisabled: false', () => {
+        var args = {
+         csvFileColumnsDelimiter: ';',
+         isDisabled: false
+        };
+       var result = createAutoImportProfile.execute(args);
+       assert.deepEqual(result,{
+             code: 'OK',
+             status: 2
+         });
+     });
 });

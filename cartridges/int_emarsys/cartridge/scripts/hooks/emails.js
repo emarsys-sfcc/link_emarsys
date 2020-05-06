@@ -16,7 +16,14 @@ function orderConfirmation(args) {
     var countryCodes = require('dw/system').Site.getCurrent().getCustomPreferenceValue('emarsysCountryCodes');
     var contactHTTPRequest = 'PUT'; // defaults to update
     var sendData = {};
-    var isSubscribe = session.forms.billing.subscribe.value;
+    var billing = session.forms.billing;
+    var isSubscribe = false;
+
+    if (Object.hasOwnProperty.call(billing, 'subscribe')) {
+        isSubscribe = billing.subscribe.value;
+    } else if (Object.hasOwnProperty.call(billing, 'billingAddress')) {
+        isSubscribe = billing.billingAddress.addToEmailList.checked;
+    }
 
     try {
         Transaction.wrap(function () {
@@ -44,7 +51,9 @@ function orderConfirmation(args) {
             var contactData = {};
             contactData.key_id = 3; // search by e-mail
             contactData['3'] = order.customerEmail;// customer e-mail address
-            contactData['31'] = isSubscribe ? 1 : 2;
+            if (isSubscribe) {
+                contactData['31'] = 1;
+            }
 
             // if source id value exists add it to request
             emarsysHelper.addSourceIdToRequest(contactData);
@@ -84,7 +93,7 @@ function orderConfirmation(args) {
             }
         }
     } catch (err) {
-        logger.error('[hook/emails.js #' + err.lineNumber + '] - ***Emarsys order confirmation email error message: ' + err);
+        logger.error('[hook/emails.js] - ***Emarsys order confirmation email error message: ' + err.message + '\n' + err.stack);
     }
 }
 

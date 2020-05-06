@@ -57,6 +57,7 @@ describe('ExportCustomerInfo jobstep', () => {
 
     it('Testing method: execute', () => {
         var args = {
+            enableAPI: false,
             csvFileColumnsDelimiter: ';',
             optInStatus: '0',
             customAttributeId: 'EmarsysOptInFlag',
@@ -92,5 +93,48 @@ describe('ExportCustomerInfo jobstep', () => {
             status: 2
         });
 
+    });
+
+    it('Testing method: execute; enableAPI = true', () => {
+        var args = {
+            enableAPI: true,
+            csvFileColumnsDelimiter: ';',
+            optInStatus: 0,
+            customAttributeId: 'EmarsysOptInFlag',
+            profilesExportThreshold: '1000',
+            fromEmail: 'test@gmail.com',
+            mailTo: 'marsik.tagManager@gmail.com',
+            mailSubject: 'Export orders'
+        };
+        var result = ExportCustomerInfo.execute(args);
+        assert.deepEqual(result, {
+            code: 'OK',
+            status: 2
+        });
+    });
+
+    it('Testing method: execute; optInStatus', () => {
+        var args = {
+            enableAPI: true,
+            csvFileColumnsDelimiter: ';',
+            optInStatus: 1, // All users true
+            customAttributeId: 'EmarsysOptInFlag',
+            profilesExportThreshold: '1000',
+            fromEmail: 'test@gmail.com',
+            mailTo: 'marsik.tagManager@gmail.com',
+            mailSubject: 'Export orders'
+        };
+        var result = ExportCustomerInfo.execute(args);
+        assert.deepEqual(result, {
+            code: 'OK',
+            status: 2
+        });
+
+        args.optInStatus = 2;  // Depending on attribute
+        var result = ExportCustomerInfo.execute(args);
+        assert.deepEqual(result, {
+            code: 'OK',
+            status: 2
+        });
     });
 });

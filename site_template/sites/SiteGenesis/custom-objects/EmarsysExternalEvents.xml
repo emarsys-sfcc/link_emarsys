@@ -3,7 +3,11 @@
     <custom-object type-id="EmarsysExternalEvents" object-id="StoredEvents">
         <object-attribute attribute-id="id">StoredEvents</object-attribute>
         <object-attribute attribute-id="name">StoredEvents</object-attribute>
-        <object-attribute attribute-id="result">[{"id":"5633","name":"single"},{"id":"5634","name":"double"},{"id":"5636","name":"single account"},{"id":"5637","name":"double account"},{"id":"5638","name":"single checkout"},{"id":"5639","name":"double checkout"}]</object-attribute>
+        <object-attribute attribute-id="newsletterSubscriptionResult"></object-attribute>
+        <object-attribute attribute-id="newsletterSubscriptionSource">["newsletter_subscription_confirmation","newsletter_subscription_success","newsletter_unsubscribe_success"]</object-attribute>
+        <object-attribute attribute-id="otherResult"></object-attribute>
+        <object-attribute attribute-id="otherSource">["cancelled_order","forgot_password_submitted","contact_form_submitted"]</object-attribute>
+        <object-attribute attribute-id="result">[{"id":"5633","name":"single"},{"id":"5634","name":"double"},{"id":"5636","name":"single account"},{"id":"5637","name":"double account"},{"id":"5638","name":"single checkout"},{"id":"5639","name":"double checkout"},{"id":"9744","name":"demandware shipping confirmation"},{"id":"11882","name":"single-optin"},{"id":"11883","name":"double-optin"},{"id":"12065","name":"availability_Rec"},{"id":"12200","name":"double opt-in save contact"},{"id":"12364","name":"passwordReset"},{"id":"12561","name":"SFCC_FORGOT_PASSWORD_SUBMITTED"},{"id":"12563","name":"SFCC_CONTACT_FORM_SUBMITTED"},{"id":"12644","name":"SFCC_NEWSLETTER_SUBSCRIPTION_CONFIRMATION"},{"id":"12645","name":"SFCC_NEWSLETTER_SUBSCRIPTION_SUCCESS"},{"id":"12646","name":"SFCC_NEWSLETTER_UNSUBSCRIBE_SUCCESS"},{"id":"12676","name":"SFCC_NEW_OTHER_EVENT"},{"id":"12677","name":"SFCC_NEW_SUBSCRIPTION_EVENT"},{"id":"12678","name":"SFCC_CANCELLED_ORDER"}]</object-attribute>
     </custom-object>
 
 </custom-objects>

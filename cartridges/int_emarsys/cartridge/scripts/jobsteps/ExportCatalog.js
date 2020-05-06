@@ -36,7 +36,7 @@ var EmarsysProductFeed = {
             this.processProducts();
             this.cleanUp();
         } catch (err) {
-            this.logger.error('EmarsysProductFeed: Error ' + err.message + '\n' + err.stack);
+            this.logger.error('[Emarsys ExportCatalog.js] - ***EmarsysProductFeed error message: ' + err.message + '\n' + err.stack);
 
             return new Status(Status.ERROR, 'ERROR');
         }
@@ -79,7 +79,7 @@ var EmarsysProductFeed = {
 
     /**
      * @description create and write csv header
-     * @param {Object} args job step configurations
+     * @param {Object} args args
      * @returns {void} write column names
      */
     prepareCsvStreamWriter: function (args) {
@@ -87,7 +87,8 @@ var EmarsysProductFeed = {
             return;
         }
 
-        this.predictConfig = CustomObjectMgr.getCustomObject('EmarsysPredictConfig', 'predictConfig');
+        var catalogConfigKey = args.catalogConfigKey;
+        this.predictConfig = CustomObjectMgr.getCustomObject('EmarsysCatalogConfig', catalogConfigKey);
         this.siteLocales = this.currentSite.getAllowedLocales();
         this.defaultLocale = this.currentSite.getDefaultLocale();
         this.currenciesMap = JSON.parse(this.currentSite.getCustomPreferenceValue('emarsysPredictLocCurMap'));
@@ -144,10 +145,22 @@ var EmarsysProductFeed = {
             var exportType = this.predictConfig.custom.exportType;
 
             if ((exportType === 'master' && product.isMaster()) || exportType === 'variations') {
+                var data = {
+                    mappedFields: this.mappedFields,
+                    siteLocales: this.siteLocales,
+                    defaultLocale: this.defaultLocale,
+                    currenciesMap: this.currenciesMap,
+                    product: product
+                };
                 var productInfo = [];
-                jobHelper.getProductInfo(this.mappedFields, product, productInfo, this.siteLocales, this.defaultLocale, this.currenciesMap);
-                // Write product info
+
+                productInfo = jobHelper.getProductInfo(data, false);
                 productInfo.forEach(writeLine, this);
+
+                if (!(product.isMaster() || product.isVariant())) {
+                    productInfo = jobHelper.getProductInfo(data, true);
+                    productInfo.forEach(writeLine, this);
+                }
             }
         }
     },
