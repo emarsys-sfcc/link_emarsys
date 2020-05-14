@@ -38,6 +38,7 @@ describe('BMEmarsysHelper Helpers', () => {
     it('Testing method: getExternalEvents', () => {
         var result = BMEmarsysHelper.getExternalEvents('EmarsysExternalEvents','StoredEvents', 'otherResult');
         assert.deepEqual(result, [
+            {id: '12678', name: 'cancelled_order'},
             {id: '12561', name: 'forgot_password_submitted'},
             {id: '12563', name: 'contact_form_submitted'}]);
     });

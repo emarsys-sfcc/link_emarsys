@@ -113,6 +113,7 @@ describe('emarsysEventsHelper Helpers', () => {
             otherSource: ["forgot_password_submitted","contact_form_submitted"],
             newsletterSubscriptionSource: ["newsletter_subscription_confirmation","newsletter_unsubscribe_success"],
             otherResult: [
+                {"sfccName":"cancelled_order","emarsysId":"12678","emarsysName":"SFCC_CANCELLED_ORDER"},
                 {"sfccName":"forgot_password_submitted","emarsysId":"12561","emarsysName":"SFCC_FORGOT_PASSWORD_SUBMITTED"},
                 {"sfccName":"contact_form_submitted","emarsysId":"12563","emarsysName":"SFCC_CONTACT_FORM_SUBMITTED"},
             ],
