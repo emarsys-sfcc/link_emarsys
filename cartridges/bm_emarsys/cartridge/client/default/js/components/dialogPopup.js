@@ -12,10 +12,12 @@ function open($dialog) {
  * Hide dialog popup
  * @param {Object} $dialog - jQuery wrap for dialog node
  */
+/* eslint-disable */
 function close($dialog) {
     $dialog.parent().addClass('hidden-block');
     removeEventHandlers($dialog);
 }
+/* eslint-enable */
 
 /**
  * Gets valid dialog node from arguments
