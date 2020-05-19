@@ -1,0 +1,32 @@
+{
+    "subscription": {},
+    "other": {
+        "cancelled_order": {
+            "requestBodyExample": {
+                "key_id": "3",
+                "external_id": "test@gmail.com",
+                "data": {
+                    "global": {
+                        "order_number": "00008103",
+                        "customer_email": "test@gmail.com",
+                        "shipping_address_1": "735 E Fillmore St",
+                        "order_date": "2020-02-18 09:42:39"
+                    },
+                    "products": [
+                        {
+                            "product_price_currency": "USD",
+                            "product_rebate": {}
+                        }
+                    ]
+                }
+            },
+            "fieldsMapping": [
+                { "field": "email", "place": "external_id" },
+                { "field": "orderNumber", "place": "data.global.order_number" },
+                { "field": "shippingAddress", "place": "data.global.shipping_address_1" },
+                { "field": "orderDate", "place": "data.global.order_date" },
+                { "field": "currency", "place": "data.products[0].product_price_currency" }
+            ]
+        }
+    }
+}

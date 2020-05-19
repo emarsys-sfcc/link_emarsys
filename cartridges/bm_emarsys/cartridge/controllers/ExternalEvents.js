@@ -5,6 +5,7 @@ var Transaction = require('dw/system/Transaction');
 var URLUtils = require('dw/web/URLUtils');
 var Resource = require('dw/web/Resource');
 var eventsHelper = require('*/cartridge/scripts/helpers/emarsysEventsHelper');
+var supportedEventsData = require('*/cartridge/config/supportedEventsData');
 
 server.get('Show',
     server.middleware.https,
@@ -77,7 +78,8 @@ server.get('Show',
                 subscriptionNotMappedEvents: subscriptionNotMappedEvents,
                 otherNotMappedEvents: otherNotMappedEvents,
                 subscriptionEmarsysDescriptions: subscriptionEmarsysDescriptions,
-                otherEmarsysDescriptions: otherEmarsysDescriptions
+                otherEmarsysDescriptions: otherEmarsysDescriptions,
+                supportedEventsData: supportedEventsData
             }
         });
 
@@ -162,10 +164,13 @@ server.post('Add',
             }
         });
 
+        var additionalEventData = supportedEventsData[event.type][event.sfccName] || {};
+
         res.json({
             response: {
                 status: 'OK',
-                result: event
+                result: event,
+                eventData: additionalEventData
             }
         });
         return next();
@@ -252,6 +257,52 @@ server.post('Update',
                 result: event
             }
         });
+        return next();
+    }
+);
+
+/**
+ * @description Add new Emarsys external event
+ */
+server.post('Trigger',
+    server.middleware.https,
+    function (req, res, next) {
+        var event = {
+            type: request.httpParameterMap.type.value,
+            emarsysId: request.httpParameterMap.emarsysId.value || '',
+            emarsysName: request.httpParameterMap.emarsysName.value || '',
+            sfccName: request.httpParameterMap.sfccName.value
+        };
+
+        if (!empty(event.emarsysName) && empty(event.emarsysId)) {
+            var url = 'event/' + event.emarsysId + '/trigger';
+/*
+            var requestBody = {
+                // data from the trigger event dialog form
+            };
+
+            // send request to trigger event with specified name
+            var response = eventsHelper.makeCallToEmarsys(url, requestBody, 'POST');
+            if (response.status === 'ERROR') {
+                response.message = Resource.msg('emarsys.error', 'errorMessages', null) + response.message;
+                res.json({ response: response });
+                return next();
+            }
+
+            res.json({
+                response: {
+                    status: response.result && response.result.replyText
+                }
+            });
+*/
+            res.json({  response: { status: 'OK' }  });
+        } else {
+            res.json({
+                response: {
+                    status: 'Error'
+                }
+            });
+        }
         return next();
     }
 );

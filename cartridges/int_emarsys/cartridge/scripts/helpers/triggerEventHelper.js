@@ -182,8 +182,7 @@ function processEventTriggering(sfccEventName, extendFunc, initialData) {
     var isEmarsysEnable = Site.getCurrent().getCustomPreferenceValue('emarsysEnabled');
     if (isEmarsysEnable) {
         try {
-            var context = {};
-            context = extendFunc(context, initialData);
+            var context = extendFunc({}, initialData);
 
             // get emarsys side external event name and it's id
             context.externalEventId = getExternalEventData(sfccEventName, 'otherResult').emarsysId;
