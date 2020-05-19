@@ -54,6 +54,16 @@
                         ${Resource.msg("button.change", "externalEvents", null)}
                     </button>
                 </div>
+                <div class="column-basic button-column">
+                    <button class="js-example-button button-basic">
+                        ${Resource.msg("button.example", "externalEvents", null)}
+                    </button>
+                </div>
+                <div class="column-basic button-column">
+                    <button class="js-trigger-button button-basic">
+                        ${Resource.msg("button.trigger", "externalEvents", null)}
+                    </button>
+                </div>
             </div>
         </isloop>
         <div class="js-empty-table-notification empty-notification-block hide-content">

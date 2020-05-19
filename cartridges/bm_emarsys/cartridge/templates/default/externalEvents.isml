@@ -24,6 +24,9 @@
             data-add-event="${pdict.urls.addEvent}"
             data-update-event="${pdict.urls.updateEvent}">
         </div>
+        <div class="js-supported-events-data"
+            data-additional-data="${JSON.stringify(pdict.response.supportedEventsData)}">
+        </div>
         <div class="js-button-labels"
             data-change="${Resource.msg("button.change", "externalEvents", null)}"
             data-apply="${Resource.msg("button.apply", "externalEvents", null)}">
@@ -33,7 +36,10 @@
         </div>
         <div class="js-dialog-messages"
             data-add-subscription="${Resource.msg("dialog.add.subscription.title", "externalEvents", null)}"
-            data-add-other="${Resource.msg("dialog.add.other.title", "externalEvents", null)}">
+            data-add-other="${Resource.msg("dialog.add.other.title", "externalEvents", null)}"
+            data-show-example="${Resource.msg("dialog.request.example.title", "externalEvents", null)}"
+            data-unsupported-event="${Resource.msg("dialog.unsupported.event", "externalEvents", null)}"
+            data-trigger-event="${Resource.msg("dialog.trigger.event.title", "externalEvents", null)}">
         </div>
         <div class="js-notification-messages"
             data-success-event="${Resource.msg("success.message.event", "externalEvents", null)}"
@@ -75,6 +81,61 @@
                 </button>
             </div>
         </div>
+
+        <iscomment> request body example (custom) dialog template </iscomment>
+        <div class="js-request-body-example dialog-block">
+            <div class="dialog-header-block">
+                <span class="js-dialog-title dialog-title">
+                    ${Resource.msg("dialog.request.example.title", "externalEvents", null)}
+                </span>
+                <span class="js-close-button dialog-close-button"></span>
+            </div>
+            <div class="js-content-block dialog-content-block">
+                <pre class="request-example-container"></pre>
+            </div>
+            <div class="dialog-footer-block">
+                <button class="js-confirm-button button-basic">
+                    ${Resource.msg("button.confirm.default", "dialogPopup", null)}
+                </button>
+            </div>
+        </div>
+
+        <iscomment> trigger event (custom) dialog template </iscomment>
+        <div class="js-trigger-event dialog-block">
+            <div class="dialog-header-block">
+                <span class="js-dialog-title dialog-title">
+                    ${Resource.msg("dialog.trigger.event.title", "externalEvents", null)}
+                </span>
+                <span class="js-close-button dialog-close-button"></span>
+            </div>
+            <div class="js-content-block dialog-content-block"></div>
+            <div class="dialog-footer-block">
+                <button class="js-cancel-button button-basic dialog-cancel-button">
+                    ${Resource.msg("dialog.button.cancel", "externalEvents", null)}
+                </button>
+                <button class="js-confirm-button button-basic">
+                    ${Resource.msg("dialog.button.trigger", "externalEvents", null)}
+                </button>
+            </div>
+        </div>
+
+        <form class="trigger-event-form" action="${URLUtils.url('ExternalEvents-Trigger')}" method="POST">
+            <label>*Email:
+                <input type="text" name="email">
+            </label><br/>
+            <label>Order number:
+                <input type="text" name="orderNumber">
+            </label><br/>
+            <label>Shipping address:
+                <input type="text" name="shippingAddress">
+            </label><br/>
+            <label>Date:
+                <input type="text" name="orderDate">
+            </label><br/>
+            <label>Currency:
+                <input type="text" name="currency">
+            </label>
+        </form>
 
         <iscomment> row template </iscomment>
         <div class="js-external-events-row row-basic">

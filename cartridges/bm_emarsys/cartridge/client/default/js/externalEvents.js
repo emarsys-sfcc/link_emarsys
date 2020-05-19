@@ -84,11 +84,11 @@ module.exports = {
         checkTableContent('subscription');
         checkTableContent('other');
     },
-    initDialog: function () {
+    initAddEventDialog: function () {
         /**
          * Custom function to open add event dialog
          */
-        function openDialog() {
+        function openAddEventDialog() {
             var $dialog = this.dialog;
 
             // refresh sfcc names select
@@ -120,7 +120,7 @@ module.exports = {
          * Custom function to close add event dialog
          * @return {Object} - user response data to add new event
          */
-        function closeDialog() {
+        function closeAddEventDialog() {
             var $dialog = this.dialog;
             dialogPopup.close($dialog);
 
@@ -143,8 +143,8 @@ module.exports = {
         // init add event button
         dialogPopup.init({
             dialogSelector: '.js-page-data-block .js-add-event-dialog',
-            openCallback: openDialog,
-            closeCallback: closeDialog
+            openCallback: openAddEventDialog,
+            closeCallback: closeAddEventDialog
         });
     },
     initAddEventButtons: function () {
@@ -482,5 +482,219 @@ module.exports = {
                 e.data.applyChanges('other', $(e.target));
             }
         );
+    },
+    initRequestBodyExampleDialog: function () {
+        /**
+         * Custom function to open request body example dialog
+         */
+        function openExampleDialog() {
+            var $dialog = this.dialog;
+
+            var supportedEventsData = $('.js-page-data-block .js-supported-events-data').data('additional-data');
+            var additionalEventData = supportedEventsData[this.eventType][this.sfccEventName];
+            var exampleObject = additionalEventData && additionalEventData.requestBodyExample;
+
+            var message = '';
+            if (exampleObject) {
+                message = JSON.stringify(exampleObject, null, 2);
+            } else {
+                message = $('.js-page-data-block .js-dialog-messages').data('unsupported-event');
+            }
+            $dialog.find('.js-content-block pre').text(message);
+
+            dialogPopup.applyReplacementsList($dialog, this.replaceList);
+            dialogPopup.open($dialog);
+        }
+
+        // init add event button
+        dialogPopup.init({
+            dialogSelector: '.js-page-data-block .js-request-body-example',
+            openCallback: openExampleDialog
+        });
+    },
+    initRequestBodyExampleButton: function () {
+        /**
+         * Click handler for request body example button
+         * @param {string} eventType - neded to separate work with different types of events
+         * @param {Object} $exampleButton - example button node
+         */
+        function showRequestBodyExample(eventType, $exampleButton) {
+            var $row = $exampleButton.closest('.js-external-events-row');
+            var sfccEventName = $row.attr('data-sfcc-name');
+
+            dialogPopup.getUserResponse({
+                dialogSelector: '.js-request-body-example',
+                eventType: eventType,
+                sfccEventName: sfccEventName,
+                replaceList: [
+                    {
+                        selector: '.js-dialog-title',
+                        text: $('.js-dialog-messages').data('show-example') + ' "' + sfccEventName + '"'
+                    }
+                ]
+            });
+
+            // hide old notifications
+            showStatus();
+        }
+
+        $('.js-subscription-events-table .js-example-button').on('click', {
+            showRequestBodyExample: showRequestBodyExample
+        }, function (e) {
+            e.data.showRequestBodyExample('subscription', $(e.target));
+        });
+        $('.js-other-events-table .js-example-button').on('click', {
+            showRequestBodyExample: showRequestBodyExample
+        }, function (e) {
+            e.data.showRequestBodyExample('other', $(e.target));
+        });
+    },
+    initTriggerEventDialog: function () {
+        /**
+         * Function to prepare html structure for the trigger event form
+         * @param {Object} fieldsDescription - fields description for trigger event form
+         * @return {jQuery} - trigger event form node
+         */
+        function prepareTriggerEventForm(fieldsDescription) {
+            return $('.js-page-data-block .trigger-event-form').clone();
+        }
+        /**
+         * Custom function to open trigger event dialog
+         */
+        function openTriggerDialog() {
+            var $dialog = this.dialog;
+
+            var form = prepareTriggerEventForm();
+            var contentBlock = $dialog.find('.dialog-content-block');
+            contentBlock.children().remove();
+            contentBlock.append(form);
+
+            dialogPopup.applyReplacementsList($dialog, this.replaceList);
+            dialogPopup.open($dialog);
+        }
+        /**
+         * Custom function to close trigger event dialog
+         * @return {Object} - user response data
+         */
+        function closeTriggerDialog() {
+            var $dialog = this.dialog;
+            dialogPopup.close($dialog);
+
+            // hide old notifications
+            showStatus();
+
+            var triggerEventForm = $dialog.find('.js-content-block form');
+
+            return {
+                eventType: this.eventType,
+                serializedForm: triggerEventForm.serializeArray(),
+                event: this.event
+            };
+        }
+
+        // init add event button
+        dialogPopup.init({
+            dialogSelector: '.js-page-data-block .js-trigger-event',
+            openCallback: openTriggerDialog,
+            closeCallback: closeTriggerDialog
+        });
+    },
+    initTriggerEventButton: function () {
+        /**
+         * Trigger event request success handler
+         * @param {Object} data - response data
+         */
+        function triggerEventSuccessHandler(data) {
+            if (data.response && data.response.status === 'OK') {
+                showStatus('success', 'The event was successfully triggered');
+            } else if (data.response && data.response.status === 'ERROR') {
+                // Emarsys error
+                showStatus('error', data.response.message);
+            }
+        }
+        /**
+         * Send request to trigger event
+         * @param {Object} result - user response data from dialog
+         */
+        function sendRequest(result) {
+            if (!result || result.status === 'cancel') { return; }
+
+            var warning = '';
+            var eventType = result.data.eventType;
+            var serializedForm = result.data.serializedForm;
+            var event = result.data.event;
+
+            // if (!event.sfccName) {
+            //     // Warning message: Name of new event is not specified
+            //     warning = $('.js-notification-messages').data('empty-name-error');
+            //     showStatus('error', warning);
+            //     setTimeout(function () { showStatus(); }, 5000);
+            //     return;
+            // }
+
+            var requestData = {
+                type: eventType,
+                sfccName: event.sfccName,
+                emarsysId: event.emarsysId,
+                emarsysName: event.emarsysName,
+                serializedForm: serializedForm
+            };
+
+            $.ajax({
+                url: $('.js-page-links').data('add-event'),
+                type: 'post',
+                dataType: 'json',
+                data: requestData,
+                context: { eventType: eventType },
+                success: triggerEventSuccessHandler,
+                error: requestErrorHandler
+            });
+        }
+        /**
+         * Click handler for trigger event button
+         * @param {string} eventType - neded to separate work with different types of events
+         * @param {Object} $triggerButton - trigger event button node
+         */
+        function triggerEvent(eventType, $triggerButton) {
+            var $row = $triggerButton.closest('.js-external-events-row');
+            var event = {
+                emarsysId: $row.attr('data-emarsys-id'),
+                emarsysName: $row.attr('data-emarsys-name'),
+                sfccName: $row.attr('data-sfcc-name')
+            };
+
+            var supportedEventsData = $('.js-page-data-block .js-supported-events-data').data('additional-data');
+            var additionalEventData = supportedEventsData[eventType][event.sfccName];
+            var exampleObject = additionalEventData && additionalEventData.requestBodyExample;
+            if (!exampleObject) { return; }
+
+            dialogPopup.getUserResponse({
+                dialogSelector: '.js-trigger-event',
+                eventType: eventType,
+                event: event,
+                replaceList: [
+                    {
+                        selector: '.js-dialog-title',
+                        text: $('.js-dialog-messages').data('trigger-event') + ' "' + event.sfccName + '"'
+                    }
+                ]
+            }).then(
+                sendRequest
+            );
+
+            // hide old notifications
+            showStatus();
+        }
+
+        $('.js-subscription-events-table .js-trigger-button').on('click', {
+            triggerEvent: triggerEvent
+        }, function (e) {
+            e.data.triggerEvent('subscription', $(e.target));
+        });
+        $('.js-other-events-table .js-trigger-button').on('click', {
+            triggerEvent: triggerEvent
+        }, function (e) {
+            e.data.triggerEvent('other', $(e.target));
+        });
     }
 };
