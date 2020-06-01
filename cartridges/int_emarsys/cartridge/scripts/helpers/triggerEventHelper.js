@@ -1,7 +1,6 @@
 'use strict';
 
 var Site = require('dw/system/Site');
-var CustomObjectMgr = require('dw/object/CustomObjectMgr');
 var emarsysHelper = new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))();
 
 /**
@@ -122,56 +121,6 @@ function getExternalEventData(sfccEventName, fieldKey) {
 }
 
 /**
- * @description Get Emarsys profile fields descriptions
- * @return {Object} - Emarsys fields descriptions
- */
-function prepareFieldsDescriptions() {
-    var currentSite = Site.getCurrent();
-    var fieldValueMapping = {};
-    var profileFieldsList = [];
-    try {
-        var ProfileFieldsCO = CustomObjectMgr.getCustomObject('EmarsysProfileFields', 'profileFields');
-        profileFieldsList = JSON.parse(ProfileFieldsCO.custom.result);
-    } catch (err) {
-        throw new Error('[Emarsys triggerEventHelper.js getEmarsysProfileFields()] - ***Get Emarsys profile fields error message:' + err.message + '\n' + err.stack);
-    }
-
-    try {
-        fieldValueMapping = JSON.parse(currentSite.getCustomPreferenceValue('emarsysSingleChoiceValueMapping'));
-    } catch (err) {
-        throw new Error('[Emarsys triggerEventHelper.js getSingleChoiceValueMapping()] - ***Get single choice value mapping error message:' + err.message + '\n' + err.stack);
-    }
-
-    var profileFields = {};
-    profileFieldsList.forEach(function (fieldObj) {
-        var field = {
-            id: '' + fieldObj.id,
-            name: fieldObj.name,
-            string_id: fieldObj.string_id,
-            application_type: fieldObj.application_type
-        };
-
-        field.isSingleChoice = Object.keys(this.fieldValueMapping).indexOf(field.id) !== -1;
-        // get options data (if any exist)
-        if (field.isSingleChoice) {
-            field.options = {};
-            this.fieldValueMapping[field.id].forEach(function (valueObj) {
-                this.options[valueObj.choice] = valueObj.value;
-            }, field);
-        }
-
-        // write data to profile fields collection if the record is valid
-        if (!empty(fieldObj.string_id) && !empty(fieldObj.id)) {
-            this.profileFields[fieldObj.string_id] = field;
-        }
-    }, {
-        profileFields: profileFields,
-        fieldValueMapping: fieldValueMapping
-    });
-    return profileFields;
-}
-
-/**
  * @description Collect additional data and run trigger function
  * @param {string} sfccEventName - Emarsys external event
  * @param {Function} extendFunc - extend or assign function to rewrite all properties from incomming object
@@ -188,7 +137,7 @@ function processEventTriggering(sfccEventName, extendFunc, initialData) {
             context.externalEventId = getExternalEventData(sfccEventName, 'otherResult').emarsysId;
 
             // get Emarsys profile fields descriptions
-            context.profileFields = prepareFieldsDescriptions();
+            context.profileFields = emarsysHelper.prepareFieldsDescriptions();
 
             if (!empty(context.externalEventId)) {
                 triggerExternalEvent(context);
@@ -202,6 +151,5 @@ function processEventTriggering(sfccEventName, extendFunc, initialData) {
 module.exports = {
     triggerExternalEvent: triggerExternalEvent,
     getExternalEventData: getExternalEventData,
-    prepareFieldsDescriptions: prepareFieldsDescriptions,
     processEventTriggering: processEventTriggering
 };

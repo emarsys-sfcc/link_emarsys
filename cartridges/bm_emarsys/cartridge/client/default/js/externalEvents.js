@@ -53,6 +53,7 @@ function refreshCreatedEventOption(event, eventType) {
     var $emarsysSelect = $('.js-page-data-block .js-' + eventType + '-events .js-emarsys-name-select');
     var $option = $emarsysSelect.children('[value="' + event.emarsysName + '"]');
     $option.attr('data-emarsys-id', event.emarsysId);
+    $option.attr('data-campaign-id', event.campaignId);
 
     // refresh active select nodes
     var $activeSelectNodes = $('.js-' + eventType + '-events-table .js-emarsys-name-select').filter(':not(:disabled)');
@@ -66,6 +67,27 @@ function refreshCreatedEventOption(event, eventType) {
         $emarsysSelectTemplate.val($(this).val());
         $(this).replaceWith($emarsysSelectTemplate);
     });
+}
+
+/**
+ * Refresh data attribute with external events descriptions
+ * @param {Object} event - external event data object
+ * @param {string} eventType - neded to find appropriate block with data
+ */
+function refreshEmarsysDescriptions(event, eventType) {
+    var emarsysDescriptions = $('.js-page-data-block .js-' + eventType + '-events').data('emarsys-descriptions');
+    var context = {
+        event: event,
+        index: emarsysDescriptions.length
+    };
+    emarsysDescriptions.some(function (description, i) {
+        var isTarget = description.emarsysName === this.event.emarsysName;
+        if (isTarget) {
+            this.index = i;
+        }
+        return isTarget;
+    }, context);
+    emarsysDescriptions.splice(context.index, 1, event);
 }
 
 module.exports = {
@@ -166,41 +188,39 @@ module.exports = {
             return openDialogPermission;
         }
         /**
-         * Prepare row with mapped event data
-         * @param {string} eventType - neded to separate work with different types of events
-         * @param {Object} event - all data about mapping of the event
-         * @return {Object} - row node to put into events table
-         */
-        function prepareRow(eventType, event) {
-            var $row = $('.js-page-data-block .js-external-events-row').clone();
-            // fill row data attributes
-            $row.attr('data-emarsys-id', event.emarsysId);
-            $row.attr('data-emarsys-name', event.emarsysName);
-            $row.attr('data-sfcc-name', event.sfccName);
-            // set event sfcc name
-            $row.find('.js-sfcc-name-span').text(event.sfccName);
-            // replace empty emarsys name select
-            var $emarsysSelect = $row.find('.js-emarsys-name-select');
-            var $emarsysSelectTemplate = prepareEmarsysNameSelect(eventType, event.emarsysName);
-            $emarsysSelectTemplate.prop('disabled', true);
-            // only "approrpeate" and "none" options allowed for other events mapping
-            if (eventType === 'other') {
-                $emarsysSelectTemplate.children(
-                    ':not([value="' + eventNameFormatter(event.sfccName) + '"],[value=""])'
-                ).remove();
-            }
-            $emarsysSelect.replaceWith($emarsysSelectTemplate);
-            return $row;
-        }
-        /**
          * Add event request success handler
          * @param {Object} data - response data
          */
         function addEventSuccessHandler(data) {
-            if (data.response && data.response.status === 'OK') {
-                var event = data.response.result;
+            var htmlData = $(data);
+            var response = {
+                newRow: htmlData.find('.js-external-events-row'),
+                requestBodyExample: htmlData.find('.js-supported-events-data').data('request-example'),
+                triggerForm: htmlData.find('.js-trigger-form'),
+                error: htmlData.find('.js-request-error').data('error')
+            };
+
+            if (response.newRow) {
+                var event = {
+                    emarsysId: response.newRow.attr('data-emarsys-id'),
+                    emarsysName: response.newRow.attr('data-emarsys-name'),
+                    sfccName: response.newRow.attr('data-sfcc-name'),
+                    campaignId: response.newRow.find('.js-campaign-status').data('id'),
+                    campaignStatus: response.newRow.find('.js-campaign-status').data('status')
+                };
                 var message = '';
                 var eventType = this.eventType;
+
+                // refresh campaign status
+                var campaignsData = $('.js-page-data-block .js-' + eventType + '-events').data('campaigns');
+                if (campaignsData[event.emarsysId]) {
+                    campaignsData[event.emarsysId].status = event.campaignStatus;
+                } else {
+                    campaignsData[event.emarsysId] = {
+                        id: event.campaignId,
+                        status: event.campaignStatus
+                    };
+                }
 
                 if (event.emarsysStatus === 'new' && eventType !== 'other') {
                     refreshCreatedEventOption(event, eventType);
@@ -213,19 +233,31 @@ module.exports = {
                 // hide block with empty table message (if exist)
                 $('.js-' + eventType + '-events-table .js-empty-table-notification').addClass('hide-content');
 
-                // prepare row with mapped event data
-                var $newRow = prepareRow(eventType, event);
-                // put the row into appropriate table
-                $newRow.insertBefore($('.js-' + eventType + '-events-table .js-empty-table-notification'));
+                // put new row into appropriate table
+                response.newRow.insertBefore($('.js-' + eventType + '-events-table .js-empty-table-notification'));
+
+                // store trigger request example
+                if (response.requestBodyExample && response.requestBodyExample.length) {
+                    var requestBodyExamples = $('.js-page-data-block .js-' + eventType + '-events').data('request-examples');
+                    requestBodyExamples[event.emarsysName] = response.requestBodyExample;
+                }
+
+                // store trigger event form
+                if (response.triggerForm && response.triggerForm.length) {
+                    $('.js-page-data-block .js-' + eventType + '-forms').append(response.triggerForm);
+                }
+
+                // refresh emarsys descriptions
+                refreshEmarsysDescriptions(event, eventType);
 
                 // Success message: Event ${event.sfccName} was successfully created
                 var $messagesBlock = $('.js-notification-messages');
                 message = $messagesBlock.data('success-event') +
                     event.sfccName + $messagesBlock.data('success-created');
                 showStatus('success', message);
-            } else if (data.response && data.response.status === 'ERROR') {
+            } else if (response.error && response.error.message === 'ERROR') {
                 // Emarsys error
-                showStatus('error', data.response.message);
+                showStatus('error', response.error.message);
             }
         }
         /**
@@ -254,17 +286,21 @@ module.exports = {
                 event.emarsysId = $appropriateOption.attr('data-emarsys-id');
             }
 
+            var campaignData = $('.js-page-data-block .js-' + eventType + '-events').data('campaigns')[event.emarsysId];
+
             var requestData = {
                 type: eventType,
                 sfccName: event.sfccName,
                 emarsysId: event.emarsysId,
-                emarsysName: event.emarsysName
+                emarsysName: event.emarsysName,
+                campaignId: campaignData && campaignData.id,
+                campaignStatus: campaignData && campaignData.status
             };
 
             $.ajax({
-                url: $('.js-page-links').data('add-event'),
+                url: $('.js-page-links').data('urls').addEvent,
                 type: 'post',
-                dataType: 'json',
+                dataType: 'text',
                 data: requestData,
                 context: { eventType: eventType },
                 success: addEventSuccessHandler,
@@ -401,7 +437,8 @@ module.exports = {
          */
         function updateSuccessHandler(data) {
             if (data.response && data.response.status === 'OK') {
-                var event = data.response.result;
+                var event = data.response.result.event;
+                var freshData = data.response.result.campaigns;
                 var message = '';
 
                 if (event.emarsysStatus === 'new' && this.eventType !== 'other') {
@@ -415,6 +452,13 @@ module.exports = {
                 // change data properties
                 this.row.attr('data-emarsys-id', event.emarsysId);
                 this.row.attr('data-emarsys-name', event.emarsysName);
+
+                // refresh campaign status
+                var campaignsData = $('.js-page-data-block .js-' + this.eventType + '-events').data('campaigns');
+                campaignsData[event.emarsysId].status = freshData[event.emarsysId].status;
+
+                // refresh emarsys descriptions
+                refreshEmarsysDescriptions(event, this.eventType);
 
                 // Success message: Event ${event.sfccName} was successfully changed
                 var $messagesBlock = $('.js-notification-messages');
@@ -436,6 +480,7 @@ module.exports = {
             var $chosenOption = $row.find('.js-emarsys-name-select').find('option').filter(':selected');
 
             var emarsysName = $chosenOption.attr('value');
+            var emarsysId = $chosenOption.attr('data-emarsys-id');
             var prevEmarsysName = $row.attr('data-emarsys-name');
 
             var context = {
@@ -451,17 +496,21 @@ module.exports = {
                 return;
             }
 
+            var campaignsData = $('.js-page-data-block .js-' + eventType + '-events').data('campaigns');
+
             var requestData = {
                 type: eventType,
                 sfccName: $row.attr('data-sfcc-name'),
-                emarsysId: $chosenOption.attr('data-emarsys-id'),
-                emarsysName: emarsysName
+                emarsysId: emarsysId,
+                emarsysName: emarsysName,
+                campaignId: campaignsData[emarsysId].id,
+                campaignStatus: campaignsData[emarsysId].status
             };
 
             $updateButton.prop('disabled', true);
 
             $.ajax({
-                url: $('.js-page-links').data('update-event'),
+                url: $('.js-page-links').data('urls').updateEvent,
                 type: 'post',
                 dataType: 'json',
                 data: requestData,
@@ -490,9 +539,8 @@ module.exports = {
         function openExampleDialog() {
             var $dialog = this.dialog;
 
-            var supportedEventsData = $('.js-page-data-block .js-supported-events-data').data('additional-data');
-            var additionalEventData = supportedEventsData[this.eventType][this.sfccEventName];
-            var exampleObject = additionalEventData && additionalEventData.requestBodyExample;
+            var requestBodyExamples = $('.js-page-data-block .js-' + this.eventType + '-events').data('request-examples');
+            var exampleObject = requestBodyExamples[this.emarsysEventName];
 
             var message = '';
             if (exampleObject) {
@@ -521,11 +569,12 @@ module.exports = {
         function showRequestBodyExample(eventType, $exampleButton) {
             var $row = $exampleButton.closest('.js-external-events-row');
             var sfccEventName = $row.attr('data-sfcc-name');
+            var emarsysEventName = $row.attr('data-emarsys-name');
 
             dialogPopup.getUserResponse({
                 dialogSelector: '.js-request-body-example',
                 eventType: eventType,
-                sfccEventName: sfccEventName,
+                emarsysEventName: emarsysEventName,
                 replaceList: [
                     {
                         selector: '.js-dialog-title',
@@ -551,23 +600,14 @@ module.exports = {
     },
     initTriggerEventDialog: function () {
         /**
-         * Function to prepare html structure for the trigger event form
-         * @param {Object} fieldsDescription - fields description for trigger event form
-         * @return {jQuery} - trigger event form node
-         */
-        function prepareTriggerEventForm(fieldsDescription) {
-            return $('.js-page-data-block .trigger-event-form').clone();
-        }
-        /**
          * Custom function to open trigger event dialog
          */
         function openTriggerDialog() {
             var $dialog = this.dialog;
 
-            var form = prepareTriggerEventForm();
             var contentBlock = $dialog.find('.dialog-content-block');
             contentBlock.children().remove();
-            contentBlock.append(form);
+            contentBlock.append(this.formTemplate);
 
             dialogPopup.applyReplacementsList($dialog, this.replaceList);
             dialogPopup.open($dialog);
@@ -583,11 +623,15 @@ module.exports = {
             // hide old notifications
             showStatus();
 
-            var triggerEventForm = $dialog.find('.js-content-block form');
+            var triggerFormFields = $dialog.find('.js-content-block .js-input-fields');
+            var formData = {};
+            Array.prototype.forEach.call(triggerFormFields, function (node) {
+                this.formData[$(node).attr('name')] = $(node).val();
+            }, { formData: formData });
 
             return {
                 eventType: this.eventType,
-                serializedForm: triggerEventForm.serializeArray(),
+                formData: formData,
                 event: this.event
             };
         }
@@ -619,29 +663,23 @@ module.exports = {
         function sendRequest(result) {
             if (!result || result.status === 'cancel') { return; }
 
-            var warning = '';
             var eventType = result.data.eventType;
-            var serializedForm = result.data.serializedForm;
+            var formData = result.data.formData;
             var event = result.data.event;
 
-            // if (!event.sfccName) {
-            //     // Warning message: Name of new event is not specified
-            //     warning = $('.js-notification-messages').data('empty-name-error');
-            //     showStatus('error', warning);
-            //     setTimeout(function () { showStatus(); }, 5000);
-            //     return;
-            // }
+            // TODO: Trigger form validation
 
             var requestData = {
                 type: eventType,
                 sfccName: event.sfccName,
                 emarsysId: event.emarsysId,
                 emarsysName: event.emarsysName,
-                serializedForm: serializedForm
+                campaignId: event.emarsysName,
+                formData: JSON.stringify(formData)
             };
 
             $.ajax({
-                url: $('.js-page-links').data('add-event'),
+                url: $('.js-page-links').data('urls').triggerEvent,
                 type: 'post',
                 dataType: 'json',
                 data: requestData,
@@ -663,15 +701,15 @@ module.exports = {
                 sfccName: $row.attr('data-sfcc-name')
             };
 
-            var supportedEventsData = $('.js-page-data-block .js-supported-events-data').data('additional-data');
-            var additionalEventData = supportedEventsData[eventType][event.sfccName];
-            var exampleObject = additionalEventData && additionalEventData.requestBodyExample;
-            if (!exampleObject) { return; }
+            var formsContainer = $('.js-page-data-block .js-' + eventType + '-forms');
+            var formTemplate = formsContainer.find('[data-event-name="' + event.sfccName + '"]')[0];
+            if (!formTemplate) { return; }
 
             dialogPopup.getUserResponse({
                 dialogSelector: '.js-trigger-event',
                 eventType: eventType,
                 event: event,
+                formTemplate: $(formTemplate).clone(),
                 replaceList: [
                     {
                         selector: '.js-dialog-title',
@@ -695,6 +733,65 @@ module.exports = {
             triggerEvent: triggerEvent
         }, function (e) {
             e.data.triggerEvent('other', $(e.target));
+        });
+    },
+    initRefreshStatusButtons: function () {
+        /**
+         * Request success handler for refresh campaign status
+         * @param {Object} data - response data
+         */
+        function refreshStatusSuccessHandler(data) {
+            if (data.response && data.response.status === 'OK') {
+                var eventType = data.response.eventType;
+                var freshData = data.response.campaigns;
+
+                $('.js-page-data-block .js-' + eventType + '-events').data('campaigns', freshData);
+
+                $('.js-' + eventType + '-events-table .js-external-events-row').each(function () {
+                    var emarsysEventId = $(this).attr('data-emarsys-id');
+                    var $statusNode = $(this).find('.js-campaign-status');
+                    $statusNode.data('emarsys-id', freshData[emarsysEventId].id);
+                    $statusNode.data('emarsys-status', freshData[emarsysEventId].status);
+                    $statusNode.text(freshData[emarsysEventId].status);
+                });
+
+                showStatus('success', 'Statys for "' + eventType + '" event campaigns was successfully refreshed');
+            } else if (data.response && data.response.status === 'ERROR') {
+                // Emarsys error
+                showStatus('error', data.response.message);
+            }
+        }
+
+        /**
+         * Click handler for refresh status button
+         * @param {string} eventType - neded to separate work with different types of events
+         */
+        function refreshStatus(eventType) {
+            var emarsysDescriptions = $('.js-page-data-block .js-' + eventType + '-events').data('emarsys-descriptions');
+            var requestData = {
+                type: eventType,
+                descriptions: JSON.stringify(emarsysDescriptions)
+            };
+            $.ajax({
+                url: $('.js-page-links').data('urls').campaignStatus,
+                type: 'post',
+                dataType: 'json',
+                data: requestData,
+                context: { eventType: eventType },
+                success: refreshStatusSuccessHandler,
+                error: requestErrorHandler
+            });
+        }
+
+        $('.js-refresh-status-subscription').on('click', {
+            refreshStatus: refreshStatus
+        }, function (e) {
+            e.data.refreshStatus('subscription', $(e.target));
+        });
+        $('.js-refresh-status-other').on('click', {
+            refreshStatus: refreshStatus
+        }, function (e) {
+            e.data.refreshStatus('other', $(e.target));
         });
     }
 };

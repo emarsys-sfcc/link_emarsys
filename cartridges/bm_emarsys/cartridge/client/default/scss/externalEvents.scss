@@ -59,11 +59,15 @@ div.table-title-column {
 
 .sfcc-name-column {
     padding-left: $column-padding;
-    width: 42%;
+    width: 30%;
 }
 
 .emarsys-name-column {
-    width: 50%;
+    width: 34%;
+}
+
+.campaign-status-column {
+    width: 12%;
 }
 
 .button-column {
@@ -71,6 +75,10 @@ div.table-title-column {
     min-width: 90px;
     -ms-flex-pack: center;
     justify-content: center;
+}
+
+.control-block .button-column {
+    margin-left: 8px;
 }
 
 .empty-notification-block {
@@ -119,6 +127,7 @@ div.table-title-column {
     text-align: center;
     text-decoration: none;
     vertical-align: middle;
+    white-space: nowrap;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;

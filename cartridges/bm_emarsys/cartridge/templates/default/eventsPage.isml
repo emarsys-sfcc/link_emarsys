@@ -8,24 +8,21 @@
 
     <isinclude template="/components/pageHeader" />
 
-    <ismodule template="components/externalEventsTable.isml"
+    <ismodule template="components/events/eventsTable.isml"
         name="externalevents"
-        attribute="list"
+        attribute="type"
     />
-    <isexternalevents list="subscription" />
-    <isexternalevents list="other" />
+    <isexternalevents type="subscription" />
+    <isexternalevents type="other" />
 
     <isinclude template="/components/dialogPopup" />
+
+
 
     <iscomment> hidden page data block </iscomment>
     <div class="js-page-data-block hide-content">
         <div class="js-page-links"
-            data-get-list="${pdict.urls.show}"
-            data-add-event="${pdict.urls.addEvent}"
-            data-update-event="${pdict.urls.updateEvent}">
-        </div>
-        <div class="js-supported-events-data"
-            data-additional-data="${JSON.stringify(pdict.response.supportedEventsData)}">
+            data-urls="${JSON.stringify(pdict.urls)}">
         </div>
         <div class="js-button-labels"
             data-change="${Resource.msg("button.change", "externalEvents", null)}"
@@ -119,24 +116,6 @@
             </div>
         </div>
 
-        <form class="trigger-event-form" action="${URLUtils.url('ExternalEvents-Trigger')}" method="POST">
-            <label>*Email:
-                <input type="text" name="email">
-            </label><br/>
-            <label>Order number:
-                <input type="text" name="orderNumber">
-            </label><br/>
-            <label>Shipping address:
-                <input type="text" name="shippingAddress">
-            </label><br/>
-            <label>Date:
-                <input type="text" name="orderDate">
-            </label><br/>
-            <label>Currency:
-                <input type="text" name="currency">
-            </label>
-        </form>
-
         <iscomment> row template </iscomment>
         <div class="js-external-events-row row-basic">
             <div class="column-basic sfcc-name-column">
@@ -149,6 +128,19 @@
                 <button class="js-change-button button-basic">
                     ${Resource.msg("button.change", "externalEvents", null)}
                 </button>
+            </div>
+            <div class="column-basic button-column">
+                <button class="js-example-button button-basic">
+                    ${Resource.msg("button.example", "externalEvents", null)}
+                </button>
+            </div>
+            <div class="column-basic button-column">
+                <button class="js-trigger-button button-basic">
+                    ${Resource.msg("button.trigger", "externalEvents", null)}
+                </button>
+            </div>
+            <div class="column-basic campaign-status-column">
+                <span class="js-campaign-status" data-id=""></span>
             </div>
         </div>
     </div>
