@@ -23,6 +23,7 @@ var externalEvent = {
             var otherNames = custom.fields.otherSource;
 
             this.eventsDescriptionList = this.getEventsDescription();
+            this.campaignsData = this.getCampaignsData();
 
             // create newsletter subscription external events
             custom.object.custom.newsletterSubscriptionResult = this.createEvents(subscriptionNames);
@@ -41,12 +42,24 @@ var externalEvent = {
      * @return {Array} list of objects with external events description
      */
     getEventsDescription: function () {
-        // send request to get events description list
+        // get events description list
         var response = this.eventsHelper.makeCallToEmarsys('event', null, 'GET');
         if (response.status === 'ERROR') {
             throw new Error('***Emarsys get events error: ' + response.message);
         }
         return response.result.data;
+    },
+    /**
+     * @description get description of all Emarsys email campaigns
+     * @return {Object} campaigns descriptions collection (by campaign name)
+     */
+    getCampaignsData: function () {
+        // get campaigns
+        var responseObj = this.eventsHelper.makeCallToEmarsys('email', null, 'GET');
+        if (responseObj.status === 'ERROR') {
+            throw new Error('***Emarsys get campaigns error: ' + responseObj.message);
+        }
+        return this.eventsHelper.prepareCampaignData(responseObj.result.data);
     },
     /**
      * Create events and prepare their description
@@ -56,15 +69,17 @@ var externalEvent = {
     createEvents: function (namesList) {
         var descriptionsList = namesList.map(function (eventName) {
             var formattedName = this.eventsHelper.eventNameFormatter(eventName);
-            var eventDescription = this.queryEventDescription(formattedName);
-            if (!eventDescription) {
-                eventDescription = this.createExternalEvent(formattedName);
+            var emarsysDescription = this.queryEventDescription(formattedName);
+            if (!emarsysDescription) {
+                emarsysDescription = this.createExternalEvent(formattedName);
             }
-            return {
+            var eventDescription = {
                 sfccName: eventName,
-                emarsysId: eventDescription.id,
-                emarsysName: eventDescription.name
+                emarsysId: emarsysDescription.id,
+                emarsysName: emarsysDescription.name
             };
+            eventDescription.campaignId = this.getCampaignId(eventDescription);
+            return eventDescription;
         }, this);
 
         return JSON.stringify(descriptionsList);
@@ -98,6 +113,28 @@ var externalEvent = {
         this.eventsDescriptionList.push(eventDescription);
 
         return eventDescription;
+    },
+    /**
+     * @description creates test campaign for Emarsys external event
+     * @param {string} event - the name of the event which should be created on emarsys
+     * @return {Object} created event description
+     */
+    getCampaignId: function (event) {
+        var campaignId = '';
+
+        var campaignName = 'test_event_' + event.emarsysId;
+        campaignId = this.campaignsData[campaignName] && this.campaignsData[campaignName].id;
+
+        if (!campaignId) {
+            // send request to create test campaign
+            var response = this.eventsHelper.createTestCampaign(event);
+            if (response.status === 'ERROR') {
+                throw new Error('***Emarsys create campaign error: ' + response.message);
+            }
+            this.campaignsData[campaignName] = response.result.data;
+            campaignId = response.result.data.id;
+        }
+        return campaignId;
     }
 };
 

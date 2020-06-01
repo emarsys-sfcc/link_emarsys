@@ -148,6 +148,7 @@
             <pipeline name="ExternalEvents-Add" />
             <pipeline name="ExternalEvents-Update" />
             <pipeline name="ExternalEvents-Trigger" />
+            <pipeline name="ExternalEvents-CampaignStatus" />
 		</sub-pipelines>
         <parameters>
             <parameter name="menuname" value="External Events" />

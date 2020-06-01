@@ -1,0 +1,12 @@
+<isloop items="${context.formsDescriptions}" var="form">
+    <form 
+        class="js-trigger-form trigger-${form.sfccEventName}-event-form"
+        data-event-name="${form.sfccEventName}"
+        action="${URLUtils.url('ExternalEvents-Trigger')}" method="POST">
+        <isloop items="${form.fieldsData}" var="obj">
+            <label><isif condition="${obj.required == true}">*</isif>${obj.label}:
+                <input type="text" name="${obj.field}" class="js-input-fields" required="${obj.required}" />
+            </label><br/>
+        </isloop>
+    </form>
+</isloop>

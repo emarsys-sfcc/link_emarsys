@@ -144,21 +144,191 @@ function getNotMappedEvents(namesList, descriptionsList) {
  * @param {Array} sfccNames - sfcc event names list
  * @return {Array} - all allowed Emarsys events descriptions
  */
-function getEmarsysEvents(allEmarsysEvents, sfccNames) {
-    var allowedEmarsysDescriptions = sfccNames.map(function (name) {
-        var emarsysDescription = {
-            id: '',
-            name: eventNameFormatter(name)
+function getExistentEventsData(allEmarsysEvents, sfccNames) {
+    var allowedEmarsysDescriptions = sfccNames.map(function (sfccName) {
+        var event = {
+            emarsysId: '',
+            emarsysName: eventNameFormatter(sfccName)
         };
-        this.some(function (descriptionObj) {
-            var isAppropriate = this.name === descriptionObj.name;
-            if (isAppropriate) { this.id = descriptionObj.id; }
+
+        this.allEmarsysEvents.some(function (descriptionObj) {
+            var isAppropriate = this.event.emarsysName === descriptionObj.name;
+            if (isAppropriate) {
+                this.event.emarsysId = descriptionObj.id;
+            }
             return isAppropriate;
-        }, emarsysDescription);
-        return emarsysDescription;
-    }, allEmarsysEvents);
+        }, { event: event });
+
+        return event;
+    }, {
+        allEmarsysEvents: allEmarsysEvents
+    });
 
     return allowedEmarsysDescriptions;
+}
+
+/**
+ * Set data into the object according to the fields mapping
+ * @param {Object} args - object with function arguments
+ * @return {Object} - created object
+ */
+function composeObject(args) {
+    var data = args.dataObject;               // {Array} object with data to set according to passed mapping
+    var mapping = args.placeholdersMapping;   // {Array} array with data fields mapping
+    var baseObject = args.baseObject;         // {Object} object with initial data (optional)
+    var assign = args.assignFunc;             // {Function} function to make a copy of baseObject
+    var mappingKeys = {                       // fields mapping properties
+        name: args.fieldKey || 'field',
+        placeholder: args.placeholderKey || 'placeholder'
+    };
+
+    var finalObj = {};
+    if (!mapping || !mapping.length) {
+        return baseObject;
+    }
+    if (baseObject != null && assign != null) {
+        finalObj = assign({}, baseObject);
+    }
+    mapping.forEach(function (fieldObj) {
+        var fieldName = fieldObj[this.nameKey];
+        var fieldPlaceholder = fieldObj[this.placeholderKey];
+        var pathList = fieldPlaceholder.replace(/(\[\d+\])/g, '.$1.').split(/\./);
+        var currPosition = this.finalObj;
+        var isArray = false;
+        var key = '';
+
+        // prepare structure for target property
+        for (var i = 1; i < pathList.length; i++) {
+            isArray = /^\[\d+\]$/.test(pathList[i - 1]);
+            key = isArray ? pathList[i - 1].match(/\d+/)[0] : pathList[i - 1];
+
+            if (currPosition[key] == null || typeof currPosition[key] !== 'object') {
+                isArray = /^\[\d+\]$/.test(pathList[i]);
+                currPosition[key] = isArray ? [] : {};
+            }
+
+            currPosition = currPosition[key];
+        }
+
+        // set value to the target property
+        var lastIndex = pathList.length - 1;
+        isArray = /^\[\d+\]$/.test(pathList[lastIndex]);
+        key = isArray ? pathList[lastIndex].match(/\d+/)[0] : pathList[lastIndex];
+
+        currPosition[key] = this.data[fieldName];
+    }, {
+        finalObj: finalObj,
+        data: data,
+        nameKey: mappingKeys.name,
+        placeholderKey: mappingKeys.placeholder
+    });
+    return finalObj;
+}
+
+/**
+ * Create campaign to test external event
+ * @param {Object} event - external event description object
+ * @return {Object} - emarsys respond object
+ */
+function createTestCampaign(event) {
+    var emailCampaignCategory = '6146';          // TODO: store the value on the site
+
+    var createCampaignBody = {
+        name: 'test_event_' + event.emarsysId,
+        language: 'en',
+        fromemail: 'testing@emarsys.com',
+        fromname: 'emarsys',
+        subject: 'external events testing',
+        email_category: emailCampaignCategory,
+        external_event_id: event.emarsysId,
+        text_source: 'Event ' + event.emarsysName + ' was triggered successfully'
+    };
+    // send request to create campaign
+    return makeCallToEmarsys('email', createCampaignBody, 'POST');
+}
+
+/**
+ * Separate useful data of all Emarsys campaigns
+ * @param {Array} campaignsList - array with Emarsys campaigns descriptions
+ * @return {Object} - campaigns data
+ */
+function prepareCampaignData(campaignsList) {
+    var campaignsData = {};
+    campaignsList.forEach(function (campaign) {
+        var campaignData = {
+            id: campaign.id,
+            name: campaign.name
+        };
+        switch (campaign.status) {
+            case '1':
+                campaignData.status = 'In design';
+                break;
+            case '2':
+                campaignData.status = 'Tested';
+                break;
+            case '3':
+                campaignData.status = 'Launched';
+                break;
+            case '4':
+                campaignData.status = 'Ready to launch';
+                break;
+            case '-3':
+                campaignData.status = 'Deactivated';
+                break;
+            case '-6':
+                campaignData.status = 'Aborted';
+                break;
+            default:
+                campaignData.status = 'Invalid';
+        }
+        this.campaignsData[campaign.name] = campaignData;
+    }, { campaignsData: campaignsData });
+    return campaignsData;
+}
+
+/**
+ * Separate events related campaigns data
+ * @param {Object} campaignsData - all Emarsys campaigns data
+ * @param {Array} emarsysDescriptions - allowed Emarsys events descriptions
+ * @return {Object} - events related campaigns data
+ */
+function getEventsRelatedData(campaignsData, emarsysDescriptions) {
+    var separatedCampaigns = {};
+
+    emarsysDescriptions.forEach(function (event) {
+        var campaignData = this.campaignsData['test_event_' + event.emarsysId];
+        this.separatedCampaigns[event.emarsysId] = campaignData || { id: '', status: 'not exist' };
+    }, {
+        campaignsData: campaignsData,
+        separatedCampaigns: separatedCampaigns
+    });
+
+    return separatedCampaigns;
+}
+
+/**
+ * Look for the first object with specified key-value pair
+ * @param {Array} list - list of objects
+ * @param {string} field - key field
+ * @param {*} value - any value of simple type
+ * @return {Object} - found object data
+ */
+function findObjectInList(list, field, value) {
+    var context = {
+        field: field,
+        value: value
+    };
+
+    context.success = list.some(function (obj, i) {
+        var isTarget = obj[this.field] === this.value;
+        if (isTarget) {
+            this.object = obj;
+            this.index = i;
+        }
+        return isTarget;
+    }, context);
+
+    return context;
 }
 
 module.exports = {
@@ -166,6 +336,11 @@ module.exports = {
     parseList: parseList,
     readEventsCustomObject: readEventsCustomObject,
     getNotMappedEvents: getNotMappedEvents,
-    getEmarsysEvents: getEmarsysEvents,
-    eventNameFormatter: eventNameFormatter
+    getExistentEventsData: getExistentEventsData,
+    eventNameFormatter: eventNameFormatter,
+    composeObject: composeObject,
+    createTestCampaign: createTestCampaign,
+    prepareCampaignData: prepareCampaignData,
+    getEventsRelatedData: getEventsRelatedData,
+    findObjectInList: findObjectInList
 };
