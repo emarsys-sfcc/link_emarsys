@@ -8,13 +8,17 @@ var CustomObjectMgr = require('dw/object/CustomObjectMgr');
 
 var externalEvent = {
     logger: require('dw/system/Logger').getLogger('externalEvent', 'externalEvent'),
-    execute: function () {
+    execute: function (args) {
+        if (args.isDisabled) {
+            return new Status(Status.OK, 'OK', 'The step is disabled. Check configuration settings');
+        }
+
         try {
             this.emarsysHelper = new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))();
 
             this.getExternalEvents();
         } catch (err) {
-            this.logger.error('externalEvent: Error ' + err.message + '\n' + err.stack);
+            this.logger.error('[Emarsys GetExternalEventsJob.js] - ***externalEvent error message: ' + err.message + '\n' + err.stack);
 
             return new Status(Status.ERROR, 'ERROR');
         }
@@ -33,14 +37,14 @@ var externalEvent = {
             var result = JSON.parse(externalEvents.object);
 
             result = JSON.stringify(result.data);
-            var CheckObject = CustomObjectMgr.getCustomObject('EmarsysExternalEvents', UniqueObjectKey);
+            var customObject = CustomObjectMgr.getCustomObject('EmarsysExternalEvents', UniqueObjectKey);
 
-            if (CheckObject !== null) {
-                CustomObjectMgr.remove(CheckObject);
+            if (empty(customObject)) {
+                customObject = CustomObjectMgr.createCustomObject('EmarsysExternalEvents', UniqueObjectKey);
             }
-            var Store = CustomObjectMgr.createCustomObject('EmarsysExternalEvents', UniqueObjectKey);
-            Store.custom.result = result;
-            Store.custom.id = Store.custom.name = UniqueObjectKey;
+
+            customObject.custom.result = result;
+            customObject.custom.id = customObject.custom.name = UniqueObjectKey;
         }
     }
 };

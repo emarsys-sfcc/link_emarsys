@@ -46,7 +46,7 @@ var FtpUpload = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/FtpUpload
     'dw/system/Status': Status,
     'int_emarsys/cartridge/scripts/helpers/jobHelper': JobHelper,
     'int_emarsys/cartridge/scripts/service/emarsysFTPService': emarsysFTPService,
-    'int_emarsys/cartridge/scripts/util/stepUtil': StepUtil
+    'int_emarsys/cartridge/scripts/util/StepUtil': StepUtil
 });
 
 describe('FtpUpload jobstep', () => {

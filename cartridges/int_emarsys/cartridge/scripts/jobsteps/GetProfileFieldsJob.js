@@ -16,7 +16,7 @@ var ProfileField = {
 
             this.getProfileFields();
         } catch (err) {
-            this.logger.error('ProfileField: Error ' + err.message + '\n' + err.stack);
+            this.logger.error('[Emarsys GetProfileFieldsJob.js] - ***ProfileField error message: ' + err.message + '\n' + err.stack);
 
             return new Status(Status.ERROR, 'ERROR');
         }

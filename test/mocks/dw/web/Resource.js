@@ -7,7 +7,18 @@ var locale = 'x_default';
 function msg(key, bundleName, defaultValue) {
     var bundlePath;
     var props;
-    var resourceDirPath = './cartridges/app_storefront_base/cartridge/templates/resources/';
+    var resourceDirPath;
+    switch(bundleName) {
+        case 'errorMessages':
+           resourceDirPath = './cartridges/bm_emarsys/cartridge/templates/resources/';
+           break;
+        case 'locale':
+            resourceDirPath = './cartridges/int_emarsys/cartridge/templates/resources/';
+            break;
+        default:
+            resourceDirPath = './cartridges/app_storefront_base/cartridge/templates/resources/';
+    }
+
     if (!key) {
         return defaultValue;
     }

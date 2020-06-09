@@ -6,6 +6,7 @@
 var Money = require('dw/value/Money');
 var Site = require('dw/system/Site');
 var ShippingMgr = require('dw/order/ShippingMgr');
+var CustomObjectMgr = require('dw/object/CustomObjectMgr');
 var web = require('dw/web');
 var order = require('dw/order');
 var siteCustomPreferences = Site.current.preferences.custom;
@@ -487,7 +488,7 @@ function EmarsysHelper() {
         var rebate = new Money(0, currencyCode);
         if (!empty(Order)) {
             var shippingMethod = Order.shipments[0].getShippingMethod();
-            var shippingModel = ShippingMgr.getShipmentShippingModel(order.shipments[0]);
+            var shippingModel = ShippingMgr.getShipmentShippingModel(Order.shipments[0]);
             var shippingCost = shippingModel.getShippingCost(shippingMethod).amount;
 
             currencyCode = Order.currencyCode;
@@ -556,6 +557,56 @@ function EmarsysHelper() {
         }
 
         return [firstHalf, secondHalf].join(dateGlue);
+    };
+
+    /**
+     * @description Get Emarsys profile fields descriptions
+     * @return {Object} - Emarsys fields descriptions
+     */
+    this.prepareFieldsDescriptions = function () {
+        var currentSite = Site.getCurrent();
+        var fieldValueMapping = {};
+        var profileFieldsList = [];
+        try {
+            var ProfileFieldsCO = CustomObjectMgr.getCustomObject('EmarsysProfileFields', 'profileFields');
+            profileFieldsList = JSON.parse(ProfileFieldsCO.custom.result);
+        } catch (err) {
+            throw new Error('[Emarsys emarsysHelper.js getEmarsysProfileFields()] - ***Get Emarsys profile fields error message:' + err.message + '\n' + err.stack);
+        }
+
+        try {
+            fieldValueMapping = JSON.parse(currentSite.getCustomPreferenceValue('emarsysSingleChoiceValueMapping'));
+        } catch (err) {
+            throw new Error('[Emarsys emarsysHelper.js getSingleChoiceValueMapping()] - ***Get single choice value mapping error message:' + err.message + '\n' + err.stack);
+        }
+
+        var profileFields = {};
+        profileFieldsList.forEach(function (fieldObj) {
+            var field = {
+                id: '' + fieldObj.id,
+                name: fieldObj.name,
+                string_id: fieldObj.string_id,
+                application_type: fieldObj.application_type
+            };
+
+            field.isSingleChoice = Object.keys(this.fieldValueMapping).indexOf(field.id) !== -1;
+            // get options data (if any exist)
+            if (field.isSingleChoice) {
+                field.options = {};
+                this.fieldValueMapping[field.id].forEach(function (valueObj) {
+                    this.options[valueObj.choice] = valueObj.value;
+                }, field);
+            }
+
+            // write data to profile fields collection if the record is valid
+            if (!empty(fieldObj.string_id) && !empty(fieldObj.id)) {
+                this.profileFields[fieldObj.string_id] = field;
+            }
+        }, {
+            profileFields: profileFields,
+            fieldValueMapping: fieldValueMapping
+        });
+        return profileFields;
     };
 }
 

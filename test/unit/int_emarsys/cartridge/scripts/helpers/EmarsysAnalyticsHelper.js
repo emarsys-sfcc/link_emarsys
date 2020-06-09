@@ -37,12 +37,14 @@ class ExpectedResponse {
             }
         ];
         this.isEnableEmarsys = true;
+        this.isAnalyticPage = true;
+        this.isSFRA = true;
         this.locale = 'en_US';
         this.logic = 'PERSONAL';
         this.predictMerchantID = '1273D0A7ACB7A11D';
 
         this.customerData = {
-            guestEmail: '',
+            guestEmail: false,
             isCustomer: false
         };
         this.pageType = '';

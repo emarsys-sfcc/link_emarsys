@@ -184,17 +184,49 @@ function handleProductCustomAttributes(productInfo, mappedField, variationAttrib
 }
 
 /**
- * @description Auxiliary function to getProductInfo
- * @param {Object} splitField - Object to retrieve data from
+ * @description set value for group_id
  * @param {Object} productInfo - Object to add data to
- * @param {Object} siteLocales - Object site Locales
- * @param {string} defaultLocale - default locale
- * @param {Object} currenciesMap - set of currency
- * @param {Object} mappedField - Object to retrieve data from
- * @param {Object} product - specific product
+ * @param {Object} product - Specific product
  * @return {void}
  */
-function getProductInfo(splitField, productInfo, siteLocales, defaultLocale, currenciesMap, mappedField, product) {
+function handleProductGroupId(productInfo, product) {
+    var groupId = '';
+    if (product.isVariant() || product.isVariationGroup()) {
+        groupId = product.getVariationModel().getMaster().ID;
+    } else {
+        groupId = product.ID;
+    }
+
+    productInfo.push(groupId);
+}
+/**
+ * @description set specific value for item
+ * @param {Object} productInfo - Object to add data to
+ * @param {Object} product - Specific product
+ * @param {boolean} addSecondLine - Flag to mark additional line for simple product
+ * @return {void}
+ */
+function handleProductId(productInfo, product, addSecondLine) {
+    var item = product.ID;
+    if (!addSecondLine && !product.isVariant()) {
+        item = 'g/' + item;
+    }
+    productInfo.push(item);
+}
+/**
+ * @description Auxiliary function to getProductInfo
+ * @param {Object} productInfo - Object to add data to
+ * @param {Object} data - Additional function arguments
+ * @param {Array} mappedField - Field names list to retrieve property
+ * @param {Object} product - Specific product
+ * @param {boolean} addSecondLine - Flag to mark additional line for simple product
+ * @return {Array} Product retrieved values
+ */
+function getProductInfo(productInfo, data, mappedField, product, addSecondLine) {
+    var splitField = mappedField.field.split('.');
+    var siteLocales = data.siteLocales;
+    var defaultLocale = data.defaultLocale;
+    var currenciesMap = data.currenciesMap;
     if (splitField[1] === 'url') {
         handleProductURL.call(this, productInfo, siteLocales, defaultLocale, currenciesMap, product);
     } else if (splitField[1] === 'image') {
@@ -210,9 +242,15 @@ function getProductInfo(splitField, productInfo, siteLocales, defaultLocale, cur
     // get the user friendly name of variation attribute
     } else if (product instanceof Variant && splitField[1] === 'custom') {
         handleProductCustomAttributes(productInfo, mappedField, splitField[2], product);
+    } else if (splitField[1] === 'ID') {
+        handleProductId(productInfo, product, addSecondLine);
+    } else if (splitField[1] === 'group_id') {
+        handleProductGroupId(productInfo, product);
     } else {
         productInfo.push(emarsysHelper.getObjectAttr({ product: product }, splitField));
     }
+
+    return productInfo;
 }
 /**
  * @description maint function (constructor)
@@ -467,23 +505,22 @@ function JobHelper() {
 
     /**
      * @description Get product info
-     * @param {Object} mappedFields - Object to retrieve data from
-     * @param {Object} product - specific product
-     * @param {Object} dataObject - Object to add data to
-     * @param {Object} siteLocales - Object site Locales
-     * @param {string} defaultLocale - default locale
-     * @param {Object} currenciesMap - set of currency
+     * @param {Object} data - Object to retrieve data from
+     * @param {boolean} addSecondLine - Flag to mark additional line for simple product
+     * @returns {Array} Product data
      */
-    this.getProductInfo = function (mappedFields, product, dataObject, siteLocales, defaultLocale, currenciesMap) {
-        if (mappedFields && product && dataObject) {
+    this.getProductInfo = function (data, addSecondLine) {
+        var dataObject = [];
+        var mappedFields = data.mappedFields;
+        var product = data.product;
+        if (mappedFields && product) {
             var productInfo = [];
 
             for (var i = 0; i < mappedFields.length; i++) {
                 var splitField = mappedFields[i].field.split('.');
-
                 switch (splitField[0]) {
                     case 'product':
-                        getProductInfo.call(this, splitField, productInfo, siteLocales, defaultLocale, currenciesMap, mappedFields[i], product);
+                        getProductInfo.call(this, productInfo, data, mappedFields[i], product, addSecondLine);
                         break;
                     default:
                         break;
@@ -492,6 +529,7 @@ function JobHelper() {
 
             dataObject.push(productInfo);
         }
+        return dataObject;
     };
 }
 

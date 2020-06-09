@@ -3,6 +3,7 @@
 var ScarabQueueHelper = new (require('int_emarsys/cartridge/scripts/helpers/scarabQueueHelper'))();
 var customPreferences = require('dw/system/Site').getCurrent().getPreferences().getCustom();
 var recommendationType = customPreferences.emarsysPredictPDPRecommendationType.value;
+var isSFRA = true;
 
 /**
  * @description Create full name for taking correct Preference
@@ -23,8 +24,11 @@ function getEmarsysPreference(namePreference) {
 function getProductData(data) {
     var analytics = {
         nameTracking: 'view',
-        trackingData: Object.hasOwnProperty.call(data, 'product') ? data.product.id : ''
+        trackingData: isSFRA
+                        ? data.product.id
+                        : data.pdict.Product.ID
     };
+
     if (recommendationType !== 'disable') {
         analytics.logic = getEmarsysPreference('PDP');
     }
@@ -38,10 +42,15 @@ function getProductData(data) {
  * @returns {Object} object for Category nalytics
  */
 function getCategoryPageData(data) {
+    var category = isSFRA
+                    ? data.productSearch.category
+                    : data.pdict.ProductSearchResult.category;
+
     var analytics = {
         nameTracking: 'category',
-        trackingData: ScarabQueueHelper.getCategoryChain(data.productSearch.category)
+        trackingData: ScarabQueueHelper.getCategoryChain(category)
     };
+
     if (recommendationType !== 'disable') {
         analytics.logic = getEmarsysPreference('CategoryPage');
     }
@@ -57,7 +66,9 @@ function getCategoryPageData(data) {
 function getSearchPageData(data) {
     var analytics = {
         nameTracking: 'searchTerm',
-        trackingData: data.productSearch.searchPhrase
+        trackingData: isSFRA
+                        ? data.productSearch.searchPhrase
+                        : request.httpParameterMap.q.value
     };
     if (recommendationType !== 'disable') {
         analytics.logic = getEmarsysPreference('SearchPage');
@@ -73,7 +84,7 @@ function getSearchPageData(data) {
  */
 function getSearchesData(data) {
     var analytics;
-    if (data.productSearch.categorySearch) {
+    if (isSFRA ? data.productSearch.categorySearch : data.pdict.ProductSearchResult.categorySearch) {
         analytics = getCategoryPageData(data);
     } else if (!empty(request.httpParameterMap.q.value)) {
         analytics = getSearchPageData(data);
@@ -88,9 +99,10 @@ function getSearchesData(data) {
  * @returns {Object} object for OrderConfirmation analytics
  */
 function getOrderConfirmationData(data) {
+    var order = isSFRA ? data.order : data.pdict.Order;
     var analytics = {
         nameTracking: 'purchase',
-        trackingData: ScarabQueueHelper.getOrderData(data.order)
+        trackingData: ScarabQueueHelper.getOrderData(order)
     };
     if (recommendationType) {
         analytics.logic = getEmarsysPreference('ThankYouForOrderPage');
@@ -136,8 +148,9 @@ function getStorefrontData() {
  */
 function getCustomerInfo(data) {
     var isCustomer = (customer.authenticated && customer.registered);
+    var order = isSFRA ? data.order : data.pdict.Order;
     var customerData = {
-        guestEmail: Object.hasOwnProperty.call(data, 'order') ? data.order.getCustomerEmail() : '',
+        guestEmail: !empty(order) ? order.getCustomerEmail() : false,
         isCustomer: isCustomer
     };
 
@@ -154,13 +167,17 @@ function getCustomerInfo(data) {
 
 /**
  * @description Add new properties in object data with a analytics data
- * @param {Object} data analytics data object, created in controller
+ * @param {string|Objcet} args string for SFRA approach or Object for SiteGenesis approach
+ * @param {Object} data analytics data object, created in controller (SFRA)
  * @returns {void} inserted in data new property "analytics" with type "object"
  */
 function PageData() {
-    this.setPageData = function (pageType, data) {
+    this.setPageData = function (args, data) {
         var isEnableEmarsys = customPreferences.emarsysPredictEnableJSTrackingCode;
         var emarsysAnalytics = {};
+        isSFRA = (typeof args === 'string');
+        var pageType = isSFRA ? args : args.ns;
+        var isAnalyticPage = false;
 
         if (isEnableEmarsys) {
             var mapping = {
@@ -170,16 +187,22 @@ function PageData() {
                 cart: getCartData,
                 storefront: getStorefrontData
             };
-            if (pageType in mapping) {
-                emarsysAnalytics = mapping[pageType](data);
-                emarsysAnalytics.customerData = getCustomerInfo(data);
+
+            isAnalyticPage = Object.prototype.hasOwnProperty.call(mapping, pageType);
+
+            if (isAnalyticPage) {
+                emarsysAnalytics = mapping[pageType](data || args);
                 emarsysAnalytics.currentBasket = ScarabQueueHelper.getCartData(require('dw/order/BasketMgr').getCurrentBasket());
-                emarsysAnalytics.locale = request.locale;
-                emarsysAnalytics.predictMerchantID = customPreferences.emarsysPredictMerchantID;
+                emarsysAnalytics.customerData = getCustomerInfo(data || args);
                 emarsysAnalytics.pageType = pageType;
+                emarsysAnalytics.predictMerchantID = customPreferences.emarsysPredictMerchantID;
+                emarsysAnalytics.locale = request.locale;
+                emarsysAnalytics.isSFRA = isSFRA;
             }
         }
+
         emarsysAnalytics.isEnableEmarsys = isEnableEmarsys;
+        emarsysAnalytics.isAnalyticPage = isAnalyticPage;
 
         return emarsysAnalytics;
     };

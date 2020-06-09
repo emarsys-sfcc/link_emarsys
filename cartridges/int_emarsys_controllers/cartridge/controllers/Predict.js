@@ -8,44 +8,6 @@
 var guard = require('~/cartridge/scripts/guard');
 
 /**
- * @description - send object
- * @returns {void}
- */
-function getCartInfo() {
-    var ScarabQueueHelper = new (require('*/cartridge/scripts/util/ScarabQueueHelper'))();
-    var currentBasket = ScarabQueueHelper.getCartData(dw.order.BasketMgr.getCurrentBasket());
-
-    response.getWriter().print(JSON.stringify({
-        Basket: currentBasket
-    }));
-}
-
-/**
- * @description - send object
- * @returns {void}
- */
-function getCustomerInfo() {
-    var isCustomer = (customer.authenticated && customer.registered);
-    var customerObject = {
-        PageContext: request.httpParameterMap.PageContext.value,
-        GuestEmail: request.httpParameterMap.GuestEmail.value,
-        IsCustomer: isCustomer
-    };
-
-    if (isCustomer) {
-        if (!empty(customer.profile.email)) {
-            customerObject.CustomerEmail = customer.profile.email;
-        } else {
-            customerObject.CustomerNo = customer.profile.customerNo;
-        }
-    }
-
-    response.getWriter().print(JSON.stringify({
-        Customer: customerObject
-    }));
-}
-
-/**
  * @description return Cart object
  * @returns {void}
  */
@@ -75,6 +37,4 @@ function returnCartObject() {
     response.writer.print(JSON.stringify(cartObj));
 }
 
-exports.GetCartInfo = guard.ensure(['get'], getCartInfo);
-exports.GetCustomerInfo = guard.ensure(['get'], getCustomerInfo);
 exports.ReturnCartObject = guard.ensure(['get'], returnCartObject);

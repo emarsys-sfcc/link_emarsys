@@ -1,7 +1,6 @@
 <!--- TEMPLATENAME: subscribe.isml --->
 <iscontent type="text/html" charset="UTF-8" compact="true"/>
 <iscache type="relative" hour="24"/>
-<isinclude template="util/modules"/>
 
 <isdecorate template="${Resource.msg('page.decorator.default', 'emarsys', 'common/layout/page')}">
     <div class="email-signup-wrapper">

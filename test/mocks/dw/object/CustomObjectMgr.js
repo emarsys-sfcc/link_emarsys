@@ -1,5 +1,42 @@
 'use strict';
+
+var Collection = require('./../util/Collection');
+
 var objects = {
+    'EmarsysCatalogConfig': {
+        'customConfig': {
+            custom: {
+                mappedFields: JSON.stringify([{
+                    'field':'product.ID','placeholder':'item'},
+                    {'field':'product.availability','placeholder':'available'}
+                    ,{'field':'product.name','placeholder':'title_multilang'},
+                    {'field':'product.url','placeholder':'link_multilang'},
+                    {'field':'product.image','placeholder':'image'},
+                    {'field':'product.categories','placeholder':'category_multilang'},
+                    {'field':'product.price','placeholder':'price_multilang'},
+                    {'field':'product.brand','placeholder':'c_braand'},
+                    {'field':'product.group_id','placeholder':'group_id'}]),
+                exportType: 'variations',
+                EmarsysCatalogConfig: 'customConfig'
+            }
+        },
+        'customConfig2': {
+            custom: {
+                mappedFields: JSON.stringify([{
+                    'field':'product.ID','placeholder':'item'},
+                    {'field':'product.image','placeholder':'image'}]),
+                exportType: 'masters',
+                EmarsysCatalogConfig: 'customConfig2'
+            }
+        },
+        'customConfigTEST': {
+            custom: {
+                mappedFields: JSON.stringify(''),
+                exportType: 'masters',
+                EmarsysCatalogConfig: 'customConfig2'
+            }
+        }
+    },
     'EmarsysPredictConfig': {
         'predictConfig': {
             custom: {
@@ -11,7 +48,8 @@ var objects = {
                     {'field':'product.image','placeholder':'image'},
                     {'field':'product.categories','placeholder':'category_multilang'},
                     {'field':'product.price','placeholder':'price_multilang'},
-                    {'field':'product.brand','placeholder':'c_braand'}]),
+                    {'field':'product.brand','placeholder':'c_braand'},
+                    {'field':'product.group_id','placeholder':'group_id'}]),
                 exportType: 'variations'
             }
         }
@@ -50,11 +88,42 @@ var objects = {
     'EmarsysExternalEvents': {
         'StoredEvents': {
             custom: {
-                result: JSON.stringify([{"id":"5633","name":"single"},{"id":"5634","name":"double"},
-                {"id":"5636","name":"single account"},{"id":"5637","name":"double account"},
-                {"id":"5638","name":"single checkout"},{"id":"5639","name":"double checkout"}])  
+                result: JSON.stringify([
+                    {"id":"5633","name":"single"},
+                    {"id":"5634","name":"double"},
+                    {"id":"12561","name":"SFCC_FORGOT_PASSWORD_SUBMITTED"},
+                    {"id":"12563","name":"SFCC_CONTACT_FORM_SUBMITTED"},
+                    {"id":"12644","name":"SFCC_NEWSLETTER_SUBSCRIPTION_CONFIRMATION"},
+                    {"id":"12646","name":"SFCC_NEWSLETTER_UNSUBSCRIBE_SUCCESS"}
+                ]),
+                otherSource: JSON.stringify(["forgot_password_submitted","contact_form_submitted"]),
+                newsletterSubscriptionSource: JSON.stringify(["newsletter_subscription_confirmation","newsletter_unsubscribe_success"]),
+                otherResult: JSON.stringify([
+                    {"sfccName":"cancelled_order","emarsysId":"12678","emarsysName":"SFCC_CANCELLED_ORDER"},
+                    {"sfccName":"forgot_password_submitted","emarsysId":"12561","emarsysName":"SFCC_FORGOT_PASSWORD_SUBMITTED"},
+                    {"sfccName":"contact_form_submitted","emarsysId":"12563","emarsysName":"SFCC_CONTACT_FORM_SUBMITTED"}
+                ]),
+                newsletterSubscriptionResult: JSON.stringify([
+                    {"sfccName":"newsletter_subscription_confirmation","emarsysId":"12644","emarsysName":"SFCC_NEWSLETTER_SUBSCRIPTION_CONFIRMATION"},
+                    {"sfccName":"newsletter_unsubscribe_success","emarsysId":"12646","emarsysName":"SFCC_NEWSLETTER_UNSUBSCRIBE_SUCCESS"}
+                ])
             },
             name: 'StoredEvents'
+        },
+        'emptyObject': {},
+        'invalidFields': {
+            custom: {
+                otherSource: "[]",
+                newsletterSubscriptionSource: "[]",
+                otherResult: "{invalid_list}",
+                newsletterSubscriptionResult: "{invalid_list}"
+            }
+        },
+        'testObject': {
+            otherResult: JSON.stringify([{"emarsysId":"1234","emarsysName":"SFCC_CANCELLED_ORDER","sfccName":"cancelled_order"},
+                {"emarsysId":"1278","emarsysName":"SFCC_DOUBLE_OPTIN","sfccName":"double-optin"}]),
+            otherSource: JSON.stringify(["cancelled_order"]),
+            newsletterSubscriptionSource: JSON.stringify(["single","double-optin"])
         }
     },
     'EmarsysTransactionalEmailsConfig': {
@@ -75,6 +144,14 @@ var objects = {
                 {"field":"product.quantityValue","placeholder":"quantity"},
                 {"field":"product.adjustedPrice","placeholder":"price"}]),
                 externalEvent: 5633
+            }
+        },
+        'orderCancelledConf': {
+            custom: {
+                mappedFields: JSON.stringify([{"field":"product.price.currencyCode","placeholder":"currency"},
+                {"field":"product.url","placeholder":"product_url"},
+                {"field":"product.quantityValue","placeholder":"quantity"},
+                {"field":"product.adjustedPrice","placeholder":"price"}])
             }
         }
     },
@@ -110,17 +187,20 @@ var objects = {
             custom: {
                 EmarsysSubscriptionType: 'footer',
                 optInStrategy: '1',
-                optInExternalEvent: '11884',
-                optInExternalEventAfterConfirmation: '11884'
+                optInExternalEvent: 'newsletter_subscription_confirmation',
+                optInExternalEventAfterConfirmation: 'newsletter_subscription_confirmation'
             }
         },
         'account': {
             custom: {
                 EmarsysSubscriptionType: 'account',
                 optInStrategy: '2',
-                optInExternalEvent: '11883',
-                optInExternalEventAfterConfirmation: '11884'
+                optInExternalEvent: 'newsletter_subscription_confirmation',
+                optInExternalEventAfterConfirmation: 'newsletter_subscription_confirmation'
             }
+        },
+        'test': {
+            custom: {}
         }
     }
 };
@@ -134,7 +214,7 @@ class CustomObjectMgr {
     getCustomObject(type, key) {
         var creator = objects[type];
         var newObject = creator[key];
-        return newObject;
+        return newObject || null;
     }
 
     queryCustomObjects(type) {
@@ -160,6 +240,15 @@ class CustomObjectMgr {
             },
             hasNext: function () {
                 return index < items.length;
+            }
+        };
+    }
+
+    getAllCustomObjects(type) {
+        var customObjects = new Collection([objects[type]['customConfig'], objects[type]['customConfig2']]);
+        return {
+            asList: function () {
+                return customObjects;
             }
         };
     }

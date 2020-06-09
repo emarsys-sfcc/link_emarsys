@@ -12,7 +12,7 @@ var Transaction = require('dw/system/Transaction');
 var app         = require('~/cartridge/scripts/app');
 
 var EmarsysNewsletter = Class.extend({});
-var emarsysHelper = new (require('int_emarsys/cartridge/scripts/util/EmarsysHelper'))();
+var emarsysHelper = new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))();
 
 /**
  * @description return mapped form

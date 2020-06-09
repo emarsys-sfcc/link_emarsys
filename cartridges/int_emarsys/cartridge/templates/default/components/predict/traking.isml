@@ -1,7 +1,0 @@
-<iscomment>Emarsys Predict</iscomment>
-<div class="analyticBasket" data-basket-analytics='<isinclude url="${URLUtils.url('Predict-GetCartInfo')}"/>'></div>
-<isif condition="${pageContext.ns === 'orderconfirmation'}">
-    <div class="analyticCustomer" data-customer-analytics='<isinclude url="${URLUtils.url('Predict-GetCustomerInfo', 'PageContext', pageContext.ns,'GuestEmail', pdict.Order.getCustomerEmail())}"/>'></div>
-<iselse/>
-    <div class="analyticCustomer" data-customer-analytics='<isinclude url="${URLUtils.url('Predict-GetCustomerInfo', 'PageContext', pageContext.ns,'GuestEmail', '')}"/>'></div>
-</isif>

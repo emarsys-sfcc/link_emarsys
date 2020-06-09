@@ -74,7 +74,8 @@ describe('ExportCatalog jobstep', () => {
     it('Testing method: execute', () => {
         var args = {
              exportFolderName: 'Test',
-             exportFileName: ''
+             exportFileName: '',
+             catalogConfigKey: 'customConfig'
         };
        var result = ExportCatalog.execute(args);
      
@@ -82,7 +83,6 @@ describe('ExportCatalog jobstep', () => {
          code: 'OK',
          status: 2
       });
-
      });
 
 });

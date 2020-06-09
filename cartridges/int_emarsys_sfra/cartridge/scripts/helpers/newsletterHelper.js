@@ -2,7 +2,6 @@
 
 var Logger = require('dw/system/Logger').getLogger('emarsys');
 var emarsysHelper = new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))();
-var Site = require('dw/system/Site');
 
 /**
  * @description return mapped form
@@ -20,7 +19,7 @@ function mapFieldsSignup() {
         // return the mapped form
         return map;
     } catch (err) {
-        Logger.error('[EmarsysNewsletterHelper.js #' + err.lineNumber + '] - ***Emarsys map signup fields data error message: ' + err);
+        Logger.error('[Emarsys newsletterHelper.js - mapFieldsSignup()] - ***Emarsys map signup fields data error message:' + err.message + '\n' + err.stack);
         return null;
     }
 }
@@ -65,69 +64,11 @@ function getCustomerData(args) {
             Args.Map = map;
         }
     } catch (err) {
-        Logger.error('[emarsysNewsletter.getCustomerData #' + err.lineNumber + '] - ***Get data error: ' + err);
+        Logger.error('[Emarsys newsletterHelper.js - getCustomerData()] - ***Get data error message:' + err.message + '\n' + err.stack);
         return Args;
     }
 
     return Args;
-}
-
-/**
- * @description returns source ID
- * @param {Object} args user params
- * @return {Object} args with source id
- */
-function getSourceID(args) {
-    var createSource;
-    var getAllSources;
-    var sourceId;
-    var request = {};
-    var sourceName = Site.current.preferences.custom.emarsysSourceName;
-
-    try {
-        request.name = sourceName;
-        getAllSources = emarsysHelper.triggerAPICall('source', {}, 'GET');
-
-        if (getAllSources.status === 'OK') {
-            // if source exists the id will be returned
-            sourceId = emarsysHelper.getSourceId(getAllSources, sourceName);
-        } else {
-            Logger.error('Get resources error:' + getAllSources.error + '] - ***Emarsys error message: ' + getAllSources.errorMessage);
-            return null;
-        }
-
-        // if no value was assigned to sourceId made a call to create a resource
-        // and a call to get all sources to retrieve source id
-        if (!sourceId) {
-            // create a source
-            createSource = emarsysHelper.triggerAPICall('source/create', request, 'POST');
-
-            if (createSource.status === 'OK') {
-                // if source exists the id will be returned
-                getAllSources = emarsysHelper.triggerAPICall('source', {}, 'GET');
-
-                if (getAllSources.status === 'OK') {
-                    // if source exists the id will be returned
-                    sourceId = emarsysHelper.getSourceId(getAllSources, sourceName);
-                } else {
-                    Logger.error('Get sources error:' + getAllSources.error + '] - ***Emarsys error message: ' + getAllSources.errorMessage);
-                    return null;
-                }
-            } else {
-                Logger.error('Create source error:' + getAllSources.error + '] - ***Emarsys error message: ' + getAllSources.errorMessage);
-                return null;
-            }
-        }
-
-        // args.SourceID = sourceId;
-        Site.current.setCustomPreferenceValue('emarsysSourceID', sourceId);
-    } catch (err) {
-        // log error message in case something goes wrong
-        Logger.error('[EmarsysNewsletterModel.js #' + err.lineNumber + '] - ***Emarsys get source data error message: ' + err);
-        return null;
-    }
-
-    return args;
 }
 
 /**
@@ -148,10 +89,10 @@ function doubleOptInSubscribe(args) {
         var getDataRequest = {};
         getDataRequest.keyId = 'uid';
         getDataRequest.keyValues = [uid];
-     
+
         var getData = emarsysHelper.triggerAPICall('contact/getdata', getDataRequest, 'POST');
         var dataObj;
-        
+
         // parse getData response to get email
         var email = null;
         if (getData.status === 'OK') {
@@ -182,7 +123,7 @@ function doubleOptInSubscribe(args) {
             }
 
             Args.ErrorMsg = errorMsg;
-            Logger.error(errorMsg);
+            Logger.error('[Emarsys newsletterHelper.js - doubleOptInSubscribe()] - ***Error message:' + errorMsg);
             return Args;
         }
 
@@ -193,7 +134,7 @@ function doubleOptInSubscribe(args) {
             updateData = emarsysHelper.triggerAPICall('contact', updateRequest, 'PUT');
 
             if (updateData.status !== 'OK') {
-                Logger.error('[Update data error:' + updateData.error + '] - ***Emarsys error message: ' + updateData.errorMessage);
+                Logger.error('[Emarsys newsletterHelper.js - doubleOptInSubscribe(); Update data error:' + updateData.error + '] - ***Data error message:' + updateData.errorMessage);
                 Args.ErrorMsg = dw.web.Resource.msg('subscription.update.error', 'emarsys', null);
                 Args.errors = true;
                 return Args;
@@ -211,13 +152,13 @@ function doubleOptInSubscribe(args) {
             triggerEvent = emarsysHelper.triggerAPICall(endpoint, triggerRequest, 'POST');
 
             if (triggerEvent.status !== 'OK') {
-                Logger.error('[Triggere event error:' + triggerEvent.error + '] - ***Emarsys error message: ' + triggerEvent.errorMessage);
+                Logger.error('[Emarsys newsletterHelper.js - doubleOptInSubscribe(); Trigger event error:' + triggerEvent.error + '] - ***Error message:' + triggerEvent.errorMessage);
                 return null;
             }
         }
     } catch (err) {
         // log error message in case something goes wrong
-        Logger.error('[EmarsysNewsletter.doubleOptInSubscribe #' + err.lineNumber + '] - ***Emarsys subscribe contact data error message: ' + err);
+        Logger.error('[Emarsys newsletterHelper.js - doubleOptInSubscribe()] - ***Subscribe contact data error message:' + err.message + '\n' + err.stack);
         return null;
     }
 
@@ -238,18 +179,18 @@ function subscriptionTypeData(SubscriptionType) {
 
         if (co.custom.optInStrategy) {
             args.Strategy = co.custom.optInStrategy;
-            args.ExternalEvent = co.custom.optInExternalEvent;
-            args.ExternalEventAfterConfirmation = co.custom.optInExternalEventAfterConfirmation;
+            args.ExternalEventName = co.custom.optInExternalEvent; // name
+            args.ExternalEventAfterConfirmationName = co.custom.optInExternalEventAfterConfirmation;
         } else {
             args.Strategy = null;
-            args.ExternalEvent = null;
-            args.ExternalEventAfterConfirmation = null;
+            args.ExternalEventName = null;
+            args.ExternalEventAfterConfirmationName = null;
         }
         // commit the CO modifications and return the processed args
         return args;
     } catch (err) {
         // log error message in case something goes wrong
-        Logger.error('[EmarsysNewsletterHelper.js #' + err.lineNumber + '] - ***Emarsys subscrition type data error message: ' + err);
+        Logger.error('[Emarsys newsletterHelper.js - subscriptionTypeData()] - ***Emarsys subscrition type data error message: ' + err.message + '\n' + err.stack);
         return null;
     }
 }
@@ -284,7 +225,7 @@ function sendDataForDoubleOptIn(args) {
             if (error.errorCode === 2008) {
                 method = 'POST';
             } else {
-                Logger.error('Get data error:' + contactData.error + '] - ***Emarsys error message: ' + contactData.errorMessage);
+                Logger.error('[Emarsys newsletterHelper.js sendDataForDoubleOptIn(); Get data error:' + contactData.error + '] - ***Emarsys error message: ' + contactData.errorMessage);
                 return null;
             }
         } else {
@@ -321,13 +262,13 @@ function sendDataForDoubleOptIn(args) {
             sendData = emarsysHelper.triggerAPICall('contact', requestNew, method);
 
             if (sendData.status !== 'OK') {
-                Logger.error('Update data error:' + sendData.error + '] - ***Emarsys error message: ' + sendData.errorMessage);
+                Logger.error('[Emarsys newsletterHelper.js - sendDataForDoubleOptIn(); Update data error:' + sendData.error + '] - ***Emarsys error message: ' + sendData.errorMessage);
                 return null;
             }
         }
     } catch (err) {
         // log error message in case something goes wrong
-        Logger.error('[EmarsysNewsletterHelper.js #' + err.lineNumber + '] - ***Emarsys send contact data error message: ' + err);
+        Logger.error('[Emarsys newsletterHelper.js - sendDataForDoubleOptIn()] - ***Emarsys send contact data error message:' + err.message + '\n' + err.stack);
         return null;
     }
 
@@ -350,19 +291,19 @@ function triggerExternalEvent(args) {
         if (externalEventId) {
             var endpoint = 'event/' + externalEventId + '/trigger';
 
-            requestObj.keyId = '3';
+            requestObj.key_id = '3';
             requestObj.external_id = Args.Email;
             triggerEvent = emarsysHelper.triggerAPICall(endpoint, requestObj, 'POST');
 
             if (triggerEvent.status !== 'OK') {
-                Logger.error('[Trigger event error:' + triggerEvent.error + '] - ***Emarsys error message: ' + triggerEvent.errorMessage);
+                Logger.error('[Emarsys newsletterHelper.js triggerExternalEvent(); Trigger event error:' + triggerEvent.error + '] - ***Emarsys error message:' + triggerEvent.errorMessage);
                 response.redirect('EmarsysNewsletter-RedirectToErrorPage');
                 return Args;
             }
         }
     } catch (err) {
         // log error message in case something goes wrong
-        Logger.error('[EmarsysNewsletterHelper.js #' + err.lineNumber + '] - ***Emarsys trigger event data error message: ' + err);
+        Logger.error('[Emarsys newsletterHelper.js triggerExternalEvent()] - ***Emarsys trigger event data error message:' + err.message + '\n' + err.stack);
         // return null and the redirect for error will be handled externally
         Args.Error = true;
         return Args;
@@ -389,7 +330,7 @@ function getAccountStatus(args, res) {
         contactData = emarsysHelper.triggerAPICall('contact/getdata', requestObj, 'POST');
 
         if (contactData.status !== 'OK') {
-            Logger.error('Get data error:' + contactData.error + '] - ***Emarsys error message: ' + contactData.errorMessage);
+            Logger.error('[Emarsys newsletterHelper.js - getAccountStatus(); Get data error:' + contactData.error + '] - ***Emarsys error message:' + contactData.errorMessage);
             if (Args.SubscriptionType === 'checkout' || !(Args.SubscriptionType === 'account' && Args.EmarsysSignupPage)) {
                 return Args;
             }
@@ -418,7 +359,7 @@ function getAccountStatus(args, res) {
         }
     } catch (err) {
         // log error message in case something goes wrong
-        Logger.error('[EmarsysNewsletterHelper.js #' + err.lineNumber + '] - ***Emarsys get contact data error message: ' + err);
+        Logger.error('[Emarsys newsletterHelper.js - getAccountStatus()] - ***Emarsys get contact data error message: ' + err.message + '\n' + err.stack);
         if (Args.SubscriptionType === 'checkout' || !(Args.SubscriptionType === 'account' && Args.EmarsysSignupPage)) {
             return Args;
         }
@@ -459,7 +400,7 @@ function submitContactData(args, res) {
         submitData = emarsysHelper.triggerAPICall('contact', requestObj, method);
 
         if (submitData.status !== 'OK') {
-            Logger.error('Submit data error:' + submitData.error + '] - ***Emarsys error message: ' + submitData.errorMessage);
+            Logger.error('[Emarsys newsletterHelper.js - submitContactData(); Submit data error:' + submitData.error + '] - ***Emarsys error message:' + submitData.errorMessage);
             if (Args.SubscriptionType === 'checkout' || Args.Action === 'create') {
                 return Args;
             }
@@ -467,7 +408,7 @@ function submitContactData(args, res) {
         }
     } catch (err) {
         // log error message in case something goes wrong
-        Logger.error('Error:' + err.lineNumber + '] - ***Emarsys submit contact data error message: ' + err);
+        Logger.error('[Emarsys newsletterHelper.js - submitContactData()] - ***Emarsys submit contact data error message: ' + err.message + '\n' + err.stack);
         if (Args.SubscriptionType === 'checkout' || Args.Action === 'create') {
             return Args;
         }
@@ -514,7 +455,7 @@ function newsletterUnsubscribe(args) {
             Args.params = { uid: uid, cid: cid, lid: lid, direct: 'y' };
         }
     } catch (err) {
-        Logger.error('EmarsysNewsletter.js #' + err.lineNumber + '] - ***Emarsys newsletter unsubscription error message: ' + err);
+        Logger.error('[Emarsys newsletterHelper.js - newsletterUnsubscribe()] - ***Emarsys newsletter unsubscription error message: ' + err.message + '\n' + err.stack);
         Args.errors = true;
         return Args;
     }
@@ -586,7 +527,7 @@ function accountUnsubscribe(email) {
             };
         }
     } catch (err) {
-        Logger.error('[EmarsysNewsletter.js - accountUnsubscribe()] - ***Emarsys unsubscribe error message: ' + err.toString());
+        Logger.error('[EmarsysNewsletter.js - accountUnsubscribe()] - ***Emarsys unsubscribe error message: ' + err.message + '\n' + err.stack);
         return {
             status: 'GENERAL ERROR'
         };
@@ -599,7 +540,6 @@ function accountUnsubscribe(email) {
 module.exports = {
     mapFieldsSignup: mapFieldsSignup,
     getCustomerData: getCustomerData,
-    getSourceID: getSourceID,
     doubleOptInSubscribe: doubleOptInSubscribe,
     subscriptionTypeData: subscriptionTypeData,
     sendDataForDoubleOptIn: sendDataForDoubleOptIn,

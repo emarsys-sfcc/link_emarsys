@@ -28,7 +28,14 @@ module.exports = {
             case 'event':
                 return {
                     status: 'OK',
-                    object: JSON.stringify({data:[{"id":"5633","name":"single"},{"id":"5634","name":"double"},{"id":"5636","name":"single account"},{"id":"5637","name":"double account"},{"id":"5638","name":"single checkout"}]})
+                    object: JSON.stringify({data:[
+                        {"id":"12678","name":"SFCC_CANCELLED_ORDER"},
+                        {"id":"12601","name":"SFCC_SHARE_A_WISHLIST"},
+                        {"id":"12644","name":"SFCC_NEWSLETTER_SUBSCRIPTION_CONFIRMATION"},
+                        {"id":"12645","name":"SFCC_NEWSLETTER_SUBSCRIPTION_SUCCESS"},
+                        {"id":"5633","name":"single"},
+                        {"id":"5634","name":"double"}
+                    ]})
                 }
             case 'source':
                 return {
@@ -64,6 +71,48 @@ module.exports = {
                 return {
                     status: 'OK',
                     object: JSON.stringify({data:[]})
+                }
+            case 'event/1000/trigger':
+                return {
+                    status: 'ERROR',
+                    errorMessage:JSON.stringify({"replyCode":1,"replyText":"ERROR"}),
+                    error: 400,
+                    msg: 'Bad request'
+                }
+            case 'event/5633/trigger':
+                return {
+                    status: 'OK',
+                    object: JSON.stringify({data:[]})
+                }
+            case 'event/1234/trigger':
+                return {
+                    status: 'OK',
+                    object: JSON.stringify({data:[]})
+                }
+            case 'validError':
+                return {
+                    status: 'ERROR',
+                    errorMessage: JSON.stringify({
+                        replyCode: 5004,
+                        replyText: 'Event ID: {id} is invalid'
+                    })
+                };
+            case 'invalidError':
+                return {
+                    status: 'ERROR',
+                    errorMessage: '{invalid_object}'
+                }
+            case 'unknownError':
+                return {
+                    status: 'ERROR',
+                    errorMessage: null,
+                    error: 400,
+                    msg: 'Bad request'
+                }
+            case 'invalidData':
+                return {
+                    status: 'OK',
+                    object: '{invalid_object}'
                 }
             default: 
                 return {

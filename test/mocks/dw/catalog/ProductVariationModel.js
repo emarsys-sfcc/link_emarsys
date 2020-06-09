@@ -1,6 +1,11 @@
 'use strict';
 
 class ProductVariationModel {
+    constructor() {
+        this.productMaster = {
+            ID: '1111'
+        };
+    }
     getProductVariationAttribute(id) {
         return id;
     }
@@ -8,7 +13,10 @@ class ProductVariationModel {
         return {
             displayValue:attribute
         };
+    }
 
+    getMaster() {
+        return this.productMaster;
     }
 }
 
