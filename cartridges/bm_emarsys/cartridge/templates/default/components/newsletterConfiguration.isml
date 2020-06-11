@@ -38,7 +38,7 @@
                             autocomplete="country">
                     <option label="${Resource.msg('noevent.option', 'newsletter', null)}" value="" >${Resource.msg('noevent.option', 'newsletter', null)}</option>
                     <isloop items="${additionalValues}" var="event">
-                        <option value="${event.id}" <isif condition="${event.id == subscriptionType.optInExternalEvent}">selected</isif>>${event.name}</option>
+                        <option value="${event.id}" <isif condition="${event.name == subscriptionType.optInExternalEvent}">selected</isif>>${event.name}</option>
                     </isloop>
                     </select>
                 </div>
@@ -53,7 +53,7 @@
                             autocomplete="country">
                     <option label="${Resource.msg('noevent.option', 'newsletter', null)}" value="" >${Resource.msg('noevent.option', 'newsletter', null)}</option>
                     <isloop items="${additionalValues}" var="event">
-                        <option value="${event.id}" <isif condition="${event.id == subscriptionType.optInExternalEventAfterConfirmation}">selected</isif>>${event.name}</option>
+                        <option value="${event.id}" <isif condition="${event.name == subscriptionType.optInExternalEventAfterConfirmation}">selected</isif>>${event.name}</option>
                     </isloop>
                     </select>
                 </div>
