@@ -103,12 +103,12 @@ describe('emarsysEventsHelper Helpers', () => {
 
     it('Testing method: readEventsCustomObject #1', () => {
         var customObjectKey = 'StoredEvents';
-        var result = emarsysEventsHelper.readEventsCustomObject([
+        var result = emarsysEventsHelper.readEventsCustomObject(customObjectKey, [
             'newsletterSubscriptionSource',
             'otherSource',
             'newsletterSubscriptionResult',
             'otherResult'
-        ], customObjectKey);
+        ]);
         assert.deepEqual(result.fields, {
             otherSource: ["forgot_password_submitted","contact_form_submitted"],
             newsletterSubscriptionSource: ["newsletter_subscription_confirmation","newsletter_unsubscribe_success"],
@@ -125,12 +125,12 @@ describe('emarsysEventsHelper Helpers', () => {
     })
 
     it('Testing method: readEventsCustomObject #2 (no such object)', () => {
-        var expectedMessage = Resource.msg('custom.object.error1', 'errorMessages', null) +
+        var expectedMessage = 'Custom object EmarsysExternalEvents with id "' +
             'notValidKey' +
-            Resource.msg('custom.object.error2', 'errorMessages', null);
+            '" does not exist';
         var errorMessage = null;
         try {
-            errorMessage = emarsysEventsHelper.readEventsCustomObject([], 'notValidKey');
+            errorMessage = emarsysEventsHelper.readEventsCustomObject('notValidKey', []);
         } catch(err) {
             errorMessage = err.message;
         }
@@ -138,13 +138,13 @@ describe('emarsysEventsHelper Helpers', () => {
     });
 
     it('Testing method: readEventsCustomObject #3 (invalid field)', () => {
-        var expectedMessage = Resource.msg('invalid.field.error1', 'errorMessages', null) +
+        var expectedMessage = 'Invalid field "' +
         'otherSource' +
-        Resource.msg('invalid.field.error2', 'errorMessages', null);
+        '" in custom object EmarsysExternalEvents';
         var errorMessage = null;
         try {
             errorMessage = emarsysEventsHelper.readEventsCustomObject(
-                ['otherSource', 'newsletterSubscriptionResult'], 'invalidFields'
+                'invalidFields', ['otherSource', 'newsletterSubscriptionResult']
             );
         } catch(err) {
             errorMessage = err.message;
