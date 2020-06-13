@@ -10,7 +10,7 @@ var baseController = require('app_storefront_controllers/cartridge/controllers/C
  * The form handler for the contactus form.
  */
 function submit() {
-    var eventsHelper = require('*/cartridge/scripts/helpers/triggerEventHelper');
+    var eventsHelper = require('int_emarsys/cartridge/scripts/helpers/triggerEventHelper');
     var contactUsResult = baseController.Submit();
     if (contactUsResult && (contactUsResult.getStatus() === Status.OK)) {
         var sfccEventName = 'contact_form_submitted';

@@ -6,7 +6,7 @@ var Form = require('~/cartridge/scripts/models/FormModel');
 var baseController = require('app_storefront_controllers/cartridge/controllers/Account');
 
 function passwordResetDialogForm() {
-    var eventsHelper = require('*/cartridge/scripts/helpers/triggerEventHelper');
+    var eventsHelper = require('int_emarsys/cartridge/scripts/helpers/triggerEventHelper');
     var viewData = baseController.PasswordResetDialogForm();
     if(viewData && viewData.ShowContinue === true) {
         var sfccEventName = 'forgot_password_submitted';

@@ -19,7 +19,7 @@ function eventNameFormatter(sfccName) {
  * Prepare select with allowed emarsys events options for replacement
  * @param {string} eventType - neded to find appropriate select for replacement
  * @param {string} currentName - name of Emarsys event, that should be in the first option
- * @return {Object} - select with Emarsys name options
+ * @return {jQuery} - select with Emarsys name options
  */
 function prepareEmarsysNameSelect(eventType, currentName) {
     var $select = $('.js-page-data-block .js-' + eventType + '-events .js-emarsys-name-select').clone();
@@ -53,7 +53,6 @@ function refreshCreatedEventOption(event, eventType) {
     var $emarsysSelect = $('.js-page-data-block .js-' + eventType + '-events .js-emarsys-name-select');
     var $option = $emarsysSelect.children('[value="' + event.emarsysName + '"]');
     $option.attr('data-emarsys-id', event.emarsysId);
-    $option.attr('data-campaign-id', event.campaignId);
 
     // refresh active select nodes
     var $activeSelectNodes = $('.js-' + eventType + '-events-table .js-emarsys-name-select').filter(':not(:disabled)');
@@ -88,6 +87,28 @@ function refreshEmarsysDescriptions(event, eventType) {
         return isTarget;
     }, context);
     emarsysDescriptions.splice(context.index, 1, event);
+}
+
+/**
+ * Validate trigger event form
+ * @param {jQuery} $form - trigger event form
+ * @return {boolean} - whether the form is valid
+ */
+function formValidation($form) {
+    var $inputs = $form.find('.js-input-fields');
+    var context = {
+        isValid: true
+    };
+
+    Array.prototype.forEach.call($inputs, function (node) {
+        var isRequired = $(node).attr('required') === 'required';
+        var noValue = $(node).val() === '';
+        if (isRequired && noValue) {
+            this.isValid = false;
+        }
+    }, context);
+
+    return context.isValid;
 }
 
 module.exports = {
@@ -205,8 +226,8 @@ module.exports = {
                     emarsysId: response.newRow.attr('data-emarsys-id'),
                     emarsysName: response.newRow.attr('data-emarsys-name'),
                     sfccName: response.newRow.attr('data-sfcc-name'),
-                    campaignId: response.newRow.find('.js-campaign-status').data('id'),
-                    campaignStatus: response.newRow.find('.js-campaign-status').data('status')
+                    campaignId: response.newRow.find('.js-campaign-status').attr('data-id'),
+                    campaignStatus: response.newRow.find('.js-campaign-status').attr('data-status')
                 };
                 var message = '';
                 var eventType = this.eventType;
@@ -357,7 +378,7 @@ module.exports = {
         /**
          * Change event button click handler
          * @param {string} eventType - neded to separate work with different types of events
-         * @param {Object} $updateButton - change/apply button node
+         * @param {jQuery} $updateButton - change/apply button node
          */
         function changeEvent(eventType, $updateButton) {
             // switch the button to apply mode
@@ -438,10 +459,10 @@ module.exports = {
         function updateSuccessHandler(data) {
             if (data.response && data.response.status === 'OK') {
                 var event = data.response.result.event;
-                var freshData = data.response.result.campaigns;
+                var freshCampaignsData = data.response.result.campaigns;
                 var message = '';
 
-                if (event.emarsysStatus === 'new' && this.eventType !== 'other') {
+                if (event.emarsysStatus === 'new' && this.eventType === 'subscription') {
                     refreshCreatedEventOption(event, this.eventType);
                 }
 
@@ -453,12 +474,26 @@ module.exports = {
                 this.row.attr('data-emarsys-id', event.emarsysId);
                 this.row.attr('data-emarsys-name', event.emarsysName);
 
-                // refresh campaign status
-                var campaignsData = $('.js-page-data-block .js-' + this.eventType + '-events').data('campaigns');
-                campaignsData[event.emarsysId].status = freshData[event.emarsysId].status;
-
                 // refresh emarsys descriptions
                 refreshEmarsysDescriptions(event, this.eventType);
+
+                if (freshCampaignsData) {   // do not do this for "none" mapping
+                    // refresh campaign status data
+                    var campaignsData = $('.js-page-data-block .js-' + this.eventType + '-events').data('campaigns');
+                    if (campaignsData[event.emarsysId]) {
+                        campaignsData[event.emarsysId].status = freshCampaignsData[event.emarsysId].status;
+                    } else {
+                        campaignsData[event.emarsysId] = {
+                            id: freshCampaignsData[event.emarsysId].id,
+                            status: freshCampaignsData[event.emarsysId].status
+                        };
+                    }
+                    // refresh status in the row
+                    var $statusNode = this.row.find('.js-campaign-status');
+                    $statusNode.attr('data-id', freshCampaignsData[event.emarsysId].id);
+                    $statusNode.attr('data-status', freshCampaignsData[event.emarsysId].status);
+                    $statusNode.text(freshCampaignsData[event.emarsysId].status);
+                }
 
                 // Success message: Event ${event.sfccName} was successfully changed
                 var $messagesBlock = $('.js-notification-messages');
@@ -473,7 +508,7 @@ module.exports = {
         /**
          * Apply changes button click handler
          * @param {string} eventType - neded to separate work with different types of events
-         * @param {Object} $updateButton - change/apply button node
+         * @param {jQuery} $updateButton - change/apply button node
          */
         function applyChanges(eventType, $updateButton) {
             var $row = $updateButton.closest('.js-external-events-row');
@@ -502,10 +537,12 @@ module.exports = {
                 type: eventType,
                 sfccName: $row.attr('data-sfcc-name'),
                 emarsysId: emarsysId,
-                emarsysName: emarsysName,
-                campaignId: campaignsData[emarsysId].id,
-                campaignStatus: campaignsData[emarsysId].status
+                emarsysName: emarsysName
             };
+            if (emarsysId && campaignsData[emarsysId]) {
+                requestData.campaignId = campaignsData[emarsysId].id;
+                requestData.campaignStatus = campaignsData[emarsysId].status;
+            }
 
             $updateButton.prop('disabled', true);
 
@@ -564,7 +601,7 @@ module.exports = {
         /**
          * Click handler for request body example button
          * @param {string} eventType - neded to separate work with different types of events
-         * @param {Object} $exampleButton - example button node
+         * @param {jQuery} $exampleButton - example button node
          */
         function showRequestBodyExample(eventType, $exampleButton) {
             var $row = $exampleButton.closest('.js-external-events-row');
@@ -587,12 +624,12 @@ module.exports = {
             showStatus();
         }
 
-        $('.js-subscription-events-table .js-example-button').on('click', {
+        $('.js-subscription-events-table').on('click', '.js-example-button', {
             showRequestBodyExample: showRequestBodyExample
         }, function (e) {
             e.data.showRequestBodyExample('subscription', $(e.target));
         });
-        $('.js-other-events-table .js-example-button').on('click', {
+        $('.js-other-events-table').on('click', '.js-example-button', {
             showRequestBodyExample: showRequestBodyExample
         }, function (e) {
             e.data.showRequestBodyExample('other', $(e.target));
@@ -605,9 +642,13 @@ module.exports = {
         function openTriggerDialog() {
             var $dialog = this.dialog;
 
-            var contentBlock = $dialog.find('.dialog-content-block');
-            contentBlock.children().remove();
-            contentBlock.append(this.formTemplate);
+            var $contentBlock = $dialog.find('.js-content-block');
+            var previousFormEvent = $contentBlock.find('.js-trigger-form').attr('data-event-name');
+            if (previousFormEvent !== this.event.sfccName) {
+                // replace trigger form if current form is not suitable
+                $contentBlock.children().remove();
+                $contentBlock.append(this.formTemplate);
+            }
 
             dialogPopup.applyReplacementsList($dialog, this.replaceList);
             dialogPopup.open($dialog);
@@ -623,6 +664,7 @@ module.exports = {
             // hide old notifications
             showStatus();
 
+            var $triggerForm = $dialog.find('.js-content-block .js-trigger-form');
             var triggerFormFields = $dialog.find('.js-content-block .js-input-fields');
             var formData = {};
             Array.prototype.forEach.call(triggerFormFields, function (node) {
@@ -632,6 +674,7 @@ module.exports = {
             return {
                 eventType: this.eventType,
                 formData: formData,
+                isValid: formValidation($triggerForm),
                 event: this.event
             };
         }
@@ -665,16 +708,22 @@ module.exports = {
 
             var eventType = result.data.eventType;
             var formData = result.data.formData;
+            var isValid = result.data.isValid;
             var event = result.data.event;
 
-            // TODO: Trigger form validation
+            if (!isValid) {
+                // Warning message: Form validation failed. Some mandatory fields have no value
+                var warning = $('.js-notification-messages').data('form-validation-error');
+                showStatus('error', warning);
+                setTimeout(function () { showStatus(); }, 5000);
+                return;
+            }
 
             var requestData = {
                 type: eventType,
                 sfccName: event.sfccName,
                 emarsysId: event.emarsysId,
                 emarsysName: event.emarsysName,
-                campaignId: event.emarsysName,
                 formData: JSON.stringify(formData)
             };
 
@@ -691,7 +740,7 @@ module.exports = {
         /**
          * Click handler for trigger event button
          * @param {string} eventType - neded to separate work with different types of events
-         * @param {Object} $triggerButton - trigger event button node
+         * @param {jQuery} $triggerButton - trigger event button node
          */
         function triggerEvent(eventType, $triggerButton) {
             var $row = $triggerButton.closest('.js-external-events-row');
@@ -700,10 +749,25 @@ module.exports = {
                 emarsysName: $row.attr('data-emarsys-name'),
                 sfccName: $row.attr('data-sfcc-name')
             };
+            var warning = '';
+
+            if (!event.emarsysId) {
+                // Warning message: Invalid mapping for the event "${event.sfccName}"
+                warning = $('.js-notification-messages').data('invalid-mapping') + ' "' + event.sfccName + '"';
+                showStatus('error', warning);
+                setTimeout(function () { showStatus(); }, 5000);
+                return;
+            }
 
             var formsContainer = $('.js-page-data-block .js-' + eventType + '-forms');
             var formTemplate = formsContainer.find('[data-event-name="' + event.sfccName + '"]')[0];
-            if (!formTemplate) { return; }
+            if (!formTemplate) {
+                // Warning message: Trigger event form is not set for the event "event.emarsysName"
+                warning = $('.js-notification-messages').data('no-trigger-form') + ' "' + event.emarsysName + '"';
+                showStatus('error', warning);
+                setTimeout(function () { showStatus(); }, 5000);
+                return;
+            }
 
             dialogPopup.getUserResponse({
                 dialogSelector: '.js-trigger-event',
@@ -724,12 +788,12 @@ module.exports = {
             showStatus();
         }
 
-        $('.js-subscription-events-table .js-trigger-button').on('click', {
+        $('.js-subscription-events-table').on('click', '.js-trigger-button', {
             triggerEvent: triggerEvent
         }, function (e) {
             e.data.triggerEvent('subscription', $(e.target));
         });
-        $('.js-other-events-table .js-trigger-button').on('click', {
+        $('.js-other-events-table').on('click', '.js-trigger-button', {
             triggerEvent: triggerEvent
         }, function (e) {
             e.data.triggerEvent('other', $(e.target));
@@ -749,10 +813,12 @@ module.exports = {
 
                 $('.js-' + eventType + '-events-table .js-external-events-row').each(function () {
                     var emarsysEventId = $(this).attr('data-emarsys-id');
-                    var $statusNode = $(this).find('.js-campaign-status');
-                    $statusNode.data('emarsys-id', freshData[emarsysEventId].id);
-                    $statusNode.data('emarsys-status', freshData[emarsysEventId].status);
-                    $statusNode.text(freshData[emarsysEventId].status);
+                    if (emarsysEventId) {
+                        var $statusNode = $(this).find('.js-campaign-status');
+                        $statusNode.attr('data-id', freshData[emarsysEventId].id);
+                        $statusNode.attr('data-status', freshData[emarsysEventId].status);
+                        $statusNode.text(freshData[emarsysEventId].status);
+                    }
                 });
 
                 showStatus('success', 'Statys for "' + eventType + '" event campaigns was successfully refreshed');

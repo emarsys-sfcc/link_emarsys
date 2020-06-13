@@ -10,20 +10,24 @@ var BMEmarsysHelper = require('*/cartridge/scripts/helpers/BMEmarsysHelper');
  * @description this function is called with bm_extensions
  */
 server.get('ShowNewsletterSubscription', server.middleware.https, function (req, res, next) {
-    var tabsAttr = BMEmarsysHelper.getTabsAttr('EmarsysNewsletterSubscription', 'EmarsysSubscriptionType');
-    var additionalValues = BMEmarsysHelper.getExternalEvents('EmarsysExternalEvents', 'StoredEvents', 'newsletterSubscriptionResult');
-    var storedConfigurations = BMEmarsysHelper.getStoredConfigurations('EmarsysNewsletterSubscription');
+    try {
+        var tabsAttr = BMEmarsysHelper.getTabsAttr('EmarsysNewsletterSubscription', 'EmarsysSubscriptionType');
+        var storedConfigurations = BMEmarsysHelper.getStoredConfigurations('EmarsysNewsletterSubscription');
+        var additionalValues = BMEmarsysHelper.getExternalEvents('StoredEvents', 'newsletterSubscriptionResult', true);
 
-    var newsletterSubForm = server.forms.getForm('newsletterSub');
-    newsletterSubForm.clear();
+        var newsletterSubForm = server.forms.getForm('newsletterSub');
+        newsletterSubForm.clear();
 
-    res.render('mainPage', {
-        contentTemplate: 'newsletterConfiguration',
-        tabsAttr: tabsAttr,
-        additionalValues: additionalValues,
-        newsletterSubForm: newsletterSubForm,
-        storedConfigurations: storedConfigurations
-    });
+        res.render('mainPage', {
+            contentTemplate: 'newsletterConfiguration',
+            tabsAttr: tabsAttr,
+            additionalValues: additionalValues,
+            newsletterSubForm: newsletterSubForm,
+            storedConfigurations: storedConfigurations
+        });
+    } catch (err) {
+        res.render('components/errorPage', { message: 'Configuration error:', error: err });
+    }
     next();
 });
 

@@ -6,7 +6,8 @@
 var Status = require('dw/system/Status');
 
 var externalEvent = {
-    eventsHelper: require('*/cartridge/scripts/helpers/emarsysEventsHelper'),
+    emarsysHelper: new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))(),
+    eventsHelper: require('int_emarsys/cartridge/scripts/helpers/emarsysEventsHelper'),
     logger: require('dw/system/Logger').getLogger('externalEvent', 'externalEvent'),
     execute: function (params) {
         try {
@@ -14,13 +15,15 @@ var externalEvent = {
             var custom = {};
 
             // read specified fields from custom object EmarsysExternalEvents
-            custom = this.eventsHelper.readEventsCustomObject([
+            custom = this.emarsysHelper.readEventsCustomObject(customObjectKey, [
                 'newsletterSubscriptionSource',
-                'otherSource'
-            ], customObjectKey);
+                'otherSource',
+                'campaignsCategory'
+            ]);
 
-            var subscriptionNames = custom.fields.newsletterSubscriptionSource;
-            var otherNames = custom.fields.otherSource;
+            var subscriptionNames = this.filterDuplications(custom.fields.newsletterSubscriptionSource);
+            var otherNames = this.filterDuplications(custom.fields.otherSource);
+            this.campaignsCategory = custom.fields.campaignsCategory;
 
             this.eventsDescriptionList = this.getEventsDescription();
             this.campaignsData = this.getCampaignsData();
@@ -36,6 +39,16 @@ var externalEvent = {
 
         this.logger.error('externalEvent: All events were succesfully created');
         return new Status(Status.OK, 'OK');
+    },
+    /**
+     * Filter names duplications
+     * @param {Array} list - sfcc events names list
+     * @return {Array} - list of names without duplications
+     */
+    filterDuplications: function (list) {
+        var valuesCollection = this.emarsysHelper.getValuesCollection(list);
+        var valuesList = Object.keys(valuesCollection);
+        return valuesList;
     },
     /**
      * @description get description of all Emarsys external events
@@ -127,7 +140,7 @@ var externalEvent = {
 
         if (!campaignId) {
             // send request to create test campaign
-            var response = this.eventsHelper.createTestCampaign(event);
+            var response = this.eventsHelper.createTestCampaign(event, this.campaignsCategory);
             if (response.status === 'ERROR') {
                 throw new Error('***Emarsys create campaign error: ' + response.message);
             }

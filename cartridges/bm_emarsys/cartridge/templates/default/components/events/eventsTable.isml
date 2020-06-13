@@ -9,9 +9,7 @@
         <button class="js-add-${eventsType}-event-button button-basic">${Resource.msg("button.add.event", "externalEvents", null)}</button>
     </div>
     <div class="column-basic button-column">
-        <button class="js-refresh-status-${eventsType} button-basic" data-refresh-url="${URLUtils.url('ExternalEvents-CampaignStatus', 'type', eventsType)}">
-            ${Resource.msg("button.refresh.status", "externalEvents", null)}
-        </button>
+        <button class="js-refresh-status-${eventsType} button-basic">${Resource.msg("button.refresh.status", "externalEvents", null)}</button>
     </div>
 </div>
 

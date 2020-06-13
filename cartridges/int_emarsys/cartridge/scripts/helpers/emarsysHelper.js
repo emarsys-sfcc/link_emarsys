@@ -12,6 +12,23 @@ var order = require('dw/order');
 var siteCustomPreferences = Site.current.preferences.custom;
 
 /**
+ * Parse string representation of array
+ * @param {string} listText - string representation of Array (may be empty)
+ * @return {Array} - parsed array (null for parse error)
+ */
+function parseList(listText) {
+    var list = [];
+    if (listText && listText.length) {
+        try {
+            list = JSON.parse(listText);
+        } catch (err) {
+            list = null;
+        }
+    }
+    return list;
+}
+
+/**
  * @description main function (constructor)
  */
 function EmarsysHelper() {
@@ -607,6 +624,94 @@ function EmarsysHelper() {
             fieldValueMapping: fieldValueMapping
         });
         return profileFields;
+    };
+
+    /**
+     * Reads specified fields of EmarsysExternalEvents custom object
+     * @param {string} customObjectKey - EmarsysExternalEvents custom object key
+     * @param {Array} fieldsKeys - keys of fields to read
+     * @return {Object} - custom object data
+     */
+    this.readEventsCustomObject = function (customObjectKey, fieldsKeys) {
+        var custom = {};
+
+        // get object which contain external events description (on BM side)
+        custom.object = CustomObjectMgr.getCustomObject('EmarsysExternalEvents', customObjectKey);
+        if (custom.object === null) {
+            throw new Error(
+                'Custom object EmarsysExternalEvents with id "' +
+                customObjectKey +
+                '" does not exist'
+            );
+        }
+
+        custom.fields = {};
+        fieldsKeys.forEach(function (fieldKey) {
+            var isValid = true;
+            var result = null;
+
+            switch (fieldKey) {
+                case 'newsletterSubscriptionSource':
+                case 'otherSource':
+                    result = parseList(this.object.custom[fieldKey]);
+                    isValid = !empty(result) && result.length !== 0;
+                    break;
+                case 'newsletterSubscriptionResult':
+                case 'otherResult':
+                    result = parseList(this.object.custom[fieldKey]);
+                    isValid = !empty(result);
+                    break;
+                case 'campaignsCategory':
+                    result = this.object.custom[fieldKey];
+                    isValid = !empty(result);
+                    break;
+                default:
+                    result = this.object.custom[fieldKey];
+            }
+
+            if (!isValid) {
+                throw new Error(
+                    'Invalid field "' +
+                    fieldKey +
+                    '" in custom object EmarsysExternalEvents'
+                );
+            }
+            this.fields[fieldKey] = result;
+        }, custom);
+
+        return custom;
+    };
+
+    /**
+     * Prepare collection from the list of items by simple value
+     * @param {Array} list - list to prepare collection from
+     * @param {Function} getKeyValue - custom function to get key property (required for list of objects)
+     * @return {Object} - resultant collection
+     */
+    this.getValuesCollection = function (list, getKeyValue) {
+        var context = {
+            collection: {},
+            getKeyValue: getKeyValue
+        };
+
+        if (!empty(list)) {
+            if (empty(getKeyValue) && typeof list[0] !== 'object') {
+                list.forEach(function (item) {
+                    if (item && !this.collection[item]) {
+                        this.collection[item] = item;
+                    }
+                }, context);
+            } else if (!empty(getKeyValue) && typeof list[0] === 'object') {
+                list.forEach(function (item) {
+                    var keyValue = item && this.getKeyValue(item);
+                    if (keyValue && !this.collection[keyValue]) {
+                        this.collection[keyValue] = item;
+                    }
+                }, context);
+            }
+        }
+
+        return context.collection;
     };
 }
 

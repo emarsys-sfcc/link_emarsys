@@ -44,7 +44,10 @@
             data-success-changed="${Resource.msg("success.message.changed", "externalEvents", null)}"
             data-server-error="${Resource.msg("server.error", "errorMessages", null)}"
             data-empty-name-error="${Resource.msg("name.not.specified.error", "errorMessages", null)}"
-            data-empty-source-error="${Resource.msg("empty.source.field.error", "errorMessages", null)}">
+            data-empty-source-error="${Resource.msg("empty.source.field.error", "errorMessages", null)}"
+            data-form-validation-error="${Resource.msg("form.validation.error", "errorMessages", null)}"
+            data-invalid-mapping="${Resource.msg("invalid.mapping", "errorMessages", null)}"
+            data-no-trigger-form="${Resource.msg("no.trigger.form", "errorMessages", null)}">
         </div>
 
         <iscomment> add event (custom) dialog template </iscomment>
@@ -113,34 +116,6 @@
                 <button class="js-confirm-button button-basic">
                     ${Resource.msg("dialog.button.trigger", "externalEvents", null)}
                 </button>
-            </div>
-        </div>
-
-        <iscomment> row template </iscomment>
-        <div class="js-external-events-row row-basic">
-            <div class="column-basic sfcc-name-column">
-                <span class="js-sfcc-name-span"></span>
-            </div>
-            <div class="column-basic emarsys-name-column">
-                <select class="js-emarsys-name-select select-basic"></select>
-            </div>
-            <div class="column-basic button-column">
-                <button class="js-change-button button-basic">
-                    ${Resource.msg("button.change", "externalEvents", null)}
-                </button>
-            </div>
-            <div class="column-basic button-column">
-                <button class="js-example-button button-basic">
-                    ${Resource.msg("button.example", "externalEvents", null)}
-                </button>
-            </div>
-            <div class="column-basic button-column">
-                <button class="js-trigger-button button-basic">
-                    ${Resource.msg("button.trigger", "externalEvents", null)}
-                </button>
-            </div>
-            <div class="column-basic campaign-status-column">
-                <span class="js-campaign-status" data-id=""></span>
             </div>
         </div>
     </div>
