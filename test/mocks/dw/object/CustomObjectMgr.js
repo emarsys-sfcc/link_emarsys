@@ -97,16 +97,15 @@ var objects = {
                     {"id":"12646","name":"SFCC_NEWSLETTER_UNSUBSCRIBE_SUCCESS"}
                 ]),
                 otherSource: JSON.stringify(["forgot_password_submitted","contact_form_submitted"]),
-                newsletterSubscriptionSource: JSON.stringify(["newsletter_subscription_confirmation","newsletter_unsubscribe_success"]),
+                newsletterSubscriptionSource: JSON.stringify(["newsletter_subscription_confirmation","newsletter_subscription_success"]),
                 otherResult: JSON.stringify([
-                    {"sfccName":"cancelled_order","emarsysId":"12678","emarsysName":"SFCC_CANCELLED_ORDER"},
-                    {"sfccName":"forgot_password_submitted","emarsysId":"12561","emarsysName":"SFCC_FORGOT_PASSWORD_SUBMITTED"},
-                    {"sfccName":"contact_form_submitted","emarsysId":"12563","emarsysName":"SFCC_CONTACT_FORM_SUBMITTED"}
-                ]),
+                    {"sfccName":"cancelled_order","emarsysId":"12678","emarsysName":"SFCC_CANCELLED_ORDER","campaignId":"7497055"},
+                    {"sfccName":"forgot_password_submitted","emarsysId":"12561","emarsysName":"SFCC_FORGOT_PASSWORD_SUBMITTED","campaignId":"7497056"},
+                    {"sfccName":"contact_form_submitted","emarsysId":"12563","emarsysName":"SFCC_CONTACT_FORM_SUBMITTED","campaignId":"7497057"}]),
                 newsletterSubscriptionResult: JSON.stringify([
-                    {"sfccName":"newsletter_subscription_confirmation","emarsysId":"12644","emarsysName":"SFCC_NEWSLETTER_SUBSCRIPTION_CONFIRMATION"},
-                    {"sfccName":"newsletter_unsubscribe_success","emarsysId":"12646","emarsysName":"SFCC_NEWSLETTER_UNSUBSCRIBE_SUCCESS"}
-                ])
+                    {"sfccName":"newsletter_subscription_confirmation","emarsysId":"12644","emarsysName":"SFCC_NEWSLETTER_SUBSCRIPTION_CONFIRMATION","campaignId":"7497007"},
+                    {"sfccName":"newsletter_subscription_success","emarsysId":"12645","emarsysName":"SFCC_NEWSLETTER_SUBSCRIPTION_SUCCESS","campaignId":"7497050"}]),
+                    campaignsCategory: '6146'
             },
             name: 'StoredEvents'
         },

@@ -32,6 +32,7 @@ var EmarsysHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsy
     'dw/value/Money': Money,
     'dw/system/Site': Site,
     'dw/order/ShippingMgr': ShippingMgr,
+    'dw/object/CustomObjectMgr': CustomObjectMgr,
     '~/cartridge/scripts/service/emarsysService': emarsysService,
     siteCustomPreferences: siteCustomPreferences 
 });
@@ -125,6 +126,7 @@ describe('triggerEventHelper Scripts', function() {
         var result = triggerEventHelper.getExternalEventData(sfccEventName, 'otherResult');
 
         assert.deepEqual(result, {
+            campaignId: '7497057',
             emarsysId: '12563',
             emarsysName: 'SFCC_CONTACT_FORM_SUBMITTED',
             sfccName: 'contact_form_submitted'

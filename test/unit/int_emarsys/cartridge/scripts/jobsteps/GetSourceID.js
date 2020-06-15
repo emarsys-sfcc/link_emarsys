@@ -12,6 +12,7 @@ var Site = require(mockPath + 'dw/system/Site');
 var ShippingMgr = require(mockPath + 'dw/order/ShippingMgr');
 var Money = require(mockPath + 'dw/value/Money');
 var emarsysService = require(mockPath + 'service/emarsysService');
+var CustomObjectMgr = require(mockPath + 'dw/object/CustomObjectMgr');
 
 var siteCustomPreferences = Site.current.preferences.custom;
 var cartridgePath = '../../../../../../cartridges/int_emarsys/';
@@ -22,6 +23,7 @@ var EmarsysHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsy
     'dw/value/Money': Money,
     'dw/system/Site': Site,
     'dw/order/ShippingMgr': ShippingMgr,
+    'dw/object/CustomObjectMgr': CustomObjectMgr,
     siteCustomPreferences: siteCustomPreferences,
     '~/cartridge/scripts/service/emarsysService': emarsysService 
 });

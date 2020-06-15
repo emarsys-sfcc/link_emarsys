@@ -31,12 +31,12 @@ describe('emarsysEventsHelper Helpers', () => {
         assert.deepEqual(result, {
             result: {
                 data: [
-                    {"id":"12678","name":"SFCC_CANCELLED_ORDER"},
-                    {"id":"12601","name":"SFCC_SHARE_A_WISHLIST"},
-                    {"id":"12644","name":"SFCC_NEWSLETTER_SUBSCRIPTION_CONFIRMATION"},
-                    {"id":"12645","name":"SFCC_NEWSLETTER_SUBSCRIPTION_SUCCESS"},
-                    {"id":"5633","name":"single"},
-                    {"id":"5634","name":"double"}
+                    {'id':'12678','name':'SFCC_CANCELLED_ORDER'},
+                    {'id':'12601','name':'SFCC_SHARE_A_WISHLIST'},
+                    {'id':'12644','name':'SFCC_NEWSLETTER_SUBSCRIPTION_CONFIRMATION'},
+                    {'id':'12645','name':'SFCC_NEWSLETTER_SUBSCRIPTION_SUCCESS'},
+                    {'id':'5633','name':'single'},
+                    {'id':'5634','name':'double'}
                 ]
             },
             status: 'OK'
@@ -86,72 +86,7 @@ describe('emarsysEventsHelper Helpers', () => {
         });
     });
 
-    it('Testing method: parseList #1', () => {
-        var result = emarsysEventsHelper.parseList('[1,2]');
-        assert.deepEqual(result, [1,2]);
-    });
-
-    it('Testing method: parseList #2 (empty string)', () => {
-        var result = emarsysEventsHelper.parseList('');
-        assert.deepEqual(result, []);
-    });
-
-    it('Testing method: parseList #3 (invalid list)', () => {
-        var result = emarsysEventsHelper.parseList('{1,2}');
-        assert.deepEqual(result, null);
-    });
-
-    it('Testing method: readEventsCustomObject #1', () => {
-        var customObjectKey = 'StoredEvents';
-        var result = emarsysEventsHelper.readEventsCustomObject(customObjectKey, [
-            'newsletterSubscriptionSource',
-            'otherSource',
-            'newsletterSubscriptionResult',
-            'otherResult'
-        ]);
-        assert.deepEqual(result.fields, {
-            otherSource: ["forgot_password_submitted","contact_form_submitted"],
-            newsletterSubscriptionSource: ["newsletter_subscription_confirmation","newsletter_unsubscribe_success"],
-            otherResult: [
-                {"sfccName":"cancelled_order","emarsysId":"12678","emarsysName":"SFCC_CANCELLED_ORDER"},
-                {"sfccName":"forgot_password_submitted","emarsysId":"12561","emarsysName":"SFCC_FORGOT_PASSWORD_SUBMITTED"},
-                {"sfccName":"contact_form_submitted","emarsysId":"12563","emarsysName":"SFCC_CONTACT_FORM_SUBMITTED"},
-            ],
-            newsletterSubscriptionResult: [
-                {"sfccName":"newsletter_subscription_confirmation","emarsysId":"12644","emarsysName":"SFCC_NEWSLETTER_SUBSCRIPTION_CONFIRMATION"},
-                {"sfccName":"newsletter_unsubscribe_success","emarsysId":"12646","emarsysName":"SFCC_NEWSLETTER_UNSUBSCRIBE_SUCCESS"}
-            ]
-        });
-    })
-
-    it('Testing method: readEventsCustomObject #2 (no such object)', () => {
-        var expectedMessage = 'Custom object EmarsysExternalEvents with id "' +
-            'notValidKey' +
-            '" does not exist';
-        var errorMessage = null;
-        try {
-            errorMessage = emarsysEventsHelper.readEventsCustomObject('notValidKey', []);
-        } catch(err) {
-            errorMessage = err.message;
-        }
-        assert.equal(errorMessage, expectedMessage);
-    });
-
-    it('Testing method: readEventsCustomObject #3 (invalid field)', () => {
-        var expectedMessage = 'Invalid field "' +
-        'otherSource' +
-        '" in custom object EmarsysExternalEvents';
-        var errorMessage = null;
-        try {
-            errorMessage = emarsysEventsHelper.readEventsCustomObject(
-                'invalidFields', ['otherSource', 'newsletterSubscriptionResult']
-            );
-        } catch(err) {
-            errorMessage = err.message;
-        }
-        assert.equal(errorMessage, expectedMessage);
-    });
-
+   
     it('Testing method: eventNameFormatter', () => {
         var result = emarsysEventsHelper.eventNameFormatter('test');
         assert.equal(result,'SFCC_TEST');
@@ -160,10 +95,10 @@ describe('emarsysEventsHelper Helpers', () => {
     it('Testing method: getNotMappedEvents', () => {
         var eventsCustomObject = { 
             custom: {
-                otherSource: JSON.stringify(["cancelled_order","single","double-optin"]),
+                otherSource: JSON.stringify(['cancelled_order','single','double-optin']),
                 otherResult: JSON.stringify([
-                    {"emarsysId":"1234","emarsysName":"SFCC_CANCELLED_ORDER","sfccName":"cancelled_order"},
-                    {"emarsysId":"1278","emarsysName":"SFCC_DOUBLE_OPTIN","sfccName":"double-optin"}])
+                    {'emarsysId':'1234','emarsysName':'SFCC_CANCELLED_ORDER','sfccName':'cancelled_order'},
+                    {'emarsysId':'1278','emarsysName':'SFCC_DOUBLE_OPTIN','sfccName':'double-optin'}])
             },
             name: 'StoredEvents'
         };
@@ -173,28 +108,216 @@ describe('emarsysEventsHelper Helpers', () => {
         assert.deepEqual(result, ['single']);
     });
 
-    it('Testing method: getEmarsysEvents', () => {
+    it('Testing method: getExistentEventsData', () => {
         var allEmarsysEvents = [
-            {"id":"5633","name":"single"},
-            {"id":"5634","name":"double"},
-            {"id":"12561","name":"SFCC_FORGOT_PASSWORD_SUBMITTED"},
-            {"id":"12563","name":"SFCC_CONTACT_FORM_SUBMITTED"},
-            {"id":"12644","name":"SFCC_NEWSLETTER_SUBSCRIPTION_CONFIRMATION"},
-            {"id":"12646","name":"SFCC_NEWSLETTER_UNSUBSCRIBE_SUCCESS"}
+            {'id':'5633','name':'single'},
+            {'id':'5634','name':'double'},
+            {'id':'12561','name':'SFCC_FORGOT_PASSWORD_SUBMITTED'},
+            {'id':'12563','name':'SFCC_CONTACT_FORM_SUBMITTED'},
+            {'id':'12644','name':'SFCC_NEWSLETTER_SUBSCRIPTION_CONFIRMATION'},
+            {'id':'12646','name':'SFCC_NEWSLETTER_UNSUBSCRIBE_SUCCESS'}
         ];
         var sfccNames = [
-            "cancelled_order",
-            "forgot_password_submitted",
-            "contact_form_submitted",
-            "share_a_wishlist"
+            'cancelled_order',
+            'forgot_password_submitted',
+            'contact_form_submitted',
+            'share_a_wishlist'
         ];
 
-        var result = emarsysEventsHelper.getEmarsysEvents(allEmarsysEvents, sfccNames);
+        var result = emarsysEventsHelper.getExistentEventsData(allEmarsysEvents, sfccNames);
         assert.deepEqual(result, [
-            {'id': '', 'name': 'SFCC_CANCELLED_ORDER'},
-            {'id': '12561', 'name': 'SFCC_FORGOT_PASSWORD_SUBMITTED'},
-            {'id': '12563', 'name': 'SFCC_CONTACT_FORM_SUBMITTED'},
-            {'id': '', 'name': 'SFCC_SHARE_A_WISHLIST'}
+            {'emarsysId': '', 'emarsysName': 'SFCC_CANCELLED_ORDER'},
+            {'emarsysId': '12561', 'emarsysName': 'SFCC_FORGOT_PASSWORD_SUBMITTED'},
+            {'emarsysId': '12563', 'emarsysName': 'SFCC_CONTACT_FORM_SUBMITTED'},
+            {'emarsysId': '', 'emarsysName': 'SFCC_SHARE_A_WISHLIST'}
         ]);
     });
+
+    it('Testing method: composeObject', () => {
+        var args = {
+            dataObject: {
+                'email': 'test@test.com'
+            },
+            placeholdersMapping: [{
+                'field': 'email',
+                'label': 'Email',
+                'placeholder': 'external_id',
+                'required': true
+            }]
+        };
+        var result = emarsysEventsHelper.composeObject(args);
+        assert.deepEqual(result, {'external_id': 'test@test.com'});
+    });
+
+    it('Testing method: composeObject #1 empty mapping', () => {
+        var args = {
+            dataObject: 'test@test.com',
+            baseObject: {}
+        };
+        var result = emarsysEventsHelper.composeObject(args);
+        assert.deepEqual(result, {});
+    });
+
+    it('Testing method: composeObject #3', () => {
+        var args = {
+            dataObject: {
+                'email': 'test@test.com',
+                'customer_email':'test@test.com'
+            },
+            placeholdersMapping: [{
+                'field': 'email',
+                'label': 'Email',
+                'placeholder': 'external_id',
+                'required': true
+            },{
+                'field': 'customer_email',
+                'label': 'Customer email',
+                'placeholder': 'data.global.customer_email',
+                'required': false
+            }]};
+        var result = emarsysEventsHelper.composeObject(args);
+        assert.deepEqual(result, {
+            'external_id': 'test@test.com',
+            'data': {
+                    'global': {
+                        'customer_email': 'test@test.com'
+                    }
+                }
+        });
+    });
+
+    it('Testing method: createTestCampaign', () => {
+        var event = {
+            'sfccName':'cancelled_order',
+            'emarsysId':'12678',
+            'emarsysName':'SFCC_CANCELLED_ORDER'
+        };
+        var result = emarsysEventsHelper.createTestCampaign(event, '1111111');
+        assert.deepEqual(result, {
+            'result': {
+                'data': [{
+                          'id': '7497056',
+                          'name': 'test_event_12561',
+                          'status': '1'
+                        },
+                        {
+                          'id': '7497055',
+                          'name': 'test_event_12677',
+                          'status': '-3'
+                        },{
+                          'id': '1113',
+                          'name': 'emarsysTest3',
+                          'status': '3'
+                        }]
+                
+            },
+            'status': 'OK'
+        });
+    });
+
+    it('Testing method: prepareCampaignData', () => {
+        var campaignsList = [{
+            id: '1111', name: 'emarsysTest1', status:'1'},{
+            id: '1112', name: 'emarsysTest2', status:'2'},{
+            id: '1113', name: 'emarsysTest3', status:'3'},{  
+            id: '1114', name: 'emarsysTest4', status:'4'},{ 
+            id: '1115', name: 'emarsysTest5', status:'-3'},{ 
+            id: '1116', name: 'emarsysTest6', status:'-6' },{ 
+            id: '1117', name: 'emarsysTestInvalid', status:'00'}];
+        var result = emarsysEventsHelper.prepareCampaignData(campaignsList);
+        assert.deepEqual(result, {
+            'emarsysTest1': {
+                'id': '1111','name': 'emarsysTest1','status': 'In design' },
+            'emarsysTest2': {
+                'id': '1112','name': 'emarsysTest2','status': 'Tested'},
+            'emarsysTest3': {
+                'id': '1113','name': 'emarsysTest3','status': 'Launched' },
+            'emarsysTest4': {
+                'id': '1114','name': 'emarsysTest4','status': 'Ready to launch'},
+            'emarsysTest5': {
+                'id': '1115','name': 'emarsysTest5','status': 'Deactivated'},
+            'emarsysTest6': {
+                'id': '1116','name': 'emarsysTest6','status': 'Aborted'},
+            'emarsysTestInvalid': {
+                'id': '1117','name': 'emarsysTestInvalid','status': 'Invalid'}
+        });
+    });
+
+    it('Testing method: getEventsRelatedData', () => {
+        var campaignData = {
+            'test_event_12561': {
+                'id':'7497056',
+                'name':'test_event_12561',
+                'status':'Deactivated'
+            },
+            'test_event_12677': {
+                'id':'7497055',
+                'name':'test_event_12677',
+                'status':'In design'
+            },
+            'emarsysTest3': {
+                'id': '1113','name': 'emarsysTest3','status': 'Launched' }
+        };
+        var emarsysDescriptions = [{
+            'emarsysId': '12561',
+            'emarsysName':'SFCC_FORGOT_PASSWORD_SUBMITTED'
+        },{
+            'emarsysId': '12563',
+            'emarsysName': 'SFCC_CONTACT_FORM_SUBMITTED'
+        }];
+        var result = emarsysEventsHelper.getEventsRelatedData(campaignData, emarsysDescriptions);
+        assert.deepEqual(result, {   
+        '12561': {
+            'id': '7497056',
+            'name': 'test_event_12561',
+            'status': 'Deactivated'
+          },
+        '12563': {
+            'id': '',
+            'status': 'not exist'
+          }
+        });
+    });
+
+    it('Testing method: findObjectInList', () => {
+        var list = [{
+            'emarsysEventName':'SFCC_CONTACT_FORM_SUBMITTED',
+            'fieldsData': [{
+                'field': 'email',
+                'label': 'Email',
+                'placeholder': 'external_id',
+                'required': true
+            }],
+            'sfccEventName':'contact_form_submitted',  
+        },{
+            'emarsysEventName':'SFCC_FORGOT_PASSWORD_SUBMITTED',
+            'fieldsData': [{
+                'field': 'email',
+                'label': 'Email',
+                'placeholder': 'external_id',
+                'required': true
+            }],
+            'sfccEventName':'forgot_password_submitted',  
+        }];
+        var field = 'emarsysEventName';
+        var value = 'SFCC_CONTACT_FORM_SUBMITTED';
+        var result = emarsysEventsHelper.findObjectInList(list, field, value);
+        assert.deepEqual(result, {
+            'field': 'emarsysEventName',
+            'index': 0,
+            'object': {
+                'emarsysEventName': 'SFCC_CONTACT_FORM_SUBMITTED',
+                'fieldsData': [{
+                        'field': 'email',
+                        'label': 'Email',
+                        'placeholder': 'external_id',
+                        'required': true
+                }],
+                'sfccEventName': 'contact_form_submitted'
+            },
+            'success': true,
+            'value': 'SFCC_CONTACT_FORM_SUBMITTED'
+        });
+    });
+
 });

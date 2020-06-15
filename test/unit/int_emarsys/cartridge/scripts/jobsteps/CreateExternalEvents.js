@@ -10,9 +10,25 @@ var Status = require(mockPath + 'dw/system/Status');
 var Resource = require(mockPath +'dw/web/Resource');
 var CustomObjectMgr = require(mockPath + 'dw/object/CustomObjectMgr');
 var emarsysService = require(mockPath + 'service/emarsysService');
+var ShippingMgr = require(mockPath + 'dw/order/ShippingMgr');
 var Site = require(mockPath + 'dw/system/Site');
+var siteCustomPreferences = Site.current.preferences.custom;
+var order = require(mockPath + 'dw/order/Order');
+var web = require(mockPath + 'dw/web/Web');
+var Money = require(mockPath + 'dw/value/Money');
 
 var cartridgePathE = '../../../../../../cartridges/int_emarsys/';
+
+var EmarsysHelper = proxyquire(cartridgePathE + 'cartridge/scripts/helpers/emarsysHelper.js', {
+    'dw/web': web,
+    'dw/order': order,
+    'dw/value/Money': Money,
+    'dw/system/Site': Site,
+    'dw/order/ShippingMgr': ShippingMgr,
+    'dw/object/CustomObjectMgr': CustomObjectMgr,
+    siteCustomPreferences: siteCustomPreferences,
+    '~/cartridge/scripts/service/emarsysService': emarsysService 
+});
 
 var EmarsysEventsHelper = proxyquire(cartridgePathE + 'cartridge/scripts/helpers/emarsysEventsHelper.js', {
     'dw/web/Resource': Resource,
@@ -25,7 +41,8 @@ var CreateExternalEvents = proxyquire(cartridgePathE + 'cartridge/scripts/jobste
     'dw/object/CustomObjectMgr': CustomObjectMgr,
     'dw/system/Status': Status,
     'dw/system/Logger': Logger,
-    '*/cartridge/scripts/helpers/emarsysEventsHelper': EmarsysEventsHelper
+    'int_emarsys/cartridge/scripts/helpers/emarsysEventsHelper': EmarsysEventsHelper,
+    'int_emarsys/cartridge/scripts/helpers/emarsysHelper': EmarsysHelper
 });
 
 describe('CreateExternalEvents jobstep', () => {
