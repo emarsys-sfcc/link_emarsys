@@ -18,6 +18,24 @@
                         }
                     ]
                 }
+            },
+            "SFCC_NEWSLETTER_SUBSCRIPTION_CONFIRMATION": {
+                "key_id": "3",
+                "external_id": "test@gmail.com",
+                "31":"1",
+                "source_id": "34567"
+            },
+            "SFCC_NEWSLETTER_SUBSCRIPTION_SUCCESS": {
+                "key_id": "3",
+                "external_id": "test@gmail.com",
+                "31":"1",
+                "source_id": "34567"
+            },
+            "SFCC_NEWSLETTER_UNSUBSCRIBE_SUCCESS": {
+                "key_id": "3",
+                "external_id": "test@gmail.com",
+                "31":"2",
+                "source_id": "34567"
             }
         },
         "other": {
@@ -89,6 +107,60 @@
                         "field": "currency",
                         "placeholder": "data.products[0].product_price_currency",
                         "label": "Currency",
+                        "required": false
+                    }
+                ]
+            },
+            {
+                "sfccEventName": "newsletter_subscription_confirmation",
+                "emarsysEventName": "SFCC_NEWSLETTER_SUBSCRIPTION_CONFIRMATION",
+                "fieldsData": [
+                    {
+                        "field": "email",
+                        "placeholder": "external_id",
+                        "label": "Email",
+                        "required": true
+                    },
+                    {
+                        "field": "31",
+                        "placeholder": "31",
+                        "label": "OptInStatus",
+                        "required": false
+                    }
+                ]
+            },
+            {
+                "sfccEventName": "newsletter_subscription_success",
+                "emarsysEventName": "SFCC_NEWSLETTER_SUBSCRIPTION_SUCCESS",
+                "fieldsData": [
+                    {
+                        "field": "email",
+                        "placeholder": "external_id",
+                        "label": "Email",
+                        "required": true
+                    },
+                    {
+                        "field": "31",
+                        "placeholder": "31",
+                        "label": "OptInStatus",
+                        "required": false
+                    }
+                ]
+            },
+            {
+                "sfccEventName": "newsletter_unsubscribe_success",
+                "emarsysEventName": "SFCC_NEWSLETTER_UNSUBSCRIBE_SUCCESS",
+                "fieldsData": [
+                    {
+                        "field": "email",
+                        "placeholder": "external_id",
+                        "label": "Email",
+                        "required": true
+                    },
+                    {
+                        "field": "31",
+                        "placeholder": "31",
+                        "label": "OptInStatus",
                         "required": false
                     }
                 ]

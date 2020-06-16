@@ -411,6 +411,7 @@ server.post('Trigger',
         });
         triggerBody.key_id = fields.email.id;   // 3
         triggerBody.external_id = userEmail;
+        triggerBody.source_id = source;   // '89648'
 
         // send request to trigger event with specified id
         responseObj = eventsHelper.makeCallToEmarsys(triggerUrl, triggerBody, 'POST');
