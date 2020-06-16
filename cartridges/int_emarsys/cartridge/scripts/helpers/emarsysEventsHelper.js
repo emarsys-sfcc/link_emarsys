@@ -1,7 +1,6 @@
 'use strict';
 
 var Resource = require('dw/web/Resource');
-var CustomObjectMgr = require('dw/object/CustomObjectMgr');
 
 /**
  * @description Make call to Emarsys
@@ -49,65 +48,6 @@ function makeCallToEmarsys(endpoint, requestBody, requestMethod) {
             message: Resource.msg('parsing.error', 'errorMessages', null)
         };
     }
-}
-
-/**
- * Parse string representation of array
- * @param {string} listText - string representation of Array (may be empty)
- * @return {Array} - parsed array (null for parse error)
- */
-function parseList(listText) {
-    var list = [];
-    if (listText && listText.length) {
-        try {
-            list = JSON.parse(listText);
-        } catch (err) {
-            list = null;
-        }
-    }
-    return list;
-}
-
-/**
- * Reads specified fields of EmarsysExternalEvents custom object
- * @param {Array} fieldsKeys - keys of fields to read
- * @param {string} objectKey - EmarsysExternalEvents custom object key
- * @return {Object} - custom object data
- */
-function readEventsCustomObject(fieldsKeys, objectKey) {
-    var custom = {};
-    var customObjectKey = objectKey;
-
-    // get object which contain external events description (on BM side)
-    custom.object = CustomObjectMgr.getCustomObject('EmarsysExternalEvents', customObjectKey);
-    if (custom.object === null) {
-        throw new Error(
-            Resource.msg('custom.object.error1', 'errorMessages', null) +
-            customObjectKey +
-            Resource.msg('custom.object.error2', 'errorMessages', null)
-        );
-    }
-
-    custom.fields = {};
-    fieldsKeys.forEach(function (fieldKey) {
-        var list = parseList(custom.object.custom[fieldKey]);
-        var isFieldInvalid = false;
-        if (fieldKey === 'newsletterSubscriptionSource' || fieldKey === 'otherSource') {
-            isFieldInvalid = !list || list.length === 0;
-        } else {
-            isFieldInvalid = !list;
-        }
-        if (isFieldInvalid) {
-            throw new Error(
-                Resource.msg('invalid.field.error1', 'errorMessages', null) +
-                fieldKey +
-                Resource.msg('invalid.field.error2', 'errorMessages', null)
-            );
-        }
-        this.fields[fieldKey] = list;
-    }, custom);
-
-    return custom;
 }
 
 /**
@@ -226,20 +166,19 @@ function composeObject(args) {
 }
 
 /**
- * Create campaign to test external event
+ * Create email campaign to test external event
  * @param {Object} event - external event description object
+ * @param {string} campaignsCategory - test campaign category identifier
  * @return {Object} - emarsys respond object
  */
-function createTestCampaign(event) {
-    var emailCampaignCategory = '6146';          // TODO: store the value on the site
-
+function createTestCampaign(event, campaignsCategory) {
     var createCampaignBody = {
         name: 'test_event_' + event.emarsysId,
         language: 'en',
         fromemail: 'testing@emarsys.com',
         fromname: 'emarsys',
         subject: 'external events testing',
-        email_category: emailCampaignCategory,
+        email_category: campaignsCategory,
         external_event_id: event.emarsysId,
         text_source: 'Event ' + event.emarsysName + ' was triggered successfully'
     };
@@ -297,7 +236,9 @@ function getEventsRelatedData(campaignsData, emarsysDescriptions) {
 
     emarsysDescriptions.forEach(function (event) {
         var campaignData = this.campaignsData['test_event_' + event.emarsysId];
-        this.separatedCampaigns[event.emarsysId] = campaignData || { id: '', status: 'not exist' };
+        if (event.emarsysId) {
+            this.separatedCampaigns[event.emarsysId] = campaignData || { id: '', status: 'not exist' };
+        }
     }, {
         campaignsData: campaignsData,
         separatedCampaigns: separatedCampaigns
@@ -333,8 +274,6 @@ function findObjectInList(list, field, value) {
 
 module.exports = {
     makeCallToEmarsys: makeCallToEmarsys,
-    parseList: parseList,
-    readEventsCustomObject: readEventsCustomObject,
     getNotMappedEvents: getNotMappedEvents,
     getExistentEventsData: getExistentEventsData,
     eventNameFormatter: eventNameFormatter,

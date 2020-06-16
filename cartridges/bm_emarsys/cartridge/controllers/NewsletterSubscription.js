@@ -7,23 +7,27 @@ var CustomObjectMgr = require('dw/object/CustomObjectMgr');
 var BMEmarsysHelper = require('*/cartridge/scripts/helpers/BMEmarsysHelper');
 
 /**
- * @description this function is colled with bm_extensions
+ * @description this function is called with bm_extensions
  */
 server.get('ShowNewsletterSubscription', server.middleware.https, function (req, res, next) {
-    var tabsAttr = BMEmarsysHelper.getTabsAttr('EmarsysNewsletterSubscription', 'EmarsysSubscriptionType');
-    var additionalValues = BMEmarsysHelper.getExternalEvents('EmarsysExternalEvents', 'StoredEvents', 'newsletterSubscriptionResult');
-    var storedConfigurations = BMEmarsysHelper.getStoredConfigurations('EmarsysNewsletterSubscription');
+    try {
+        var tabsAttr = BMEmarsysHelper.getTabsAttr('EmarsysNewsletterSubscription', 'EmarsysSubscriptionType');
+        var storedConfigurations = BMEmarsysHelper.getStoredConfigurations('EmarsysNewsletterSubscription');
+        var additionalValues = BMEmarsysHelper.getExternalEvents('StoredEvents', 'newsletterSubscriptionResult', true);
 
-    var newsletterSubForm = server.forms.getForm('newsletterSub');
-    newsletterSubForm.clear();
+        var newsletterSubForm = server.forms.getForm('newsletterSub');
+        newsletterSubForm.clear();
 
-    res.render('mainPage', {
-        contentTemplate: 'newsletterConfiguration',
-        tabsAttr: tabsAttr,
-        additionalValues: additionalValues,
-        newsletterSubForm: newsletterSubForm,
-        storedConfigurations: storedConfigurations
-    });
+        res.render('mainPage', {
+            contentTemplate: 'newsletterConfiguration',
+            tabsAttr: tabsAttr,
+            additionalValues: additionalValues,
+            newsletterSubForm: newsletterSubForm,
+            storedConfigurations: storedConfigurations
+        });
+    } catch (err) {
+        res.render('components/errorPage', { message: 'Configuration error:', error: err });
+    }
     next();
 });
 
@@ -31,14 +35,25 @@ server.post('SaveNewsletter', server.middleware.https, function (req, res, next)
     var newsletteForm = server.forms.getForm('newsletterSub');
     var newsletteFormObj = newsletteForm.toObject();
 
+    var events = BMEmarsysHelper.getExternalEvents('StoredEvents', 'newsletterSubscriptionResult');
+    events.forEach(function (event) {
+        if (this.externalEventOptin === event.id) {
+            this.externalEventOptinName = event.name;
+        }
+
+        if (this.externalEventOptinAfterConfirmation === event.id) {
+            this.externalEventOptinAfterConfirmationName = event.name;
+        }
+    }, newsletteFormObj);
+
     if (newsletteFormObj.subscriptionType) {
         try {
             Transaction.wrap(function () {
                 var currentCustomObject = CustomObjectMgr.getCustomObject('EmarsysNewsletterSubscription', newsletteFormObj.subscriptionType);
 
-                currentCustomObject.custom.optInExternalEvent = newsletteFormObj.externalEventOptin;
+                currentCustomObject.custom.optInExternalEvent = newsletteFormObj.externalEventOptinName;
                 currentCustomObject.custom.optInStrategy = newsletteFormObj.subscriptionStrategy;
-                currentCustomObject.custom.optInExternalEventAfterConfirmation = newsletteFormObj.externalEventOptinAfterConfirmation;
+                currentCustomObject.custom.optInExternalEventAfterConfirmation = newsletteFormObj.externalEventOptinAfterConfirmationName;
             });
             res.json({
                 success: true

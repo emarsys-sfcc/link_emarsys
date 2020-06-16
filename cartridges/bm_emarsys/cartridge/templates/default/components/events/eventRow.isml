@@ -35,9 +35,9 @@
     </div>
     <div class="column-basic campaign-status-column">
         <span class="js-campaign-status"
-            data-id="${context.campaigns[event.emarsysId].id}"
-            data-status="${context.campaigns[event.emarsysId].status}">
-            ${context.campaigns[event.emarsysId].status}
+            data-id="${event.emarsysId ? context.campaigns[event.emarsysId].id : ''}"
+            data-status="${event.emarsysId ? context.campaigns[event.emarsysId].status : ''}">
+            ${event.emarsysId ? context.campaigns[event.emarsysId].status : ''}
         </span>
     </div>
 </div>

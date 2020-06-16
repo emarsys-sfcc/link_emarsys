@@ -63,6 +63,9 @@
     </custom-type>
 
     <custom-type type-id="EmarsysExternalEvents">
+        <description xml:lang="x-default">Custom object to store events related data. &#13;
+Source fields keep list of all sfcc events allowed to use. &#13;
+Result fields keeps their mapping to Emarsys side events and some additional data</description>
         <staging-mode>no-staging</staging-mode>
         <storage-scope>site</storage-scope>
         <key-definition attribute-id="externalEvents">
@@ -70,6 +73,15 @@
             <min-length>0</min-length>
         </key-definition>
         <attribute-definitions>
+            <attribute-definition attribute-id="campaignsCategory">
+                <display-name xml:lang="x-default">Campaigns category</display-name>
+                <description xml:lang="x-default">Needed to create test campaigns on Emarsys</description>
+                <type>string</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>true</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
             <attribute-definition attribute-id="id">
                 <display-name xml:lang="x-default">ID</display-name>
                 <type>string</type>
@@ -99,7 +111,7 @@
                 <description xml:lang="x-default">Newsletter subscribtion events identifier list</description>
                 <type>text</type>
                 <localizable-flag>false</localizable-flag>
-                <mandatory-flag>false</mandatory-flag>
+                <mandatory-flag>true</mandatory-flag>
                 <externally-managed-flag>false</externally-managed-flag>
             </attribute-definition>
             <attribute-definition attribute-id="otherResult">
@@ -115,7 +127,7 @@
                 <description xml:lang="x-default">Other events identifier list</description>
                 <type>text</type>
                 <localizable-flag>false</localizable-flag>
-                <mandatory-flag>false</mandatory-flag>
+                <mandatory-flag>true</mandatory-flag>
                 <externally-managed-flag>false</externally-managed-flag>
             </attribute-definition>
             <attribute-definition attribute-id="result">
@@ -137,6 +149,7 @@
                 <attribute attribute-id="otherSource"/>
                 <attribute attribute-id="newsletterSubscriptionResult"/>
                 <attribute attribute-id="otherResult"/>
+                <attribute attribute-id="campaignsCategory"/>
                 <attribute attribute-id="externalEvents"/>
             </attribute-group>
         </group-definitions>

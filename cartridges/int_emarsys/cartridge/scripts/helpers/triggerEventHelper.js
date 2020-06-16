@@ -81,7 +81,6 @@ function triggerExternalEvent(context, onError) {
  * @return {Object} specified external event description (mapping)
  */
 function getExternalEventData(sfccEventName, fieldKey) {
-    var BMEventsHelper = require('*/cartridge/scripts/helpers/emarsysEventsHelper');
     var context = {};
     var fieldKeyCO = fieldKey || '';
     try {
@@ -95,7 +94,7 @@ function getExternalEventData(sfccEventName, fieldKey) {
         }
 
         // read other external events description
-        var custom = BMEventsHelper.readEventsCustomObject([fieldKeyCO], 'StoredEvents');
+        var custom = emarsysHelper.readEventsCustomObject('StoredEvents', [fieldKeyCO]);
 
         context = {
             sfccEventName: sfccEventName,

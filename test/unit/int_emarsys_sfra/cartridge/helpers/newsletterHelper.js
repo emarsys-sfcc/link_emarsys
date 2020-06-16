@@ -28,6 +28,7 @@ var emarsysHelper = proxyquire(cartridgePathE + 'cartridge/scripts/helpers/emars
     'dw/value/Money': Money,
     'dw/system/Site': Site,
     'dw/order/ShippingMgr': ShippingMgr,
+    'dw/object/CustomObjectMgr': CustomObjectMgr,
     siteCustomPreferences: siteCustomPreferences,
     '~/cartridge/scripts/service/emarsysService': emarsysService
 });

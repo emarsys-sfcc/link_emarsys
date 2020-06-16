@@ -5,9 +5,9 @@ var Transaction = require('dw/system/Transaction');
 var URLUtils = require('dw/web/URLUtils');
 var Resource = require('dw/web/Resource');
 var Site = require('dw/system/Site');
-var eventsHelper = require('*/cartridge/scripts/helpers/emarsysEventsHelper');
-var emarsysHelper = new (require('*/cartridge/scripts/helpers/emarsysHelper'))();
-var supportedEventsData = require('*/cartridge/config/supportedEventsData');
+var eventsHelper = require('int_emarsys/cartridge/scripts/helpers/emarsysEventsHelper');
+var emarsysHelper = new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))();
+var supportedEventsData = require('bm_emarsys/cartridge/config/supportedEventsData');
 
 server.get('Show',
     server.middleware.https,
@@ -20,15 +20,15 @@ server.get('Show',
 
         // read specified fields from custom object EmarsysExternalEvents
         try {
-            custom = eventsHelper.readEventsCustomObject([
+            custom = emarsysHelper.readEventsCustomObject(customObjectKey, [
                 'newsletterSubscriptionSource',
                 'otherSource',
                 'newsletterSubscriptionResult',
                 'otherResult'
-            ], customObjectKey);
+            ]);
         } catch (err) {
             res.render('components/errorPage', {
-                message: Resource.msg('custom.object.message', 'errorMessages', null),
+                message: 'Configuration error:',
                 error: err
             });
             return next();
@@ -121,7 +121,7 @@ server.get('Show',
 );
 
 /**
- * @description Add new Emarsys external event
+ * @description Add new Emarsys external event (does not support none mapping option)
  */
 server.post('Add',
     server.middleware.https,
@@ -131,7 +131,7 @@ server.post('Add',
             emarsysId: request.httpParameterMap.emarsysId.value || '',
             emarsysName: request.httpParameterMap.emarsysName.value || '',
             sfccName: request.httpParameterMap.sfccName.value,
-            campaignId: request.httpParameterMap.campaignId.value,
+            campaignId: request.httpParameterMap.campaignId.value || '',
             campaignStatus: request.httpParameterMap.campaignStatus.value
         };
         var customObjectKey = 'StoredEvents';
@@ -141,7 +141,7 @@ server.post('Add',
         // read events descriptions list from custom object
         var fieldId = (event.type === 'subscription') ? 'newsletterSubscriptionResult' : 'otherResult';
         try {
-            custom = eventsHelper.readEventsCustomObject([fieldId], customObjectKey);
+            custom = emarsysHelper.readEventsCustomObject(customObjectKey, [fieldId, 'campaignsCategory']);
         } catch (err) {
             res.render('components/events/addEvent', {
                 response: {
@@ -171,7 +171,7 @@ server.post('Add',
 
         // create campaign if it doesn't exist
         if (empty(event.campaignId)) {
-            responseObj = eventsHelper.createTestCampaign(event);
+            responseObj = eventsHelper.createTestCampaign(event, custom.fields.campaignsCategory);
             if (responseObj.status === 'ERROR') {
                 responseObj.message = Resource.msg('emarsys.error', 'errorMessages', null) + responseObj.message;
                 res.render('components/events/addEvent', { response: responseObj });
@@ -244,17 +244,18 @@ server.post('Update',
             sfccName: request.httpParameterMap.sfccName.value,
             emarsysId: request.httpParameterMap.emarsysId.value || '',
             emarsysName: request.httpParameterMap.emarsysName.value || '',
-            campaignId: request.httpParameterMap.campaignId.value,
+            campaignId: request.httpParameterMap.campaignId.value || '',
             campaignStatus: request.httpParameterMap.campaignStatus.value
         };
         var customObjectKey = 'StoredEvents';
         var custom = {};
         var responseObj = {};
+        var campaignData = null;
 
         // read events descriptions list from custom object
         var fieldId = (event.type === 'subscription') ? 'newsletterSubscriptionResult' : 'otherResult';
         try {
-            custom = eventsHelper.readEventsCustomObject([fieldId], customObjectKey);
+            custom = emarsysHelper.readEventsCustomObject(customObjectKey, [fieldId, 'campaignsCategory']);
         } catch (err) {
             res.json({
                 response: {
@@ -264,44 +265,46 @@ server.post('Update',
             });
             return next();
         }
-
         var eventsDescriptionList = custom.fields[fieldId];
-        if (empty(event.emarsysName) || empty(event.emarsysId)) {
-            event.emarsysStatus = 'new';
 
-            // send request to create event with specified name
-            responseObj = eventsHelper.makeCallToEmarsys('event', { name: event.emarsysName }, 'POST');
+        if (!empty(event.emarsysName)) {   // do not do this for "none" mapping
+            if (empty(event.emarsysId)) {
+                event.emarsysStatus = 'new';
+
+                // send request to create event with specified name
+                responseObj = eventsHelper.makeCallToEmarsys('event', { name: event.emarsysName }, 'POST');
+                if (responseObj.status === 'ERROR') {
+                    responseObj.message = Resource.msg('emarsys.error', 'errorMessages', null) + responseObj.message;
+                    res.json({ response: responseObj });
+                    return next();
+                }
+                event.emarsysId = responseObj.result.data.id;
+                event.emarsysName = responseObj.result.data.name;
+            } else {
+                event.emarsysStatus = 'specified';
+            }
+
+            // create campaign if it doesn't exist
+            if (empty(event.campaignId)) {
+                responseObj = eventsHelper.createTestCampaign(event, custom.fields.campaignsCategory);
+                if (responseObj.status === 'ERROR') {
+                    responseObj.message = Resource.msg('emarsys.error', 'errorMessages', null) + responseObj.message;
+                    res.json({ response: responseObj });
+                    return next();
+                }
+                event.campaignId = responseObj.result.data.id;
+            }
+
+            // get data about campaign, related to the event
+            responseObj = eventsHelper.makeCallToEmarsys('email/' + event.campaignId, null, 'GET');
             if (responseObj.status === 'ERROR') {
                 responseObj.message = Resource.msg('emarsys.error', 'errorMessages', null) + responseObj.message;
                 res.json({ response: responseObj });
                 return next();
             }
-            event.emarsysId = responseObj.result.data.id;
-            event.emarsysName = responseObj.result.data.name;
-        } else {
-            event.emarsysStatus = 'specified';
+            campaignData = eventsHelper.prepareCampaignData([responseObj.result.data]);
+            campaignData[event.emarsysId] = campaignData['test_event_' + event.emarsysId];
         }
-
-        // create campaign if it doesn't exist
-        if (empty(event.campaignId)) {
-            responseObj = eventsHelper.createTestCampaign(event);
-            if (responseObj.status === 'ERROR') {
-                responseObj.message = Resource.msg('emarsys.error', 'errorMessages', null) + responseObj.message;
-                res.json({ response: responseObj });
-                return next();
-            }
-            event.campaignId = responseObj.result.data.id;
-        }
-
-        // get data about campaign, related to the event
-        responseObj = eventsHelper.makeCallToEmarsys('email/' + event.campaignId, null, 'GET');
-        if (responseObj.status === 'ERROR') {
-            responseObj.message = Resource.msg('emarsys.error', 'errorMessages', null) + responseObj.message;
-            res.json({ response: responseObj });
-            return next();
-        }
-        var campaignData = eventsHelper.prepareCampaignData([responseObj.result.data]);
-        campaignData[event.emarsysId] = campaignData['test_event_' + event.emarsysId];
 
         // get event description index
         event.descriptionIndex = eventsHelper.findObjectInList(
@@ -408,6 +411,7 @@ server.post('Trigger',
         });
         triggerBody.key_id = fields.email.id;   // 3
         triggerBody.external_id = userEmail;
+        triggerBody.source_id = source;   // '89648'
 
         // send request to trigger event with specified id
         responseObj = eventsHelper.makeCallToEmarsys(triggerUrl, triggerBody, 'POST');

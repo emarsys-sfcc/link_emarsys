@@ -30,6 +30,7 @@ var emarsysHelper = proxyquire(cartridgePathE + 'cartridge/scripts/helpers/emars
     'dw/order': order,
     'dw/value/Money': Money,
     'dw/system/Site': Site,
+    'dw/object/CustomObjectMgr': CustomObjectMgr,
     'dw/order/ShippingMgr': ShippingMgr,
     siteCustomPreferences: siteCustomPreferences,
     '~/cartridge/scripts/service/emarsysService': emarsysService

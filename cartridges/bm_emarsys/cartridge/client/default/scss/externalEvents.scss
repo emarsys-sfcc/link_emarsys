@@ -81,6 +81,14 @@ div.table-title-column {
     margin-left: 8px;
 }
 
+.trigger-form .label-column {
+    min-width: 30%;
+}
+
+.trigger-form .field-column {
+    width: 55%;
+}
+
 .empty-notification-block {
     width: -webkit-fit-content;
     width: fit-content;
@@ -91,6 +99,11 @@ div.table-title-column {
 
 .empty-notification {
     line-height: 40px;
+}
+
+.required-sign {
+    color: red;
+    font-size: 2rem;
 }
 
 /* Common styles */

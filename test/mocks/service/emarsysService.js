@@ -55,13 +55,31 @@ module.exports = {
                         errors:[]
                         }})
                 }
-                case 'contact':
-                    return {
-                        status: 'OK',
-                        object: JSON.stringify({data: {
-                            result:[]
-                            }})
-                    }
+            case 'contact':
+                return {
+                    status: 'OK',
+                    object: JSON.stringify({data: {
+                        result:[]
+                        }})
+                }
+            case 'email':
+                return {
+                    status: 'OK',
+                    object: JSON.stringify({data: [
+                            {
+                                'id':'7497056',
+                                'name':'test_event_12561',
+                                'status':'1'
+                            },{
+                                'id':'7497055',
+                                'name':'test_event_12677',
+                                'status':'-3'
+                            },{
+                                'id': '1113',
+                                'name': 'emarsysTest3',
+                                'status': '3' }
+                        ]})
+                }
             case 'field/translate/en':
                 return {
                     status: 'OK',

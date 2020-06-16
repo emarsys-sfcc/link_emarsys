@@ -5,6 +5,7 @@ var proxyquire = require('proxyquire').noCallThru().noPreserveCache();
 
 var mockPath = '../../../../../mocks/';
 
+var CustomObjectMgr = require(mockPath + 'dw/object/CustomObjectMgr');
 var Session = require(mockPath + 'dw/system/Session');
 var Money = require(mockPath + 'dw/value/Money');
 var Product = require(mockPath + 'dw/catalog/Product');
@@ -24,6 +25,7 @@ var EmarsysHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsy
     'dw/value/Money': Money,
     'dw/system/Site': Site,
     'dw/order/ShippingMgr': ShippingMgr,
+    'dw/object/CustomObjectMgr': CustomObjectMgr,
     '~/cartridge/scripts/service/emarsysService': emarsysService,
     siteCustomPreferences: siteCustomPreferences
 });
@@ -257,4 +259,108 @@ describe('EmarsysHelper Scripts', () => {
 
         assert.equal(result, res);
     });
+
+    it('testing method: prepareFieldsDescriptions ', () => {
+        var result = emarsys.prepareFieldsDescriptions();
+
+        assert.deepEqual(result['last_name'], {
+            'application_type': 'shorttext',
+            'id': '2',
+            'isSingleChoice': false,
+            'name': 'Last Name',
+            'string_id': 'last_name'
+        });
+    });
+
+    it('Testing method: readEventsCustomObject #1', () => {
+        var customObjectKey = 'StoredEvents';
+        var result = emarsys.readEventsCustomObject(customObjectKey, [
+            'newsletterSubscriptionSource',
+            'otherSource',
+            'newsletterSubscriptionResult',
+            'otherResult'
+        ]);
+        assert.deepEqual(result.fields, {
+            otherSource: ['forgot_password_submitted','contact_form_submitted'],
+            newsletterSubscriptionSource: ['newsletter_subscription_confirmation','newsletter_subscription_success'],
+            otherResult: [
+                {'sfccName':'cancelled_order','emarsysId':'12678','emarsysName':'SFCC_CANCELLED_ORDER', 'campaignId': '7497055'},
+                {'sfccName':'forgot_password_submitted','emarsysId':'12561','emarsysName':'SFCC_FORGOT_PASSWORD_SUBMITTED', 'campaignId': '7497056'},
+                {'sfccName':'contact_form_submitted','emarsysId':'12563','emarsysName':'SFCC_CONTACT_FORM_SUBMITTED', 'campaignId': '7497057'},
+            ],
+            newsletterSubscriptionResult: [
+                {'sfccName':'newsletter_subscription_confirmation','emarsysId':'12644','emarsysName':'SFCC_NEWSLETTER_SUBSCRIPTION_CONFIRMATION','campaignId': '7497007'},
+                {'sfccName':'newsletter_subscription_success','emarsysId':'12645','emarsysName':'SFCC_NEWSLETTER_SUBSCRIPTION_SUCCESS','campaignId': '7497050'}
+            ]
+        });
+    })
+
+    it('Testing method: readEventsCustomObject #2 (no such object)', () => {
+        var expectedMessage = 'Custom object EmarsysExternalEvents with id "' +
+                              'notValidKey' +
+                              '" does not exist';
+        var errorMessage = null;
+        try {
+            errorMessage = emarsys.readEventsCustomObject('notValidKey', []);
+        } catch(err) {
+            errorMessage = err.message;
+        }
+        assert.equal(errorMessage, expectedMessage);
+    });
+
+    it('Testing method: readEventsCustomObject #3 (invalid field)', () => {
+        var expectedMessage = 'Invalid field "' +
+        'otherSource' +
+        '" in custom object EmarsysExternalEvents';
+        var errorMessage = null;
+        try {
+            errorMessage = emarsys.readEventsCustomObject(
+                'invalidFields', ['otherSource', 'newsletterSubscriptionResult']
+            );
+        } catch(err) {
+            errorMessage = err.message;
+        }
+        assert.equal(errorMessage, expectedMessage);
+    });
+
+    it('Testing method: getValuesCollection #1 Empty list', () => {
+  
+       var result = emarsys.getValuesCollection([]);
+
+        assert.deepEqual(result, {});
+    });
+
+    it('Testing method: getValuesCollection #2 list isn`t obj', () => {
+        var getKeyValue = function (item) {
+            return item.name;
+        };
+        var result = emarsys.getValuesCollection([
+            {'id':'5633','name':'single'},
+            {'id':'5634','name':'double'}
+        ], getKeyValue);
+ 
+         assert.deepEqual(result, {
+                'double': {
+                    'id': '5634',
+                    'name': 'double'
+                },
+                'single': {
+                    'id': '5633',
+                    'name': 'single'
+                }
+         });
+     });
+
+     it('Testing method: getValuesCollection #3 list isnt obj', () => {
+        var getKeyValue = function (item) {
+            return item.name;
+        };
+        var result = emarsys.getValuesCollection(['single','double']);
+ 
+         assert.deepEqual(result, {
+                'double': 'double',
+                'single': 'single'
+         });
+     });
+
 });

@@ -6,7 +6,7 @@ server.extend(module.superModule);
 server.append('Subscribe', function (req, res, next) {
     var viewData = res.getViewData();
     var assign = require('modules/server/assign');
-    var eventsHelper = require('*/cartridge/scripts/helpers/triggerEventHelper');
+    var eventsHelper = require('int_emarsys/cartridge/scripts/helpers/triggerEventHelper');
     var isEmarsysEnable = require('dw/system/Site').getCurrent().getCustomPreferenceValue('emarsysEnabled');
     if (viewData.success === true && isEmarsysEnable) {
         var sfccEventName = 'contact_form_submitted';
