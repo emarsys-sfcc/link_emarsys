@@ -35,7 +35,7 @@ server.post('SaveNewsletter', server.middleware.https, function (req, res, next)
     var newsletteForm = server.forms.getForm('newsletterSub');
     var newsletteFormObj = newsletteForm.toObject();
 
-    var events = BMEmarsysHelper.getExternalEvents('EmarsysExternalEvents', 'StoredEvents', 'newsletterSubscriptionResult');
+    var events = BMEmarsysHelper.getExternalEvents('StoredEvents', 'newsletterSubscriptionResult');
     events.forEach(function (event) {
         if (this.externalEventOptin === event.id) {
             this.externalEventOptinName = event.name;
