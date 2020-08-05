@@ -19,6 +19,7 @@
     "args": "writable",
     "pageContext": "writable",
     "emarsysAnalytics": "writable",
+    "dataLayer":"writable",
     "execute": "writable",
     "PIPELET_ERROR": "readonly",
     "data": "readonly",

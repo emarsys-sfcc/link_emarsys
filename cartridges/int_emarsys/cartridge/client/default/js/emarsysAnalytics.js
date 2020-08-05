@@ -93,7 +93,7 @@ function addPageData() {
 
 module.exports = {
     init: function () {
-        if (analyticsData.isEnableEmarsys) {
+        if (analyticsData.isEnableEmarsys && analyticsData.AnalyticApproach === 'sendDataDirectlyToEmarsys') {
             initScarabQueue();
             addPageData();
             initQuickViewAnalytics();
