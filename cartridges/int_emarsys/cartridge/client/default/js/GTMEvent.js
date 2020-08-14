@@ -1,11 +1,11 @@
 'use strict';
 
-var analyticsData = false;
+var analyticsData = {};
 
 if (window.emarsysAnalyticsData) {
-    analyticsData = window.emarsysAnalyticsData.emarsysAnalytics;
+    analyticsData = window.emarsysAnalyticsData.emarsysAnalytics; // analytics data for SFRA
 } else if (window.pageContext) {
-    analyticsData = window.pageContext.analytics;
+    analyticsData = window.pageContext.analytics; // analytics data for SiteGenesis
 }
 
 /**
@@ -14,21 +14,11 @@ if (window.emarsysAnalyticsData) {
 function initGTMEvent() {
     if (!('dataLayer' in window)) { return; }
 
-    dataLayer.push({
-        event: 'emarsysAnalyticInit',
-        pageAnalyticsData: analyticsData
-    });
-
-    var pageDataObject = window.dataLayer.find(function (item) {
-        return 'pageAnalyticsData' in item;
-    });
-
-    if (!pageDataObject) { return; }
-
-    var nameTracking = pageDataObject.pageAnalyticsData.nameTracking;
-    if (nameTracking) {
+    var pageType = analyticsData.pageType;
+    if (pageType) {
         window.dataLayer.push({
-            event: pageDataObject.pageAnalyticsData.pageType
+            event: analyticsData.pageType,
+            pageAnalyticsData: analyticsData
         });
     }
 }
@@ -36,7 +26,7 @@ function initGTMEvent() {
 /**
  * @description Sets google quickViewClick trigger
  */
-function googleQuickView() {
+function quickView() {
     var targetElement = analyticsData.isSFRA ? '.product' : '.product-tile';
     var targetData = analyticsData.isSFRA ? 'pid' : 'itemid';
 
@@ -52,7 +42,7 @@ function googleQuickView() {
 /**
  * @description Sets google addItemToCart trigger
  */
-function googleAddItemToCart() {
+function addItemToCart() {
     if (analyticsData.isSFRA) {
         $('body').on('product:afterAddToCart', function () {
             window.dataLayer.push({
@@ -65,10 +55,10 @@ function googleAddItemToCart() {
 
 module.exports = {
     init: function () {
-        if (analyticsData.isEnableEmarsys && analyticsData.AnalyticApproach === 'sendDataWithGTM') {
+        if (analyticsData.isEnableEmarsys && analyticsData.analyticApproach === 'scarabGTMIntegration') {
             initGTMEvent();
-            googleQuickView();
-            googleAddItemToCart();
+            quickView();
+            addItemToCart();
         }
     }
 };

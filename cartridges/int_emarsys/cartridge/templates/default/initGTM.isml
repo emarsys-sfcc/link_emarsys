@@ -1,13 +1,18 @@
 <isset name="gtmContainerID" value="${dw.system.Site.getCurrent().getCustomPreferenceValue('gtmContainerID')}" scope="page" />
+<isset name="predictMerchantID" value="${dw.system.Site.getCurrent().getCustomPreferenceValue('emarsysPredictMerchantID')}" scope="page" />
 
 <script>
     var dataLayer = dataLayer || [];
+    var analyticsData = {};
+    analyticsData.predictMerchantID = "${predictMerchantID}";
+    analyticsData.isHttpSecure = window.location.protocol;
 
     (function(w,d,s,l,i) {
         w[l]=w[l]||[];
         w[l].push({
             'gtm.start':new Date().getTime(),
-            event:'gtm.js'
+            event:'gtm.js',
+            pageAnalyticsData: analyticsData
         });
         var f=d.getElementsByTagName(s)[0],
             j=d.createElement(s),

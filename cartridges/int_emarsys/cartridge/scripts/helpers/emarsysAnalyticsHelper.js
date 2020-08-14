@@ -196,7 +196,6 @@ function PageData() {
                 emarsysAnalytics.customerData = getCustomerInfo(data || args);
                 emarsysAnalytics.pageType = pageType;
                 emarsysAnalytics.predictMerchantID = customPreferences.emarsysPredictMerchantID;
-                emarsysAnalytics.isHttpSecure = request.httpSecure;
                 emarsysAnalytics.locale = request.locale;
                 emarsysAnalytics.isSFRA = isSFRA;
             }
@@ -204,8 +203,8 @@ function PageData() {
 
         emarsysAnalytics.isEnableEmarsys = isEnableEmarsys;
         emarsysAnalytics.isAnalyticPage = isAnalyticPage;
-        emarsysAnalytics.AnalyticApproach = 'emarsysAnalyticApproach' in customPreferences ?
-        customPreferences.emarsysAnalyticApproach.value : 'sendDataDirectlyToEmarsys';
+        emarsysAnalytics.analyticApproach = 'emarsysAnalyticApproach' in customPreferences ?
+        customPreferences.emarsysAnalyticApproach.value : 'scarabDirectIntegration';
 
         return emarsysAnalytics;
     };
