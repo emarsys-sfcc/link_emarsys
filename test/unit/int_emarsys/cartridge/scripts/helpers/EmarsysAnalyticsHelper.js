@@ -24,6 +24,7 @@ var EmarsysAnalyticsHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpe
 
 class ExpectedResponse {
     constructor() {
+        this.analyticApproach = "scarabDirectIntegration";
         this.currentBasket = [
             {
                 item: 'product1',
