@@ -1,7 +1,7 @@
 {
   "name": "sfra",
-  "version": "4.4.0",
-  "description": "Storefront Reference Architecture",
+  "version": "1.0.0",
+  "description": "Emarsys Integration",
   "main": "index.js",
   "engines": {
     "node": ">=4.0 <12.0.0"
