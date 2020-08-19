@@ -3,26 +3,26 @@ $hoverColor: #40a3f9;
 .applay-add-fields-buttons-container {
     display: flex;
     justify-content: flex-end;
-    margin-top: 10px;
+    margin-top: 0.625rem;
 
     button {
-        margin: 5px;
+        margin: 0.3125rem;
     }
 }
 
 .add-fields-button-container {
-    margin-left: 10px;
+    margin-left: 0.625rem;
 }
 
 .additional-menu {
-    padding-top: 10px;
+    padding-top: 0.625rem;
 }
 
 .additional-body {
     display: flex;
     align-items: center;
     background-color: rgba(0, 0, 0, 0.05);
-    min-height: 30px;
+    min-height: 1.875rem;
 }
 
 .border-text {
@@ -35,8 +35,8 @@ $hoverColor: #40a3f9;
     border-color: #009ddc;
     background-color: #009ddc;
     color: #fff;
-    border: 1px solid #009ddc;
-    border-radius: 3px;
+    border: 0.0625rem solid #009ddc;
+    border-radius: 0.1875rem;
     line-height: 1.5;
     cursor: pointer;
 
@@ -52,7 +52,7 @@ $hoverColor: #40a3f9;
 
 .fild-configuration {
     display: flex;
-    min-height: 48px;
+    min-height: 3rem;
 }
 
 .newsletter-container,
@@ -67,29 +67,29 @@ $hoverColor: #40a3f9;
 
 .warning-teg {
     display: flex;
-    min-height: 36px;
+    min-height: 2.25rem;
     align-items: center;
     background-color: #d5d7d9;
 }
 
 .select-fields,
 .select-additional-value {
-    border: 1px solid #d5d7d9;
-    border-radius: 10px;
+    border: 0.0625rem solid #d5d7d9;
+    border-radius: 0.625rem;
     cursor: pointer;
 
     &:hover {
-        border: 1px solid $hoverColor;
+        border: 0.0625rem solid $hoverColor;
     }
 
     &:focus {
         outline: none;
-        border: 1px solid $hoverColor;
+        border: 0.0625rem solid $hoverColor;
     }
 }
 
 .select-additional-value {
-    margin-left: 10px;
+    margin-left: 0.625rem;
 }
 
 .send-order-mail-container {
@@ -99,7 +99,7 @@ $hoverColor: #40a3f9;
     label,
     button,
     input {
-        margin: 5px;
+        margin: 0.3125rem;
     }
 }
 
@@ -110,16 +110,16 @@ $hoverColor: #40a3f9;
 
 .subscribe-container {
     display: flex;
-    min-height: 22px;
+    min-height: 1.375rem;
 }
 
 .subscribe-label-container {
-    min-width: 320px;
+    min-width: 20rem;
 }
 
 .title-label-row {
     display: flex;
-    padding-top: 10px;
+    padding-top: 0.625rem;
     width: 100%;
 }
 
@@ -134,7 +134,7 @@ $hoverColor: #40a3f9;
 .title-placeholder-col,
 .placeholder-col {
     justify-content: center;
-    min-width: 120px;
+    min-width: 7.5rem;
     padding-left: 1%;
     width: 60%;
 }
@@ -144,46 +144,46 @@ $hoverColor: #40a3f9;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 40px;
+    min-width: 2.5rem;
     padding-left: 1%;
     width: 10%;
 }
 
 .text-position {
-    padding-left: 10px;
+    padding-left: 0.625rem;
     margin: 0;
 }
 
 .input-send-order-number {
-    border: 1px solid #d5d7d9;
-    border-radius: 3px;
+    border: 0.0625rem solid #d5d7d9;
+    border-radius: 0.1875rem;
 
     &:hover {
-        border: 1px solid $hoverColor;
-        box-shadow: 0 0 5px #bbb;
+        border: 0.0625rem solid $hoverColor;
+        box-shadow: 0 0 0.3125rem #bbb;
     }
 
     &:focus {
         border-color: $hoverColor;
-        box-shadow: 0 0 5px #bbb;
+        box-shadow: 0 0 0.3125rem #bbb;
     }
 }
 
 .input-placeholder {
     border: none;
-    border-bottom: 0.5px solid $hoverColor;
+    border-bottom: 0.0313rem solid $hoverColor;
     background: transparent;
     width: 100%;
-    padding: 5px;
+    padding: 0.3125rem;
 
     &:hover {
-        border: 1px solid $hoverColor;
-        box-shadow: 0 0 5px #bbb;
+        border: 0.0625rem solid $hoverColor;
+        box-shadow: 0 0 0.3125rem #bbb;
     }
 
     &:focus {
         border-color: $hoverColor;
-        box-shadow: 0 0 5px #bbb;
+        box-shadow: 0 0 0.3125rem #bbb;
     }
 }
 
@@ -193,20 +193,20 @@ $hoverColor: #40a3f9;
 }
 
 .notification-messages-container {
-    border: 1px solid #d5d7d9;
+    border: 0.0625rem solid #d5d7d9;
 }
 
 .select-input-error {
     border-color: #ee294e;
     background-color: #fde9ed;
-    border: 1px solid red;
+    border: 0.0625rem solid red;
 }
 
 @supports (-webkit-appearance: none) or (-moz-appearance: none) {
     .remove-check-box {
         --active: #40a3f9;
         --active-inner: #fff;
-        --focus: 2px rgba(39, 94, 254, 0.3);
+        --focus: 0.125rem rgba(39, 94, 254, 0.3);
         --border: #bbc1e1;
         --border-hover: #40a3f9;
         --background: #fff;
@@ -215,14 +215,14 @@ $hoverColor: #40a3f9;
 
         -webkit-appearance: none;
         -moz-appearance: none;
-        height: 21px;
+        height: 1.3125rem;
         outline: none;
         display: inline-block;
         vertical-align: top;
         position: relative;
         margin: 0;
         cursor: pointer;
-        border: 1px solid var(--bc, var(--border));
+        border: 0.0625rem solid var(--bc, var(--border));
         background: var(--b, var(--background));
         transition: background 0.3s, border-color 0.3s, box-shadow 0.2s;
 
@@ -274,7 +274,7 @@ $hoverColor: #40a3f9;
         }
 
         &:not(.switch) {
-            width: 21px;
+            width: 1.3125rem;
 
             &::after {
                 opacity: var(--o, 0);
@@ -286,27 +286,27 @@ $hoverColor: #40a3f9;
         }
 
         + label {
-            font-size: 14px;
-            line-height: 21px;
+            font-size: 0.875rem;
+            line-height: 1.3125rem;
             display: inline-block;
             vertical-align: top;
             cursor: pointer;
-            margin-left: 4px;
+            margin-left: 0.25rem;
         }
     }
 
     input[type="checkbox"] {
         &:not(.switch) {
-            border-radius: 15px;
+            border-radius: 0.9375rem;
 
             &::after {
-                width: 5px;
-                height: 9px;
-                border: 2px solid var(--active-inner);
+                width: 0.3125rem;
+                height: 0.5625rem;
+                border: 0.125rem solid var(--active-inner);
                 border-top: 0;
                 border-left: 0;
-                left: 7px;
-                top: 4px;
+                left: 0.4375rem;
+                top: 0.25rem;
                 transform: rotate(var(--r, 20deg));
             }
 
@@ -316,22 +316,22 @@ $hoverColor: #40a3f9;
         }
 
         &.switch {
-            width: 38px;
-            border-radius: 11px;
+            width: 2.375rem;
+            border-radius: 0.6875rem;
 
             &::after {
-                left: 2px;
-                top: 2px;
+                left: 0.125rem;
+                top: 0.125rem;
                 border-radius: 50%;
-                width: 15px;
-                height: 15px;
+                width: 0.9375rem;
+                height: 0.9375rem;
                 background: var(--ab, var(--border));
                 transform: translateX(var(--x, 0));
             }
 
             &:checked {
                 --ab: var(--active-inner);
-                --x: 17px;
+                --x: 1.0625rem;
             }
 
             &:disabled {

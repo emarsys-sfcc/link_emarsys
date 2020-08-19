@@ -1,18 +1,18 @@
 @import "dialogPopup";
 
-$header-column-padding: 8px;
-$column-padding: 5px;
+$header-column-padding: 0.5rem;
+$column-padding: 0.3125rem;
 
 .external-events-content {
     padding: 0.9375rem;
-    border: 1px solid #ccc;
+    border: 0.0625rem solid #ccc;
     width: 100%;
 }
 
 .control-block {
-    min-height: 36px;
-    margin-top: 10px;
-    padding-right: 10px;
+    min-height: 2.25rem;
+    margin-top: 0.625rem;
+    padding-right: 0.625rem;
     display: -ms-flexbox;
     display: flex;
     -ms-flex-align: center;
@@ -25,7 +25,7 @@ div.table-title-column {
 }
 
 .table-header {
-    height: 48px;
+    height: 3rem;
     display: -ms-flexbox;
     display: flex;
     -ms-flex-align: center;
@@ -38,7 +38,7 @@ div.table-title-column {
 }
 
 .row-basic {
-    height: 48px;
+    height: 3rem;
     display: flex;
     -ms-flex-align: center;
     align-items: center;
@@ -54,7 +54,7 @@ div.table-title-column {
     -ms-flex-align: center;
     align-items: center;
     -ms-flex-pack: center;
-    margin-left: 3px;
+    margin-left: 0.1875rem;
 }
 
 .sfcc-name-column {
@@ -72,13 +72,13 @@ div.table-title-column {
 
 .button-column {
     width: 8%;
-    min-width: 90px;
+    min-width: 5.625rem;
     -ms-flex-pack: center;
     justify-content: center;
 }
 
 .control-block .button-column {
-    margin-left: 8px;
+    margin-left: 0.5rem;
 }
 
 .trigger-form .label-column {
@@ -94,11 +94,11 @@ div.table-title-column {
     width: fit-content;
     height: -webkit-fit-content;
     height: fit-content;
-    margin-left: 25px;
+    margin-left: 1.5625rem;
 }
 
 .empty-notification {
-    line-height: 40px;
+    line-height: 2.5rem;
 }
 
 .required-sign {
@@ -108,20 +108,20 @@ div.table-title-column {
 
 /* Common styles */
 .input-placeholder {
-    border: 0.5px solid transparent;
-    border-bottom: 0.5px solid #40a3f9;
+    border: 0.0313rem solid transparent;
+    border-bottom: 0.0313rem solid #40a3f9;
     background: transparent;
     width: 100%;
-    padding: 5px;
+    padding: 0.3125rem;
 
     &:hover {
-        border: 0.5px solid #40a3f9;
-        box-shadow: 0 0 5px #bbb;
+        border: 0.0313rem solid #40a3f9;
+        box-shadow: 0 0 0.3125rem #bbb;
     }
 
     &:focus {
         border-color: #40a3f9;
-        box-shadow: 0 0 5px #bbb;
+        box-shadow: 0 0 0.3125rem #bbb;
     }
 }
 
@@ -131,9 +131,9 @@ div.table-title-column {
         color 0.2s ease-in-out,
         background-color 0.2s ease-in-out,
         border-color 0.2s ease-in-out;
-    border: 1px solid #009ddc;
-    border-radius: 3px;
-    padding: 1px 8px;
+    border: 0.0625rem solid #009ddc;
+    border-radius: 0.1875rem;
+    padding: 0.0625rem 0.5rem;
     background-color: #009ddc;
     color: #fff;
     line-height: 1.5;
@@ -153,30 +153,30 @@ div.table-title-column {
 }
 
 .select-basic {
-    border: 1px solid #d5d7d9;
-    border-radius: 10px;
+    border: 0.0625rem solid #d5d7d9;
+    border-radius: 0.625rem;
     cursor: pointer;
     width: 100%;
     font-size: 1.4rem;
     background-color: #fff;
     background-image: none;
-    padding: 1px $column-padding;
+    padding: 0.0625rem $column-padding;
     margin: 0;
-    min-width: 129px;
+    min-width: 8.0625rem;
 
     &:focus {
         outline: none;
-        border: 1px solid #40a3f9;
+        border: 0.0625rem solid #40a3f9;
     }
 
     &:hover {
-        border: 1px solid #40a3f9;
+        border: 0.0625rem solid #40a3f9;
     }
 
     &:disabled {
-        border: 0.5px solid transparent;
+        border: 0.0313rem solid transparent;
         color: black;
-        background-color: transparent !important;
+        background-color: transparent;
         pointer-events: none;
         -webkit-appearance: none;
         -moz-appearance: none;
