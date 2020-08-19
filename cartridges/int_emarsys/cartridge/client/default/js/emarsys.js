@@ -8,6 +8,6 @@ var processInclude = require('./util');
 
 $(document).ready(function () {
     processInclude(require('./emarsysAnalytics'));
-    processInclude(require('./GTMEvent'));
+    processInclude(require('./gtmEvent'));
     processInclude(require('./emarsysSubscription'));
 });
