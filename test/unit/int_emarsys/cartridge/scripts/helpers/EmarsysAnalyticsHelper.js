@@ -45,7 +45,8 @@ class ExpectedResponse {
 
         this.customerData = {
             guestEmail: false,
-            isCustomer: false
+            isCustomer: true,
+            customerEmail: 'test@test.com'
         };
         this.pageType = '';
     }

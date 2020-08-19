@@ -2,8 +2,21 @@
 
 class Customer {
     constructor() {
-        this.authenticated = false;
-        this.registered = false;
+        this.authenticated = true;
+        this.registered = true;
+        this.profile = {
+            email: "test@test.com",
+            addressBook: {
+                preferredAddress: {
+                    countryCode: {
+                        value: ''
+                    }
+                }
+            },
+            gender: {
+                value: '1'
+            }
+        }
     }
 }
 

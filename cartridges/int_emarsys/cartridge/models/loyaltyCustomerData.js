@@ -1,6 +1,7 @@
 'use strict';
 var currentSite = require('dw/system/Site').getCurrent();
 var logger = require('dw/system/Logger').getLogger('emarsysLoyalty');
+var crypto = require('dw/crypto');
 /**
  * @description hash input data
  * @param {string} data - input data
@@ -10,8 +11,8 @@ function getToken(data) {
     var key = currentSite.getCustomPreferenceValue('emarsysSecret'); // salt
     var emailDigest = '';
     if (!empty(key)) {
-        var sha256mac = new dw.crypto.Mac(dw.crypto.Mac.HMAC_SHA_256).digest(data, key);
-        emailDigest = dw.crypto.Encoding.toHex(sha256mac);
+        var sha256mac = new crypto.Mac(crypto.Mac.HMAC_SHA_256).digest(data, key);
+        emailDigest = crypto.Encoding.toHex(sha256mac);
     } else {
         logger.error('[model/loyaltyCustomerData.js] - ***Empty CustomPreferenceValue - emarsysSecret');
     }

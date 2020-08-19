@@ -55,7 +55,12 @@ var preferenceMap = {
     emarsysEnabled: true,
     emarsysPredictVariationAttributes:['product.custom.color', 'product.custom.size'],
     emarsysCatalogExportType: JSON.stringify([{"id" : "master", "name" : "master.export.type.label"},
-        {"id" : "variations", "name" : "variations.export.type.label"}])
+        {"id" : "variations", "name" : "variations.export.type.label"}]),
+    emarsysLoyaltyWalletEnabled:true,
+    emarsysAppId:'2260332443498184708',
+    emarsysCustomerId:'test',
+    emarsysRegion:'eu',
+    emarsysSecret:'test_salt'
 };
 
 
