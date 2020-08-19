@@ -176,7 +176,7 @@ div.table-title-column {
     &:disabled {
         border: 0.0313rem solid transparent;
         color: black;
-        background-color: transparent !important;
+        background-color: transparent;
         pointer-events: none;
         -webkit-appearance: none;
         -moz-appearance: none;
