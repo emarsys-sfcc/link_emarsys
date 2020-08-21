@@ -37,7 +37,7 @@ var externalEvent = {
             return new Status(Status.ERROR, 'ERROR');
         }
 
-        this.logger.error('externalEvent: All events were succesfully created');
+        this.logger.info('externalEvent: All events were succesfully created');
         return new Status(Status.OK, 'OK');
     },
     /**
