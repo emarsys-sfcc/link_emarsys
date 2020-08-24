@@ -27,7 +27,7 @@ var Currency = require(mockPath + 'dw/util/Currency');
 var ProductLineItem = require(mockPath + 'dw/order/ProductLineItem');
 var GiftCertificateLineItem = require(mockPath + 'dw/order/GiftCertificateLineItem');
 
-var siteCustomPreferences = Site.current.preferences.custom;
+var siteCustomPreferences = Site.getCurrent();
 var cartridgePath = '../../../../../../cartridges/int_emarsys/';
 
 var EmarsysHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsysHelper.js', {
@@ -51,7 +51,7 @@ var JobHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/jobHelper.
     siteCustomPreferences: siteCustomPreferences 
 });
 
-var ExportOrders = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/ExportOrders.js', {
+var ExportOrders = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/exportOrders.js', {
     'dw/io/File':File,
     'dw/system/Status': Status,
     'dw/system/Logger':Logger,

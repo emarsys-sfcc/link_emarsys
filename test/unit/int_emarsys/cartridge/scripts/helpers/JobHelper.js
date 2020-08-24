@@ -19,7 +19,7 @@ var Product = require(mockPath + 'dw/catalog/Product');
 var ProductLineItem = require(mockPath + 'dw/order/ProductLineItem');
 var CustomObjectMgr = require(mockPath + 'dw/object/CustomObjectMgr');
 
-var siteCustomPreferences = Site.current.preferences.custom;
+var siteCustomPreferences = Site.getCurrent();
 var cartridgePath = '../../../../../../cartridges/int_emarsys/';
 
 var EmarsysHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsysHelper.js', {

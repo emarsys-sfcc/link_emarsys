@@ -14,7 +14,7 @@ var Money = require(mockPath + 'dw/value/Money');
 var CustomObjectMgr = require(mockPath + 'dw/object/CustomObjectMgr');
 var emarsysService = require(mockPath + 'service/emarsysService');
 
-var siteCustomPreferences = Site.current.preferences.custom;
+var siteCustomPreferences = Site.getCurrent();
 var cartridgePath = '../../../../../../cartridges/int_emarsys/';
 
 var EmarsysHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsysHelper.js', {
@@ -28,7 +28,7 @@ var EmarsysHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsy
     '~/cartridge/scripts/service/emarsysService': emarsysService 
 });
 
-var profileEvent = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/GetProfileFieldsJob.js', {
+var profileEvent = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/getProfileFieldsJob.js', {
     'dw/system/Status': Status,
     'dw/object/CustomObjectMgr':CustomObjectMgr,
     'dw/system/Site': Site,

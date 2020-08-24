@@ -16,7 +16,7 @@ var Money = require(mockPath + 'dw/value/Money');
 var ShippingMgr = require(mockPath + 'dw/order/ShippingMgr');
 var Site = require(mockPath + 'dw/system/Site');
 var emarsysService = require(mockPath + 'service/emarsysService');
-var siteCustomPreferences = Site.current.preferences.custom;
+var siteCustomPreferences = Site.getCurrent();
 
 var cartridgePath = '../../../../../../cartridges/int_emarsys/';
 

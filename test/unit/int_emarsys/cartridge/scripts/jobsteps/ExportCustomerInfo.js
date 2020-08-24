@@ -8,7 +8,7 @@ var web = require(mockPath + 'dw/web/Web');
 var order = require(mockPath + 'dw/order/Order');
 var Money = require(mockPath + 'dw/value/Money');
 var Site = require(mockPath + 'dw/system/Site');
-var siteCustomPreferences = Site.current.preferences.custom;
+var siteCustomPreferences = Site.getCurrent();
 var ShippingMgr = require(mockPath + 'dw/order/ShippingMgr');
 var emarsysService = require(mockPath + 'service/emarsysService');
 var template = require(mockPath + 'dw/util/Template');
@@ -33,7 +33,7 @@ var EmarsysHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsy
     '~/cartridge/scripts/service/emarsysService': emarsysService
 });
 
-var ExportCustomerInfo = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/ExportCustomerInfo.js', {
+var ExportCustomerInfo = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/exportCustomerInfo.js', {
     'dw/system': system,
     'dw/io': io,
     'dw/io/File': File,

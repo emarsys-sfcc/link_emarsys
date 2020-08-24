@@ -20,7 +20,7 @@ var Request = require(mockPath + 'dw/system/Request');
 var Session = require(mockPath + 'dw/system/Session');
 Logger.getLogger('emarsys');
 
-var siteCustomPreferences = Site.current.preferences.custom;
+var siteCustomPreferences = Site.getCurrent();
 
 var cartridgePath = '../../../../../cartridges/int_emarsys_sfra/';
 var cartridgePathE = '../../../../../cartridges/int_emarsys/';

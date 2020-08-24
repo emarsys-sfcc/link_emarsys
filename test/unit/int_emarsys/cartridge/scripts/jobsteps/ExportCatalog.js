@@ -23,7 +23,7 @@ var Variant = require(mockPath + 'dw/catalog/Variant');
 var Request = require(mockPath + 'dw/system/Request');
 var Session = require(mockPath + 'dw/system/Session');
 
-var siteCustomPreferences = Site.current.preferences.custom;
+var siteCustomPreferences = Site.getCurrent();
 var cartridgePath = '../../../../../../cartridges/int_emarsys/';
 
 var EmarsysHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsysHelper.js', {
@@ -47,7 +47,7 @@ var JobHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/jobHelper.
     siteCustomPreferences: siteCustomPreferences 
 });
 
-var ExportCatalog = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/ExportCatalog.js',{
+var ExportCatalog = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/exportCatalog.js',{
     'dw/catalog/CatalogMgr': CatalogMgr,
     'dw/io/CSVStreamWriter': CSVStreamWriter,
     'dw/object/CustomObjectMgr': CustomObjectMgr,
