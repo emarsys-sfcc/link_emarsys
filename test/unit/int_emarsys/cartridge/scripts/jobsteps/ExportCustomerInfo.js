@@ -8,7 +8,6 @@ var web = require(mockPath + 'dw/web/Web');
 var order = require(mockPath + 'dw/order/Order');
 var Money = require(mockPath + 'dw/value/Money');
 var Site = require(mockPath + 'dw/system/Site');
-var siteCustomPreferences = Site.getCurrent();
 var ShippingMgr = require(mockPath + 'dw/order/ShippingMgr');
 var emarsysService = require(mockPath + 'service/emarsysService');
 var template = require(mockPath + 'dw/util/Template');
@@ -29,7 +28,7 @@ var EmarsysHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsy
     'dw/system/Site': Site,
     'dw/order/ShippingMgr': ShippingMgr,
     'dw/object/CustomObjectMgr': CustomObjectMgr,
-    siteCustomPreferences: siteCustomPreferences,
+    'dw/system/Site': Site,
     '~/cartridge/scripts/service/emarsysService': emarsysService
 });
 
@@ -41,6 +40,7 @@ var ExportCustomerInfo = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/
     'dw/object/CustomObjectMgr': CustomObjectMgr,
     'dw/system/Status': Status,
     'dw/system/Logger': Logger,
+    'dw/system/Site': Site,
     'int_emarsys/cartridge/scripts/helpers/emarsysHelper': EmarsysHelper,
     'dw/util/Template': template,
     'dw/util/HashMap': hashMap,

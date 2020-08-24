@@ -4,7 +4,7 @@ var server = require('server');
 
 var Transaction = require('dw/system/Transaction');
 var CustomObjectMgr = require('dw/object/CustomObjectMgr');
-var BMEmarsysHelper = require('*/cartridge/scripts/helpers/BMEmarsysHelper');
+var BMEmarsysHelper = require('*/cartridge/scripts/helpers/bmEmarsysHelper');
 
 /**
  * @description this function is called with bm_extensions
@@ -51,9 +51,9 @@ server.post('SaveNewsletter', server.middleware.https, function (req, res, next)
             Transaction.wrap(function () {
                 var currentCustomObject = CustomObjectMgr.getCustomObject('EmarsysNewsletterSubscription', newsletteFormObj.subscriptionType);
 
-                currentCustomObject.custom.optInExternalEvent = newsletteFormObj.externalEventOptinName;
+                currentCustomObject.custom.optInExternalEvent = empty(newsletteFormObj.externalEventOptinName) ? null : newsletteFormObj.externalEventOptinName;
                 currentCustomObject.custom.optInStrategy = newsletteFormObj.subscriptionStrategy;
-                currentCustomObject.custom.optInExternalEventAfterConfirmation = newsletteFormObj.externalEventOptinAfterConfirmationName;
+                currentCustomObject.custom.optInExternalEventAfterConfirmation = empty(newsletteFormObj.externalEventOptinAfterConfirmationName) ? null : newsletteFormObj.externalEventOptinAfterConfirmationName;
             });
             res.json({
                 success: true

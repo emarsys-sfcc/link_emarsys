@@ -13,6 +13,7 @@ var Logger            = require('dw/system/Logger').getLogger('emarsys');
 var app               = require('~/cartridge/scripts/app');
 var guard             = require('~/cartridge/scripts/guard');
 var EmarsysNewsletter = app.getModel('EmarsysNewsletter');
+var eventsHelper = require('*/cartridge/scripts/helpers/triggerEventHelper');
 
 /**
  * @description renders the disabled template
@@ -391,12 +392,19 @@ function processor(args) {
         var TypeData = EmarsysNewsletter.subscriptionTypeData(args.SubscriptionType);
         var accountStatus;
         var json;
+        var fieldKey = 'newsletterSubscriptionResult';
 
+        TypeData.ExternalEvent = eventsHelper.getExternalEventData(TypeData.ExternalEventName, fieldKey).emarsysId;
+        TypeData.ExternalEventAfterConfirmation = eventsHelper.getExternalEventData(TypeData.ExternalEventAfterConfirmationName, fieldKey).emarsysId;
         // redirect in case of error
         if (empty(TypeData) || empty(TypeData.Strategy)) {
             redirectToErrorPage(args);
             return;
         }
+
+        args.Strategy = TypeData.Strategy;
+        args.ExternalEvent = TypeData.ExternalEvent;
+        args.ExternalEventAfterConfirmation = TypeData.ExternalEventAfterConfirmation;
 
         if (TypeData.Strategy === '1') {
             handleOptInStrategy1(args);

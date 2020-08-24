@@ -3,7 +3,7 @@
 var server = require('server');
 var Transaction = require('dw/system/Transaction');
 var CustomObjectMgr = require('dw/object/CustomObjectMgr');
-var BMEmarsysHelper = require('*/cartridge/scripts/helpers/BMEmarsysHelper');
+var BMEmarsysHelper = require('*/cartridge/scripts/helpers/bmEmarsysHelper');
 
 server.get('ShowCatalogConfigurations', server.middleware.https, function (req, res, next) {
     try {
