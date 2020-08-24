@@ -9,7 +9,7 @@ var ShippingMgr = require('dw/order/ShippingMgr');
 var CustomObjectMgr = require('dw/object/CustomObjectMgr');
 var web = require('dw/web');
 var order = require('dw/order');
-var siteCustomPreferences = Site.current.preferences.custom;
+var currentSite = Site.getCurrent();
 
 /**
  * Parse string representation of array
@@ -95,7 +95,7 @@ function EmarsysHelper() {
      */
     this.addDataToMap = function (object, map) {
         // read site preference value with emarsys ids for fields
-        var emarsysIdsMap = JSON.parse(siteCustomPreferences.emarsysContactFieldsMap);
+        var emarsysIdsMap = JSON.parse(currentSite.getCustomPreferenceValue('emarsysContactFieldsMap'));
         var newMap = map;
 
         Object.keys(emarsysIdsMap).forEach(function (element) {
@@ -124,7 +124,7 @@ function EmarsysHelper() {
      * @param {Int} i Int address counter
      */
     this.addAddressDataToMap = function (object, map, i) {
-        var emarsysIdsMap = JSON.parse(siteCustomPreferences.emarsysAddressFieldsMap);
+        var emarsysIdsMap = JSON.parse(currentSite.getCustomPreferenceValue('emarsysAddressFieldsMap'));
         var newMap = map;
 
         Object.keys(emarsysIdsMap[i]).forEach(function (element) {
@@ -147,7 +147,7 @@ function EmarsysHelper() {
      * @return {Object} coutnry code
      */
     this.convertCountryCode = function (countryCode) {
-        var countryCodes = JSON.parse(siteCustomPreferences.emarsysCountryCodes);
+        var countryCodes = JSON.parse(currentSite.getCustomPreferenceValue('emarsysCountryCodes'));
         return countryCodes[countryCode.toLowerCase()];
     };
 
@@ -157,7 +157,7 @@ function EmarsysHelper() {
      * @return {Object} gender codes
      */
     this.convertGenderCode = function (gender) {
-        var genderCodes = JSON.parse(siteCustomPreferences.emarsysGenderCodes);
+        var genderCodes = JSON.parse(currentSite.getCustomPreferenceValue('emarsysGenderCodes'));
         return genderCodes[gender];
     };
 
@@ -291,7 +291,7 @@ function EmarsysHelper() {
                             if (splitField[1] === 'url') {
                                 addProduct[placeholder] = url.toString();
                             } else if (splitField[1] === 'image') {
-                                var viewType = siteCustomPreferences.emarsysProductImageSize;
+                                var viewType = currentSite.getCustomPreferenceValue('emarsysProductImageSize');
                                 addProductImageUrl(viewType, placeholder, productLineItem);
                             } else if (splitField[1] === 'rebate') {
                                 addProduct[placeholder] = rebate;
@@ -540,7 +540,7 @@ function EmarsysHelper() {
      */
     this.addSourceIdToRequest = function (object) {
         var newObject = object;
-        var source = siteCustomPreferences.emarsysSourceID;
+        var source = currentSite.getCustomPreferenceValue('emarsysSourceID');
 
         if (source) {
             newObject.source_id = source;
@@ -581,7 +581,6 @@ function EmarsysHelper() {
      * @return {Object} - Emarsys fields descriptions
      */
     this.prepareFieldsDescriptions = function () {
-        var currentSite = Site.getCurrent();
         var fieldValueMapping = {};
         var profileFieldsList = [];
         try {

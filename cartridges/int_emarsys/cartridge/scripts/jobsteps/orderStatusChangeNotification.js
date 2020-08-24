@@ -71,7 +71,7 @@ var OrderStatusChangeNotification = {
         var triggerEvent;
 
         var method = 'PUT';
-        var genderCodes = JSON.parse(Site.current.preferences.custom.emarsysGenderCodes);
+        var genderCodes = JSON.parse(Site.getCurrent().getCustomPreferenceValue('emarsysGenderCodes'));
         var mappedFields = JSON.parse(this.co.custom.mappedFields);
         var externalEventId = this.co.custom.externalEvent;
 

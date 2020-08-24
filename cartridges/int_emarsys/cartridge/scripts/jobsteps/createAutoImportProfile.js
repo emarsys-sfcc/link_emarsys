@@ -32,14 +32,13 @@ var CreateAutoImportProfile = {
             var ProfileFieldsCO = CustomObjectMgr.getCustomObject('EmarsysProfileFields', 'profileFields');
             var ProfileFields = JSON.parse(ProfileFieldsCO.custom.result);
 
-            var sitePrefs = currentSite.preferences.custom;
-            var language = sitePrefs.emarsysLanguage;
-            var asList = sitePrefs.emarsysAsList;
-            var newsletter = sitePrefs.emarsysNewsletter;
-            var skipEmpty = sitePrefs.emarsysSkipEmpty;
-            var updateOnly = sitePrefs.emarsysUpdateOnly;
-            var enabled = sitePrefs.emarsysAutoImportEnabled;
-            var overwrite = sitePrefs.emarsysOverwriteContacts;
+            var language = currentSite.getCustomPreferenceValue('emarsysLanguage');
+            var asList = currentSite.getCustomPreferenceValue('emarsysAsList');
+            var newsletter = currentSite.getCustomPreferenceValue('emarsysNewsletter');
+            var skipEmpty = currentSite.getCustomPreferenceValue('emarsysSkipEmpty');
+            var updateOnly = currentSite.getCustomPreferenceValue('emarsysUpdateOnly');
+            var enabled = currentSite.getCustomPreferenceValue('emarsysAutoImportEnabled');
+            var overwrite = currentSite.getCustomPreferenceValue('emarsysOverwriteContacts');
 
             request.separator = Separator;
             request.text_separator = '"';
