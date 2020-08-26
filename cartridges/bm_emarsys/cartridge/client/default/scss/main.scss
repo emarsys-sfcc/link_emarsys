@@ -3,26 +3,26 @@ $hoverColor: #40a3f9;
 .applay-add-fields-buttons-container {
     display: flex;
     justify-content: flex-end;
-    margin-top: 0.625rem;
+    margin-top: 1rem;
 
     button {
-        margin: 0.3125rem;
+        margin: 0.5rem;
     }
 }
 
 .add-fields-button-container {
-    margin-left: 0.625rem;
+    margin-left: 1rem;
 }
 
 .additional-menu {
-    padding-top: 0.625rem;
+    padding-top: 1rem;
 }
 
 .additional-body {
     display: flex;
     align-items: center;
     background-color: rgba(0, 0, 0, 0.05);
-    min-height: 1.875rem;
+    min-height: 3rem;
 }
 
 .border-text {
@@ -35,8 +35,8 @@ $hoverColor: #40a3f9;
     border-color: #009ddc;
     background-color: #009ddc;
     color: #fff;
-    border: 0.0625rem solid #009ddc;
-    border-radius: 0.1875rem;
+    border: 0.1rem solid #009ddc;
+    border-radius: 0.3rem;
     line-height: 1.5;
     cursor: pointer;
 
@@ -52,7 +52,7 @@ $hoverColor: #40a3f9;
 
 .fild-configuration {
     display: flex;
-    min-height: 3rem;
+    min-height: 4.8rem;
 }
 
 .newsletter-container,
@@ -65,31 +65,42 @@ $hoverColor: #40a3f9;
     flex-direction: column;
 }
 
+.breadcrumb {
+	font-size: 1em;
+	line-height: 1em;
+	margin: 0;
+	padding: .5em 1%;
+	li {
+		display: inline;
+		list-style: none outside none;
+	}
+}
+
 .warning-teg {
     display: flex;
-    min-height: 2.25rem;
+    min-height: 3.6rem;
     align-items: center;
     background-color: #d5d7d9;
 }
 
 .select-fields,
 .select-additional-value {
-    border: 0.0625rem solid #d5d7d9;
-    border-radius: 0.625rem;
+    border: 0.1rem solid #d5d7d9;
+    border-radius: 1rem;
     cursor: pointer;
 
     &:hover {
-        border: 0.0625rem solid $hoverColor;
+        border: 0.1rem solid $hoverColor;
     }
 
     &:focus {
         outline: none;
-        border: 0.0625rem solid $hoverColor;
+        border: 0.1rem solid $hoverColor;
     }
 }
 
 .select-additional-value {
-    margin-left: 0.625rem;
+    margin-left: 1rem;
 }
 
 .send-order-mail-container {
@@ -99,7 +110,7 @@ $hoverColor: #40a3f9;
     label,
     button,
     input {
-        margin: 0.3125rem;
+        margin: 0.5rem;
     }
 }
 
@@ -110,16 +121,16 @@ $hoverColor: #40a3f9;
 
 .subscribe-container {
     display: flex;
-    min-height: 1.375rem;
+    min-height: 2.2rem;
 }
 
 .subscribe-label-container {
-    min-width: 20rem;
+    min-width: 32rem;
 }
 
 .title-label-row {
     display: flex;
-    padding-top: 0.625rem;
+    padding-top: 1rem;
     width: 100%;
 }
 
@@ -134,7 +145,7 @@ $hoverColor: #40a3f9;
 .title-placeholder-col,
 .placeholder-col {
     justify-content: center;
-    min-width: 7.5rem;
+    min-width: 12rem;
     padding-left: 1%;
     width: 60%;
 }
@@ -144,46 +155,46 @@ $hoverColor: #40a3f9;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 2.5rem;
+    min-width: 4rem;
     padding-left: 1%;
     width: 10%;
 }
 
 .text-position {
-    padding-left: 0.625rem;
+    padding-left: 1rem;
     margin: 0;
 }
 
 .input-send-order-number {
-    border: 0.0625rem solid #d5d7d9;
-    border-radius: 0.1875rem;
+    border: 0.1rem solid #d5d7d9;
+    border-radius: 0.3rem;
 
     &:hover {
-        border: 0.0625rem solid $hoverColor;
-        box-shadow: 0 0 0.3125rem #bbb;
+        border: 0.1rem solid $hoverColor;
+        box-shadow: 0 0 0.5rem #bbb;
     }
 
     &:focus {
         border-color: $hoverColor;
-        box-shadow: 0 0 0.3125rem #bbb;
+        box-shadow: 0 0 0.5rem #bbb;
     }
 }
 
 .input-placeholder {
     border: none;
-    border-bottom: 0.0313rem solid $hoverColor;
+    border-bottom: 0.0501rem solid $hoverColor;
     background: transparent;
     width: 100%;
-    padding: 0.3125rem;
+    padding: 0.5rem;
 
     &:hover {
-        border: 0.0625rem solid $hoverColor;
-        box-shadow: 0 0 0.3125rem #bbb;
+        border: 0.1rem solid $hoverColor;
+        box-shadow: 0 0 0.5rem #bbb;
     }
 
     &:focus {
         border-color: $hoverColor;
-        box-shadow: 0 0 0.3125rem #bbb;
+        box-shadow: 0 0 0.5rem #bbb;
     }
 }
 
@@ -193,20 +204,20 @@ $hoverColor: #40a3f9;
 }
 
 .notification-messages-container {
-    border: 0.0625rem solid #d5d7d9;
+    border: 0.1rem solid #d5d7d9;
 }
 
 .select-input-error {
     border-color: #ee294e;
     background-color: #fde9ed;
-    border: 0.0625rem solid red;
+    border: 0.1rem solid red;
 }
 
 @supports (-webkit-appearance: none) or (-moz-appearance: none) {
     .remove-check-box {
         --active: #40a3f9;
         --active-inner: #fff;
-        --focus: 0.125rem rgba(39, 94, 254, 0.3);
+        --focus: 0.2rem rgba(39, 94, 254, 0.3);
         --border: #bbc1e1;
         --border-hover: #40a3f9;
         --background: #fff;
@@ -215,14 +226,14 @@ $hoverColor: #40a3f9;
 
         -webkit-appearance: none;
         -moz-appearance: none;
-        height: 1.3125rem;
+        height: 2.1rem;
         outline: none;
         display: inline-block;
         vertical-align: top;
         position: relative;
         margin: 0;
         cursor: pointer;
-        border: 0.0625rem solid var(--bc, var(--border));
+        border: 0.1rem solid var(--bc, var(--border));
         background: var(--b, var(--background));
         transition: background 0.3s, border-color 0.3s, box-shadow 0.2s;
 
@@ -274,7 +285,7 @@ $hoverColor: #40a3f9;
         }
 
         &:not(.switch) {
-            width: 1.3125rem;
+            width: 2.1rem;
 
             &::after {
                 opacity: var(--o, 0);
@@ -286,27 +297,27 @@ $hoverColor: #40a3f9;
         }
 
         + label {
-            font-size: 0.875rem;
-            line-height: 1.3125rem;
+            font-size: 1.4rem;
+            line-height: 2.1rem;
             display: inline-block;
             vertical-align: top;
             cursor: pointer;
-            margin-left: 0.25rem;
+            margin-left: 0.4rem;
         }
     }
 
     input[type="checkbox"] {
         &:not(.switch) {
-            border-radius: 0.9375rem;
+            border-radius: 1.5rem;
 
             &::after {
-                width: 0.3125rem;
-                height: 0.5625rem;
-                border: 0.125rem solid var(--active-inner);
+                width: 0.5rem;
+                height: 0.9rem;
+                border: 0.2rem solid var(--active-inner);
                 border-top: 0;
                 border-left: 0;
-                left: 0.4375rem;
-                top: 0.25rem;
+                left: 0.7rem;
+                top: 0.4rem;
                 transform: rotate(var(--r, 20deg));
             }
 
@@ -316,22 +327,22 @@ $hoverColor: #40a3f9;
         }
 
         &.switch {
-            width: 2.375rem;
-            border-radius: 0.6875rem;
+            width: 3.8rem;
+            border-radius: 1.1rem;
 
             &::after {
-                left: 0.125rem;
-                top: 0.125rem;
+                left: 0.2rem;
+                top: 0.2rem;
                 border-radius: 50%;
-                width: 0.9375rem;
-                height: 0.9375rem;
+                width: 1.5rem;
+                height: 1.5rem;
                 background: var(--ab, var(--border));
                 transform: translateX(var(--x, 0));
             }
 
             &:checked {
                 --ab: var(--active-inner);
-                --x: 1.0625rem;
+                --x: 1.7rem;
             }
 
             &:disabled {
