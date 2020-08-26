@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<library xmlns="http://www.demandware.com/xml/impex/library/2006-10-31" library-id="SiteGenesisSharedLibrary">
+<library xmlns="http://www.demandware.com/xml/impex/library/2006-10-31" library-id="RefArchSharedLibrary">
 
     <content content-id="emarsys-double-opt-in-thank-you-page">
         <display-name xml:lang="x-default">Double Opt-in Thank You Page</display-name>

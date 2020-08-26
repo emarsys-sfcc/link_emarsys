@@ -264,13 +264,13 @@
 ]</preference>
             <preference preference-id="emarsysDBLoadExportStatus">true</preference>
             <preference preference-id="emarsysEnabled">true</preference>
-            <preference preference-id="emarsysFileNameString">initial_2020false03false11091734</preference>
+            <preference preference-id="emarsysFileNameString">initial_2020false08false24092418</preference>
             <preference preference-id="emarsysGenderCodes">{"male": 1,"female": 2}</preference>
             <preference preference-id="emarsysGetProfileFieldsLanguage">en</preference>
             <preference preference-id="emarsysIMPEXFolderString">inidb/RefArch</preference>
             <preference preference-id="emarsysLoyalsysURLexaccess">https://exaccess-stg.loyalsys.io/v1.0.1/ls_ea.min.js?x=</preference>
             <preference preference-id="emarsysLoyalsysURLuiElements">https://ui-elements-staging.loyalsys.io/v1.0.1/embed.min.js?x=</preference>
-            <preference preference-id="emarsysLoyaltyWalletEnabled">true</preference>
+            <preference preference-id="emarsysLoyaltyWalletEnabled">false</preference>
             <preference preference-id="emarsysOrderConfirmationElements">[
         {
 			"value" : "billingAddress.address1",
@@ -579,11 +579,15 @@
                 <value>custom.product.url</value>
                 <value>custom.product.image</value>
                 <value>custom.product.rebate</value>
+                <value>customer.order.customerName</value>
+                <value>c_sales_amount</value>
+                <value>customer</value>
+                <value>custom.order.paymentMethods</value>
             </preference>
             <preference preference-id="emarsysSourceID">89648</preference>
             <preference preference-id="emarsysSourceName">osf-test-source2</preference>
             <preference preference-id="emarsysUseGrossPrice">false</preference>
-            <preference preference-id="emarsysWebDAVPasswordString">d6qaacb3uo3npY1AHFmesSd/aN251ZJ0oxDhqcuFqgxVzWmTJ/8SXMEa0Sj5N6vb</preference>
+            <preference preference-id="emarsysWebDAVPasswordString"></preference>
             <preference preference-id="emarsysWebDAVURLString">https://emarsys01-tech-prtnr-eu01-dw.demandware.net/on/demandware.servlet/webdav/Sites/Impex</preference>
             <preference preference-id="emarsysWebDAVUsernameString">pilena</preference>
         </development>
