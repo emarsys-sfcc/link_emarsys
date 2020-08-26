@@ -1,4 +1,4 @@
-<!--- TEMPLATENAME: emarsys_thankyou.isml --->
+<iscomment> TEMPLATENAME: emarsys_thankyou.isml </iscomment>
 <iscontent type="text/html" charset="UTF-8" compact="true"/>
 <iscache type="relative" hour="24"/>
 
@@ -6,7 +6,7 @@
     <div class="show-confirmation-message">
         <h1>${Resource.msg("subscription.error", "emarsys", null)}</h1>
         <isif condition="${pdict.ErrorMsg}" >
-            <isprint value="${pdict.ErrorMsg}" encoding="off" />
+            <isprint value="${pdict.ErrorMsg}" encoding="on" />
         </isif>
     </div>
 </isdecorate>

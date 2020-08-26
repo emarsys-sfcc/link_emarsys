@@ -1,3 +1,7 @@
+<isif condition="${Resource.msg('page.decorator.account', 'emarsys', false) !== false}">
+    <isinclude template="util/modules"/>
+</isif>
+
 <form action="${URLUtils.continueURL()}" method="post" name="${pdict.CurrentForms.emarsyssignup.htmlName}">
     <fieldset>
         <isinputfield formfield="${pdict.CurrentForms.emarsyssignup.emailAddress}" type="input"/>

@@ -1,18 +1,17 @@
 <isdecorate template="/pageWrapper">
-<iscontent type="text/html" charset="UTF-8">
-<isinclude template="inc/Modules">
-<isinclude template="/components/modules">
+<iscontent type="text/html" charset="UTF-8"/>
+<isinclude template="/components/modules"/>
 
-<link rel="stylesheet" type="text/css" href="${URLUtils.staticURL('css/global.css')}">
+<link rel="stylesheet" type="text/css" href="${URLUtils.staticURL('css/global.css')}"/>
 <script type="text/javascript" src="${URLUtils.staticURL('js/main.js')}" defer></script>
 
     <div>
-        <isinclude template="/components/pageHeader">
+        <isinclude template="/components/pageHeader"/>
 
         <isif condition="${Object.hasOwnProperty.call(pdict, 'tabsAttr')}">
-            <istabs tabsAttr="${pdict}">
+            <istabs tabsAttr="${pdict}"/>
         <iselse/>
-            <isinclude template="${'/components/' + pdict.contentTemplate}">
+            <isinclude template="${'/components/' + pdict.contentTemplate}"/>
         </isif>
     </div>
 

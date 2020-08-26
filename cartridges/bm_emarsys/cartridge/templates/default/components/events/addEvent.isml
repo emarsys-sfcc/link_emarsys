@@ -16,7 +16,7 @@
             <isinclude template="/components/events/triggerEventForm" />
         </isif>
     </div>
-<iselse>
+<iselse/>
     <div class="js-request-error"
         data-error="${JSON.stringify(context)}">
     </div>

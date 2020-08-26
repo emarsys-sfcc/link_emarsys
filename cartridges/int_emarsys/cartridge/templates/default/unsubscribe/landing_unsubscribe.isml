@@ -24,7 +24,7 @@
         <isprint value="${Resource.msg('nu.unsubscribe.success', 'newsletter_unsubscribe', null)}" />
     <iselseif condition="${!empty(pdict.Errors) && pdict.Errors == true}" />
         <h1><isprint value="${Resource.msg('nu.unsubscribe.error', 'newsletter_unsubscribe', null)}" /></h1>
-        <isprint value="${pdict.ErrorText}" encoding="off" />
+        <isprint value="${pdict.ErrorText}" encoding="on" />
     </isif>
 </div>
 </isdecorate>

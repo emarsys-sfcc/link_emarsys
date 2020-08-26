@@ -1,17 +1,18 @@
-<iscontent type="text/html" charset="UTF-8" compact="true">
-<isinclude template="inc/Modules">
-<isinclude template="application/modules">
-<isinclude url="${URLUtils.url('SiteNavigationBar-IncludeFrameTop','SelectedMenuItem',pdict.SelectedMenuItem,'CurrentMenuItemId',pdict.CurrentMenuItemId)}">
+<iscontent type="text/html" charset="UTF-8" compact="true"/>
+<isinclude url="${URLUtils.url('SiteNavigationBar-IncludeFrameTop','SelectedMenuItem',pdict.SelectedMenuItem,'CurrentMenuItemId',pdict.CurrentMenuItemId)}"/>
 <iscomment>Render BM breadcrumbs</iscomment>
 <isif condition="${pdict.CurrentHttpParameterMap.CurrentMenuItemId != ''}">
-    <isscript>
-        var level1 = URLUtils.url('ViewApplication-SelectSite', 'MenuGroupID', 'ChannelMenu', 'ChannelID', pdict.ChannelID, 'SelectedSiteID', pdict.ChannelID);
-        var level2 = URLUtils.url('SiteNavigationBar-ShowMenuitemOverview', 'CurrentMenuItemId', pdict.CurrentHttpParameterMap.CurrentMenuItemId);
-        var level2Name = pdict.CurrentHttpParameterMap.mainmenuname;
-        var currentLevel = pdict.CurrentHttpParameterMap.menuname;
-    </isscript>
+    <div class="breadcrumb">
+        <a href="${URLUtils.url('ViewApplication-SelectSite', 'MenuGroupID', 'ChannelMenu', 'ChannelID', pdict.ChannelID, 'SelectedSiteID', pdict.ChannelID)}">
+                ${Resource.msg("pageWrapper.name.merchanttools","pageTitle",'')}
+        </a>
+            >
+        <a href="${URLUtils.url('SiteNavigationBar-ShowMenuitemOverview', 'CurrentMenuItemId', pdict.CurrentHttpParameterMap.CurrentMenuItemId)}">
+                ${pdict.CurrentHttpParameterMap.mainmenuname}
+        </a>
+        > ${pdict.CurrentHttpParameterMap.menuname}
+    </div>
 </isif>
-<ISBreadcrumb name1="Merchant Tools" url1="${level1}" name2=" ${level2Name}" url2=" ${level2.toString()}" name3=" ${currentLevel}" />
 <iscomment>Render the page</iscomment>
 <isreplace/>
-<isinclude url="${URLUtils.url('SiteNavigationBar-IncludeFrameBottom')}">
+<isinclude url="${URLUtils.url('SiteNavigationBar-IncludeFrameBottom')}"/>
