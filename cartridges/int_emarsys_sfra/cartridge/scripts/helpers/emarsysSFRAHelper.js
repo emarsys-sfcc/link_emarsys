@@ -410,8 +410,7 @@ function accountSubscription(res, profileForm) {
     if (Site.getCurrent().getCustomPreferenceValue('emarsysEnabled')) {
         args.SubscriptionType = 'account';
         args.Email = profileForm.email;
-        args.SubscribeToEmails = request.httpParameterMap.dwfrm_profile_customer_addtoemaillist.booleanValue;
-
+        args.SubscribeToEmails = request.httpParameterMap.dwfrm_profile_customer_addtoemaillist.submitted;
         args = getCustomerData(args); // get customer data
         // process the request and form data
         processor(args, res);
