@@ -1229,8 +1229,6 @@ Example: {"default":"USD", "en_US":"USD", "it_IT":"EUR", "en_GB":"GBP"}</descrip
                 <attribute attribute-id="emarsysLoyalsysURLuiElements"/>
             </attribute-group>
         </group-definitions>
-            </attribute-group>
-        </group-definitions>
     </type-extension>
 
 </metadata>
