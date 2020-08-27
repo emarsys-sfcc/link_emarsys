@@ -12,6 +12,9 @@ class Session {
             billing: {
                 subscribe: {
                     value: true
+                },
+                addToEmailList: {
+                    checked : true
                 }
             }
         };

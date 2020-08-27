@@ -66,14 +66,15 @@ $hoverColor: #40a3f9;
 }
 
 .breadcrumb {
-	font-size: 1em;
-	line-height: 1em;
-	margin: 0;
-	padding: .5em 1%;
-	li {
-		display: inline;
-		list-style: none outside none;
-	}
+    font-size: 1em;
+    line-height: 1em;
+    margin: 0;
+    padding: 0.5em 1%;
+
+    li {
+        display: inline;
+        list-style: none outside none;
+    }
 }
 
 .warning-teg {
