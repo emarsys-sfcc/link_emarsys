@@ -430,7 +430,7 @@ function checkoutSubscription(res, billingData) {
     if (Site.getCurrent().getCustomPreferenceValue('emarsysEnabled')) {
         args.SubscriptionType = 'checkout';
         args.Email = billingData.email && billingData.email.value;
-        args.SubscribeToEmails = session.forms.billing.subscribe.value;
+        args.SubscribeToEmails = session.forms.billing.addToEmailList.checked;
         args = newsletterHelper.getCustomerData(args); // get customer data
         // process the request and form data
         processor(args, res);
