@@ -15,7 +15,7 @@
                 </label>
                 <input type="text" class="form-control" id="emailAddress"
                     <isprint value="${pdict.signupForm.emailAddress.attributes}" encoding="htmlsinglequote" />
-                    autocomplete="email-address"/>
+                    autocomplete="email-address" required/>
                 <div class="invalid-feedback"></div>
             </div>
         </div>
@@ -29,7 +29,7 @@
                 </label>
                 <select class="form-control" id="gender"
                     <isprint value="${pdict.signupForm.gender.attributes}" encoding="htmlsinglequote" />
-                    autocomplete="country">
+                    autocomplete="country" required>
                     <isloop items=${pdict.signupForm.gender.options} var="gender">
                         <option id="${gender.id}" value="${gender.htmlValue}" <isif condition="${gender.selected}">selected</isif>>${gender.label}</option>
                     </isloop>
@@ -50,7 +50,7 @@
                 </label>
                 <input type="text" class="form-control" id="firstName"
                     <isprint value="${pdict.signupForm.firstName.attributes}" encoding="htmlsinglequote" />
-                    autocomplete="given-name"/>
+                    autocomplete="given-name" required/>
                 <div class="invalid-feedback"></div>
             </div>
         </div>
@@ -64,7 +64,7 @@
                 </label>
                 <input type="text" class="form-control" id="lastName"
                     <isprint value="${pdict.signupForm.lastName.attributes}" encoding="htmlsinglequote" />
-                    autocomplete="family-name"/>
+                    autocomplete="family-name" required/>
                 <div class="invalid-feedback"></div>
             </div>
         </div>
@@ -78,7 +78,7 @@
         </label>
         <input type="text" class="form-control" id="address1"
             <isprint value="${pdict.signupForm.address1.attributes}" encoding="htmlsinglequote" />
-            autocomplete="address-line1"/>
+            autocomplete="address-line1" required/>
         <div class="invalid-feedback"></div>
     </div>
 
@@ -93,7 +93,7 @@
                 </label>
                 <select class="form-control" id="countryCode"
                     <isprint value="${pdict.signupForm.countryCode.attributes}" encoding="htmlsinglequote" />
-                    autocomplete="country">
+                    autocomplete="country" required>
                     <isloop items=${pdict.signupForm.countryCode.options} var="country">
                         <option id="${country.id}" value="${country.htmlValue}" <isif condition="${country.selected}">${Resource.msg("default.selected.value", "dynamicTemplate",'')}</isif>>${country.label}</option>
                     </isloop>
@@ -111,7 +111,7 @@
                 </label>
                 <select class="form-control" id="stateCode"
                     <isprint value="${pdict.signupForm.stateCode.attributes}" encoding="htmlsinglequote" />
-                    autocomplete="address-level1">
+                    autocomplete="address-level1" required>
                     <isloop items=${pdict.signupForm.stateCode.options} var="state">
                         <option id="${state.id}" value="${state.htmlValue}" <isif condition="${state.selected}">${Resource.msg("default.selected.value", "dynamicTemplate",'')}</isif>>${state.label || ' '}</option>
                     </isloop>
@@ -132,7 +132,7 @@
                 </label>
                 <input type="text" class="form-control" id="city"
                     <isprint value="${pdict.signupForm.city.attributes}" encoding="htmlsinglequote" />
-                    autocomplete="address-level2"/>
+                    autocomplete="address-level2" required/>
                 <div class="invalid-feedback"></div>
             </div>
         </div>
@@ -146,7 +146,7 @@
                 </label>
                 <input type="text" class="form-control" id="postalCode"
                     <isprint value="${pdict.signupForm.postalCode.attributes}" encoding="htmlsinglequote" />
-                    autocomplete="postal-code"/>
+                    autocomplete="postal-code" required/>
                 <div class="invalid-feedback"></div>
             </div>
         </div>
@@ -160,7 +160,7 @@
         </label>
         <input type="text" class="form-control" id="phone"
             <isprint value="${pdict.signupForm.phone.attributes}" encoding="htmlsinglequote" />
-            autocomplete="tel"/>
+            autocomplete="tel" required/>
         <div class="invalid-feedback"></div>
     </div>
 
