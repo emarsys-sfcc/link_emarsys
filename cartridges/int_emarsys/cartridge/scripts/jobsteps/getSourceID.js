@@ -13,7 +13,7 @@ var SourceID = {
         try {
             this.emarsysHelper = new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))();
 
-            var sourceName = Site.current.preferences.custom.emarsysSourceName;
+            var sourceName = Site.getCurrent().getCustomPreferenceValue('emarsysSourceName');
             var createSource;
             var sourceId;
             var request = {
@@ -50,7 +50,7 @@ var SourceID = {
                 }
             }
 
-            Site.current.setCustomPreferenceValue('emarsysSourceID', sourceId);
+            Site.getCurrent().setCustomPreferenceValue('emarsysSourceID', sourceId);
         } catch (err) {
             this.logger.error('[Emarsys GetSourceID.js] - ***Emarsys get source data error message: ' + err.message + '\n' + err.stack);
 

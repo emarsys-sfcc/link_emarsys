@@ -3,12 +3,11 @@
 *    Export Profile atributes as CSV
 */
 
-var system = require('dw/system');
 var io = require('dw/io');
 var File = require('dw/io/File');
 var customerMgr = require('dw/customer/CustomerMgr');
 var CustomObjectMgr = require('dw/object/CustomObjectMgr');
-var Site = system.Site.getCurrent();
+var Site = require('dw/system/Site').getCurrent();
 var Status = require('dw/system/Status');
 
 var ExportCustomerInfo = {

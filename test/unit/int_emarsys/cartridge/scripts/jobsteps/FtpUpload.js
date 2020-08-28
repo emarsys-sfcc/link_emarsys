@@ -18,7 +18,7 @@ var emarsysFTPService = require(mockPath + 'service/emarsysFTPService');
 var StepUtil = require(mockPath + 'util/stepUtil');
 var CustomObjectMgr = require(mockPath + 'dw/object/CustomObjectMgr');
 
-var siteCustomPreferences = Site.current.preferences.custom;
+var siteCustomPreferences = Site.getCurrent();
 var cartridgePath = '../../../../../../cartridges/int_emarsys/';
 
 var EmarsysHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsysHelper.js', {
@@ -43,12 +43,12 @@ var JobHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/jobHelper.
 });
 
 
-var FtpUpload = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/FtpUpload.js', {
+var FtpUpload = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/ftpUpload.js', {
     'dw/io/File': File,
     'dw/system/Status': Status,
     'int_emarsys/cartridge/scripts/helpers/jobHelper': JobHelper,
     'int_emarsys/cartridge/scripts/service/emarsysFTPService': emarsysFTPService,
-    'int_emarsys/cartridge/scripts/util/StepUtil': StepUtil
+    'int_emarsys/cartridge/scripts/util/stepUtil': StepUtil
 });
 
 describe('FtpUpload jobstep', () => {

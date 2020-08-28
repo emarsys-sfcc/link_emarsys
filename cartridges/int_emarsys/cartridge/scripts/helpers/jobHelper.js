@@ -3,12 +3,11 @@
 var File = require('dw/io/File');
 var emarsysHelper = new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))();
 var io = require('dw/io');
-var Site = require('dw/system/Site');
 var Currency = require('dw/util/Currency');
 var Variant = require('dw/catalog/Variant');
 var ArrayList = require('dw/util/ArrayList');
 
-var siteCustomPreferences = Site.current.preferences.custom;
+var currentSite = require('dw/system/Site').getCurrent();
 
 
 /**
@@ -28,7 +27,7 @@ function setLocale(siteLocale, defaultLocale) {
  * @return {void}
  */
 function handleProductImage(productInfo, product) {
-    var viewType = siteCustomPreferences.emarsysProductImageSize;
+    var viewType = currentSite.getCustomPreferenceValue('emarsysProductImageSize');
     var productImage = product.getImage(viewType);
     var parsedImage = productImage !== null ? productImage.getAbsURL().toString() : '';
 
@@ -168,7 +167,7 @@ function handleProductCategory(productInfo, siteLocales, defaultLocale, currenci
  * @return {void}
  */
 function handleProductCustomAttributes(productInfo, mappedField, variationAttribute, product) {
-    var productVariationAttributes = Site.getCurrent().getCustomPreferenceValue('emarsysPredictVariationAttributes');
+    var productVariationAttributes = currentSite.getCustomPreferenceValue('emarsysPredictVariationAttributes');
    // find the variation attributes from emarsysPredictVariationAttributes site preference
     if (productVariationAttributes.indexOf(mappedField.field) !== -1) {
         var selectedAttribute = product.variationModel.getProductVariationAttribute(variationAttribute);
@@ -382,7 +381,7 @@ function JobHelper() {
      * @return {io.File} new file
      */
     this.createSmartInsightExportFile = function (destinationFolder) {
-        var siteID = Site.current.getID();
+        var siteID = currentSite.getID();
         var exportFolderPath = io.File.IMPEX + '/src/' + destinationFolder;
         var exportFolder = new io.File(exportFolderPath);
 
@@ -398,7 +397,7 @@ function JobHelper() {
      * @return {string} name
      */
     this.createSmartInsightFeedName = function () {
-        var siteID = Site.current.ID;
+        var siteID = currentSite.ID;
 
         var name = 'sales_items_' + siteID + '.csv';
         return name;
@@ -441,7 +440,7 @@ function JobHelper() {
              Product main image url
              */
             case 'image':
-                var viewType = siteCustomPreferences.emarsysProductImageSize;
+                var viewType = currentSite.getCustomPreferenceValue('emarsysProductImageSize');
                 return productLineItem.product.getImage(viewType) !== null ? productLineItem.product.getImage(viewType).getAbsURL().toString() : '';
             /*
              Product rebate

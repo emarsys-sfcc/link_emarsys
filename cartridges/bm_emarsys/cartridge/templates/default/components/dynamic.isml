@@ -50,13 +50,13 @@
             <isloop items="${contentConfig.mappedFields}" var="mappedFild">
                 <div class="js-fild-configuration fild-configuration text-position">
                     <div class="selects-attr available-col">
-                        <select class="js-fields select-fields"/>
+                        <select class="js-fields select-fields">
                             <option value="" >${Resource.msg("default.option.value", "dynamicTemplate",'')}</option>
                             <isloop items="${generalAttrs}" var="generalAttr">
                                 <option value="${Object.hasOwnProperty.call(generalAttr, "value") ? generalAttr.value 
                                                 : Object.hasOwnProperty.call(generalAttr, "id") ? generalAttr.id : generalAttr}" 
                                 <isif condition="${(Object.hasOwnProperty.call(generalAttr, "value") ? generalAttr.value
-                                                : Object.hasOwnProperty.call(generalAttr, "id") ? generalAttr.id : generalAttr) == mappedFild.field}">selected</isif>>
+                                                : Object.hasOwnProperty.call(generalAttr, "id") ? generalAttr.id : generalAttr) == mappedFild.field}">${Resource.msg("default.selected.value", "dynamicTemplate",'')}</isif>>
                                     ${Object.hasOwnProperty.call(generalAttr, "name") ? generalAttr.name : generalAttr}
                                 </option>
                             </isloop>
@@ -69,7 +69,7 @@
                                     <option value="" >${Resource.msg("default.option.value", "dynamicTemplate",'')}</option>
                                     <isloop items="${selectPlacheholder}" var="availableAttr">
                                         <option value="${availableAttr.value}" 
-                                        <isif condition="${availableAttr.value === mappedFild.placeholder}">selected</isif>>
+                                        <isif condition="${availableAttr.value === mappedFild.placeholder}">${Resource.msg("default.selected.value", "dynamicTemplate",'')}</isif>>
                                                 ${Object.hasOwnProperty.call(availableAttr, "name") ? availableAttr.name : availableAttr}
                                         </option>
                                     </isloop>
@@ -99,7 +99,7 @@
                     </div>
                     <select class="js-additional-value select-additional-value"/>
                         <isloop items="${additionalValues}" var="value">
-                            <option value="${value.id}" <isif condition="${value.id == contentConfig.additionalParam}">selected</isif>>
+                            <option value="${value.id}" <isif condition="${value.id == contentConfig.additionalParam}">${Resource.msg("default.selected.value", "dynamicTemplate",'')}</isif>>
                                 ${isProperties ? Resource.msg(value.name, "dynamicTemplate",'') : value.name}
                             </option>
                         </isloop>

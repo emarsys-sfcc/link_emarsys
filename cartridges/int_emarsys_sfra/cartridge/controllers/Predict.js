@@ -11,7 +11,7 @@ var Site = require('dw/system/Site');/**
 server.get(
     'ReturnCartObject',
     function (req, res, next) {
-        var useGrossPrice = Site.current.getCustomPreferenceValue('emarsysUseGrossPrice');
+        var useGrossPrice = Site.getCurrent().getCustomPreferenceValue('emarsysUseGrossPrice');
         var cart = BasketMgr.getCurrentBasket();
         var productItemsArray = [];
 

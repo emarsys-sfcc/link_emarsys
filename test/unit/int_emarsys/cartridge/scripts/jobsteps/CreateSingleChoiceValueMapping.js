@@ -14,7 +14,7 @@ var web = require(mockPath + 'dw/web/Web');
 var CustomObjectMgr = require(mockPath + 'dw/object/CustomObjectMgr');
 
 var cartridgePath = '../../../../../../cartridges/int_emarsys/';
-var siteCustomPreferences = Site.current.preferences.custom;
+var siteCustomPreferences = Site.getCurrent();
 
 var EmarsysHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsysHelper.js', {
     'dw/web': web,
@@ -27,7 +27,7 @@ var EmarsysHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsy
     '~/cartridge/scripts/service/emarsysService': emarsysService
 });
 
-var CreateSingleChoice = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/CreateSingleChoiceValueMapping.js', {
+var CreateSingleChoice = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/createSingleChoiceValueMapping.js', {
     'dw/system/Site': Site,
     'dw/system/Status': Status,
     'dw/system/Logger': Logger,

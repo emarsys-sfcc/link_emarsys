@@ -2,7 +2,7 @@
     "step-types": {
         "script-module-step": [{
                 "@type-id": "custom.EmarsysComponents.EmarsysExportOrders",
-                "module": "int_emarsys/cartridge/scripts/jobsteps/ExportOrders.js",
+                "module": "int_emarsys/cartridge/scripts/jobsteps/exportOrders.js",
                 "description": "Exports orders for Emarsys",
                 "function": "execute",
                 "transactional":"true",
@@ -63,7 +63,7 @@
             },
             {
                 "@type-id": "custom.EmarsysComponents.EmarsysExportCatalog",
-                "module": "int_emarsys/cartridge/scripts/jobsteps/ExportCatalog.js",
+                "module": "int_emarsys/cartridge/scripts/jobsteps/exportCatalog.js",
                 "description": "Exports products for Emarsys",
                 "function": "execute",
                 "parameters": {
@@ -107,7 +107,7 @@
             {
                 "@type-id": "custom.CSComponents.FtpUpload",
                 "description": "Upload files to an (S)FTP server",
-                "module": "int_emarsys/cartridge/scripts/jobsteps/FtpUpload.js",
+                "module": "int_emarsys/cartridge/scripts/jobsteps/ftpUpload.js",
                 "function": "Run",
                 "parameters": {
                     "parameters": [
@@ -195,7 +195,7 @@
             },
             {
                 "@type-id": "custom.EmarsysComponents.GetAvailableProfileFields",
-                "module": "int_emarsys/cartridge/scripts/jobsteps/GetProfileFieldsJob.js",
+                "module": "int_emarsys/cartridge/scripts/jobsteps/getProfileFieldsJob.js",
                 "description": "retrieves and stores Emarsys external events",
                 "function": "execute",
                 "transactional":"true",
@@ -213,7 +213,7 @@
             },
             {
                 "@type-id": "custom.EmarsysComponents.GetAvailableEvents",
-                "module": "int_emarsys/cartridge/scripts/jobsteps/GetExternalEventsJob.js",
+                "module": "int_emarsys/cartridge/scripts/jobsteps/getExternalEventsJob.js",
                 "description": "Retrieve all profile fields from Emarsys",
                 "function": "execute",
                 "transactional":"true",
@@ -243,7 +243,7 @@
             },
             {
                 "@type-id": "custom.EmarsysComponents.GetSourceID",
-                "module": "int_emarsys/cartridge/scripts/jobsteps/GetSourceID.js",
+                "module": "int_emarsys/cartridge/scripts/jobsteps/getSourceID.js",
                 "description": "Get source id on Emarsys side",
                 "function": "execute",
                 "transactional":"true",
@@ -261,7 +261,7 @@
             },
             {
                 "@type-id": "custom.EmarsysComponents.CreateSingleChoiceValueMapping",
-                "module": "int_emarsys/cartridge/scripts/jobsteps/CreateSingleChoiceValueMapping.js",
+                "module": "int_emarsys/cartridge/scripts/jobsteps/createSingleChoiceValueMapping.js",
                 "description": "Create Single Choice Value Mapping",
                 "function": "execute",
                 "transactional":"true",
@@ -279,7 +279,7 @@
             },
             {
                 "@type-id": "custom.DBLoad.ExportCustomerInfo",
-                "module": "int_emarsys/cartridge/scripts/jobsteps/ExportCustomerInfo.js",
+                "module": "int_emarsys/cartridge/scripts/jobsteps/exportCustomerInfo.js",
                 "description": "Exports customer info for Emarsys",
                 "function": "execute",
                 "transactional": true,
@@ -389,7 +389,7 @@
             },
             {
                 "@type-id": "custom.DBLoad.CreateAutoImportProfile",
-                "module": "int_emarsys/cartridge/scripts/jobsteps/CreateAutoImportProfile.js",
+                "module": "int_emarsys/cartridge/scripts/jobsteps/createAutoImportProfile.js",
                 "description": "Exports customer info for Emarsys",
                 "function": "execute",
                 "parameters": {
@@ -429,7 +429,7 @@
             },
             {
                 "@type-id": "custom.DBLoad.UploadProfilesCSVToWebDAV",
-                "module": "int_emarsys/cartridge/scripts/jobsteps/UploadProfilesCSVToWebDAV.js",
+                "module": "int_emarsys/cartridge/scripts/jobsteps/uploadProfilesCSVToWebDAV.js",
                 "description": "Exports customer info for Emarsys",
                 "function": "execute",
                 "parameters": {
@@ -455,8 +455,8 @@
                 }
             },
             {
-                "@type-id": "custom.EmarsysComponents.OrderStatusСhangeNotification",
-                "module": "int_emarsys/cartridge/scripts/jobsteps/OrderStatusСhangeNotification.js",
+                "@type-id": "custom.EmarsysComponents.OrderStatusChangeNotification",
+                "module": "int_emarsys/cartridge/scripts/jobsteps/orderStatusChangeNotification.js",
                 "description": "Send a confirmation emails through campaign on Emarsys",
                 "function": "execute",
                 "transactional":"true",
@@ -497,7 +497,7 @@
             },
             {
                 "@type-id": "custom.EmarsysComponents.CreateExternalEvents",
-                "module": "int_emarsys/cartridge/scripts/jobsteps/CreateExternalEvents.js",
+                "module": "int_emarsys/cartridge/scripts/jobsteps/createExternalEvents.js",
                 "description": "Creates external events on Emarsys",
                 "function": "execute",
                 "transactional":"true",

@@ -291,6 +291,7 @@ server.get(
             // update form with account data
             CustomerModel.updateAccountFormWithCustomerData(signupForm);
             res.render('subscription/emarsys_emailsettings', {
+                isSFRA: true,
                 signupForm: signupForm,
                 ContinueURL: URLUtils.https('EmarsysNewsletter-EmailSettingsHandleForm')
             });

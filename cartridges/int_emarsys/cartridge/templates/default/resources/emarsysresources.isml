@@ -4,7 +4,7 @@
 </isscript>
 
 (function (){
-    window.EmarsysUrls = <isprint value="${JSON.stringify(emarsysResourceHelper.getUrls())}" encoding="off"/>;
-    window.EmarsysResources = <isprint value="${JSON.stringify(emarsysResourceHelper.getResources())}" encoding="off"/>;
-    window.EmarsysPreferences = <isprint value="${JSON.stringify(emarsysResourceHelper.getPreferences())}" encoding="off"/>;
+    window.EmarsysUrls = <isprint value="${JSON.stringify(emarsysResourceHelper.getUrls())}" encoding="htmlsinglequote"/>;
+    window.EmarsysResources = <isprint value="${JSON.stringify(emarsysResourceHelper.getResources())}" encoding="htmlsinglequote"/>;
+    window.EmarsysPreferences = <isprint value="${JSON.stringify(emarsysResourceHelper.getPreferences())}" encoding="htmlsinglequote"/>;
 }());

@@ -14,7 +14,7 @@ var order = require(mockPath + 'dw/order/Order');
 var web = require(mockPath + 'dw/web/Web');
 
 var cartridgePath = '../../../../../../cartridges/int_emarsys/';
-var siteCustomPreferences = Site.current.preferences.custom;
+var siteCustomPreferences = Site.getCurrent();
 
 var EmarsysHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsysHelper.js', {
     'dw/web': web,
@@ -27,7 +27,7 @@ var EmarsysHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsy
     '~/cartridge/scripts/service/emarsysService': emarsysService
 });
 
-var createAutoImportProfile = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/CreateAutoImportProfile.js', {
+var createAutoImportProfile = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/createAutoImportProfile.js', {
     'dw/object/CustomObjectMgr': CustomObjectMgr,
     'dw/system/Site': Site,
     'dw/system/Status': Status,

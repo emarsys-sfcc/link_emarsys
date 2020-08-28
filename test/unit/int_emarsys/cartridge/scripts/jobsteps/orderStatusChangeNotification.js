@@ -16,7 +16,7 @@ var CustomObjectMgr = require(mockPath + 'dw/object/CustomObjectMgr');
 var Order = require(mockPath + 'dw/order/Order');
 var OrderMgr = require(mockPath + 'dw/order/OrderMgr');
 
-var siteCustomPreferences = Site.current.preferences.custom;
+var siteCustomPreferences = Site.getCurrent();
 var cartridgePath = '../../../../../../cartridges/int_emarsys/';
 
 var EmarsysHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsysHelper.js', {
@@ -30,7 +30,7 @@ var EmarsysHelper = proxyquire(cartridgePath + 'cartridge/scripts/helpers/emarsy
     '~/cartridge/scripts/service/emarsysService': emarsysService 
 });
 
-var OrderStatusСhangeNotification = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/OrderStatusСhangeNotification.js', {
+var OrderStatusСhangeNotification = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/orderStatusChangeNotification.js', {
     'dw/object/CustomObjectMgr': CustomObjectMgr,
     'dw/system/Status': Status,
     'dw/system/Site': Site,

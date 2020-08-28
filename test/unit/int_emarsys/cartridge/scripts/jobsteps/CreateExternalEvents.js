@@ -12,7 +12,7 @@ var CustomObjectMgr = require(mockPath + 'dw/object/CustomObjectMgr');
 var emarsysService = require(mockPath + 'service/emarsysService');
 var ShippingMgr = require(mockPath + 'dw/order/ShippingMgr');
 var Site = require(mockPath + 'dw/system/Site');
-var siteCustomPreferences = Site.current.preferences.custom;
+var siteCustomPreferences = Site.getCurrent();
 var order = require(mockPath + 'dw/order/Order');
 var web = require(mockPath + 'dw/web/Web');
 var Money = require(mockPath + 'dw/value/Money');
@@ -37,7 +37,7 @@ var EmarsysEventsHelper = proxyquire(cartridgePathE + 'cartridge/scripts/helpers
     'dw/system/Site': Site
 });
 
-var CreateExternalEvents = proxyquire(cartridgePathE + 'cartridge/scripts/jobsteps/CreateExternalEvents.js', {
+var CreateExternalEvents = proxyquire(cartridgePathE + 'cartridge/scripts/jobsteps/createExternalEvents.js', {
     'dw/object/CustomObjectMgr': CustomObjectMgr,
     'dw/system/Status': Status,
     'dw/system/Logger': Logger,

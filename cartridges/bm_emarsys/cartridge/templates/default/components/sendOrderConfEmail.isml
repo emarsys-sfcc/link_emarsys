@@ -4,7 +4,7 @@
 <form action="${URLUtils.url('EmarsysAdmin-SendOrderConfirmationEmail')}" 
       class="js-forms"
       method="post" 
-      <isprint value="${orderConfEmailForm.attributes}" encoding="off" />>
+      <isprint value="${orderConfEmailForm.attributes}" encoding="htmlsinglequote" />>
     <div class="main-container">
         <div class="js-main-title warning-teg">
             <label class="border-text text-position">
@@ -15,7 +15,7 @@
             <label class="text-position">
                 <isprint value="${orderConfEmailForm.orderId.label}" encoding="htmlcontent" />
             </label>
-            <input type="text" class="input-send-order-number" <isprint value="${orderConfEmailForm.orderId.attributes}" encoding="off" />/>
+            <input type="text" class="input-send-order-number" <isprint value="${orderConfEmailForm.orderId.attributes}" encoding="htmlsinglequote" />/>
             <button type="submit" name="${orderConfEmailForm.dynamicHtmlName}" class="js-submit-button button-apply">${Resource.msg("form.apply.sendemail.label","forms",'')}</button>
         </div>
     </div>

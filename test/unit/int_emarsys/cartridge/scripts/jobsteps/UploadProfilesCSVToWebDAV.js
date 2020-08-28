@@ -11,7 +11,7 @@ var Site = require(mockPath + 'dw/system/Site');
 
 var cartridgePath = '../../../../../../cartridges/int_emarsys/';
 
-var UploadProfiles = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/UploadProfilesCSVToWebDAV.js', {
+var UploadProfiles = proxyquire(cartridgePath + 'cartridge/scripts/jobsteps/uploadProfilesCSVToWebDAV.js', {
     'dw/system/Status': Status,
     'dw/system/Site': Site,
     'dw/system/Logger': Logger,

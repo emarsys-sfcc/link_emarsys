@@ -11,7 +11,7 @@
                 <option value="${event.emarsysName}" data-emarsys-id="${event.emarsysId}">
                     ${event.emarsysName}
                 </option>
-            <iselse>
+            <iselse/>
                 <option value="" data-emarsys-id="">
                     ${Resource.msg("option.none.event.title", "externalEvents", null)}
                 </option>

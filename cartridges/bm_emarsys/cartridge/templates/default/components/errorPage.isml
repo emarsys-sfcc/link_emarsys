@@ -21,7 +21,7 @@
                     </a>
                 </div>
             </isif>
-        <iselse>
+        <iselse/>
             ${Resource.msg('lack.of.arguments.message','errorMessages',null)}
         </isif>
     </div>
