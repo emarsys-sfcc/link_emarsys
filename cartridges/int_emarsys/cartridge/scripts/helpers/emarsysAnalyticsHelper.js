@@ -39,7 +39,7 @@ function getProductData(data) {
 /**
  * @description Сreating a category analytics object
  * @param {Object} data analytics data object, created in controller
- * @returns {Object} object for Category nalytics
+ * @returns {Object} object for Category analytics
  */
 function getCategoryPageData(data) {
     var category = isSFRA
@@ -59,7 +59,7 @@ function getCategoryPageData(data) {
 }
 
 /**
- * @description Сreating a serch analytics object
+ * @description Сreating a search analytics object
  * @param {Object} data analytics data object, created in controller
  * @returns {Object} object for Search analytics
  */
@@ -78,7 +78,7 @@ function getSearchPageData(data) {
 }
 
 /**
- * @description Сreating a serch analytics object
+ * @description Сreating a search analytics object
  * @param {Object} data analytics data object, created in controller
  * @returns {Object} object for Search analytics
  */
@@ -129,7 +129,7 @@ function getCartData() {
 /**
  * @description Сreating a storefront analytics object
  * @param {Object} data analytics data object, created in controller
- * @returns {Object} object for Storefron analytics
+ * @returns {Object} object for Storefront analytics
  */
 function getStorefrontData() {
     if (recommendationType !== 'disable') {
@@ -142,9 +142,9 @@ function getStorefrontData() {
 }
 
 /**
- * @description - Create objec with customer data for emarsys analytics
+ * @description - Create object with customer data for emarsys analytics
  * @param {Object} data analytics data object, created in controller
- * @returns {void}
+ * @returns {Object} object with customer data
  */
 function getCustomerInfo(data) {
     var isCustomer = (customer.authenticated && customer.registered);
@@ -167,7 +167,7 @@ function getCustomerInfo(data) {
 
 /**
  * @description Add new properties in object data with a analytics data
- * @param {string|Objcet} args string for SFRA approach or Object for SiteGenesis approach
+ * @param {string|Object} args string for SFRA approach or Object for SiteGenesis approach
  * @param {Object} data analytics data object, created in controller (SFRA)
  * @returns {void} inserted in data new property "analytics" with type "object"
  */
