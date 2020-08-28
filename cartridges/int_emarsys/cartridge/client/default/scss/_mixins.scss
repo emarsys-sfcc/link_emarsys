@@ -1,13 +1,13 @@
 // responsive breakpoints
-$break-small-portrait: 20rem;
-$break-medium-portrait: 30rem;
-$break-small-landscape: 46.875rem;
-$break-medium: 64rem;
-$break-large: 70.25rem;
+$break-small-portrait: 32rem;
+$break-medium-portrait: 48rem;
+$break-small-landscape: 75rem;
+$break-medium: 102.4rem;
+$break-large: 112.4rem;
 $landscape: landscape;
-$break-small-landscape-plus-one: 46.9375rem;
-$break-medium-minus-one: 63.9375rem;
-$phone-landscape-width: 40rem;
+$break-small-landscape-plus-one: 75.1rem;
+$break-medium-minus-one: 102.3rem;
+$phone-landscape-width: 64rem;
 
 @mixin respond-to($media) {
     @if $media == small-phones {

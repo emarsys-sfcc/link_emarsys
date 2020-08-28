@@ -32,7 +32,6 @@ describe('LoyaltyCustomerDataModel Scripts', () => {
 
     it('testing method: loyaltyCustomerData; ', () => {
         var result = new LoyaltyCustomerDataModel();
-        console.log(result);
         assert.deepEqual(result, {
             appId: '2260332443498184708',
             contactId: 'test@test.com',

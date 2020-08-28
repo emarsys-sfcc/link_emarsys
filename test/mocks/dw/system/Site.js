@@ -60,8 +60,28 @@ var preferenceMap = {
     emarsysAppId:'2260332443498184708',
     emarsysCustomerId:'test',
     emarsysRegion:'eu',
-    emarsysSecret:'test_salt'
-};
+    emarsysSecret:'test_salt',
+    emarsysContactFieldsMap : JSON.stringify({ 
+        '1':'firstName', 
+        '2':'lastName', 
+        '3':'emailAddress', 
+        '4':'birthday',
+        '5':'gender',
+        '10':'address1',
+        '11':'city',
+        '12':'stateCode',
+        '13':'postalCode',
+        '14':'countryCode',
+        '15':'phone',
+        '17':'jobTitle',
+        '18':'companyName',
+        '46':'salutation'
+    }),
+    emarsysAddressFieldsMap : JSON.stringify({
+        '1': { '1_1': 'firstName', '2_1': 'lastName', '3_1': 'emailAddress', '10_1': 'address1', '11_1': 'city', '12_1': 'stateCode', '13_1': 'postalCode', '14_1': 'countryCode', '15_1': 'phone', '18_1': 'companyName'},
+        '2': { '1_2': 'firstName', '2_2': 'lastName', '3_2': 'emailAddress', '10_2': 'address1', '11_2': 'city', '12_2': 'stateCode', '13_2': 'postalCode', '14_2': 'countryCode', '15_2': 'phone', '18_2': 'companyName'}}),
+        emarsysSourceID: '34967'
+    };
 
 
 // Current Site methods, dw.system.Site methods
@@ -80,55 +100,12 @@ function getCurrent() {
         },
         preferences : {
             custom : {
-                emarsysContactFieldsMap : JSON.stringify({ 
-                    '1':'firstName', 
-                    '2':'lastName', 
-                    '3':'emailAddress', 
-                    '4':'birthday',
-                    '5':'gender',
-                    '10':'address1',
-                    '11':'city',
-                    '12':'stateCode',
-                    '13':'postalCode',
-                    '14':'countryCode',
-                    '15':'phone',
-                    '17':'jobTitle',
-                    '18':'companyName',
-                    '46':'salutation'
-                }),
-                emarsysAddressFieldsMap : JSON.stringify({
-                    '1': {
-                        '1_1': 'firstName',
-                        '2_1': 'lastName',
-                        '3_1': 'emailAddress',
-                        '10_1': 'address1',
-                        '11_1': 'city',
-                        '12_1': 'stateCode',
-                        '13_1': 'postalCode',
-                        '14_1': 'countryCode',
-                        '15_1': 'phone',
-                        '18_1': 'companyName'
-                    },
-                    '2': {
-                        '1_2': 'firstName',
-                        '2_2': 'lastName',
-                        '3_2': 'emailAddress',
-                        '10_2': 'address1',
-                        '11_2': 'city',
-                        '12_2': 'stateCode',
-                        '13_2': 'postalCode',
-                        '14_2': 'countryCode',
-                        '15_2': 'phone',
-                        '18_2': 'companyName'
-                    }
-                }),
                 emarsysCountryCodes: JSON.stringify({'us': 185,'uk': 184,'de': 65,'fr': 61}),
                 emarsysGenderCodes: JSON.stringify({'male': 1,'female': 2}),
                 emarsysProductImageSize:'small',
                 emarsysSFTPHost: 'test.emarsys.net',
                 emarsysSFTPUsername: 'Test',
                 emarsysSFTPPassword: 'test1234',
-                emarsysSourceID: '34967',
                 emarsysPredictEnableJSTrackingCode: true,
                 emarsysLanguage:'en',
                 emarsysSourceName: 'ofs-test2',

@@ -1,18 +1,18 @@
 @import "dialogPopup";
 
-$header-column-padding: 0.5rem;
-$column-padding: 0.3125rem;
+$header-column-padding: 0.8rem;
+$column-padding: 0.5rem;
 
 .external-events-content {
-    padding: 0.9375rem;
-    border: 0.0625rem solid #ccc;
+    padding: 1.5rem;
+    border: 0.1rem solid #ccc;
     width: 100%;
 }
 
 .control-block {
-    min-height: 2.25rem;
-    margin-top: 0.625rem;
-    padding-right: 0.625rem;
+    min-height: 3.6rem;
+    margin-top: 1rem;
+    padding-right: 1rem;
     display: -ms-flexbox;
     display: flex;
     -ms-flex-align: center;
@@ -25,7 +25,7 @@ div.table-title-column {
 }
 
 .table-header {
-    height: 3rem;
+    height: 4.8rem;
     display: -ms-flexbox;
     display: flex;
     -ms-flex-align: center;
@@ -38,7 +38,7 @@ div.table-title-column {
 }
 
 .row-basic {
-    height: 3rem;
+    height: 4.8rem;
     display: flex;
     -ms-flex-align: center;
     align-items: center;
@@ -54,7 +54,7 @@ div.table-title-column {
     -ms-flex-align: center;
     align-items: center;
     -ms-flex-pack: center;
-    margin-left: 0.1875rem;
+    margin-left: 0.3rem;
 }
 
 .sfcc-name-column {
@@ -72,13 +72,13 @@ div.table-title-column {
 
 .button-column {
     width: 8%;
-    min-width: 5.625rem;
+    min-width: 9rem;
     -ms-flex-pack: center;
     justify-content: center;
 }
 
 .control-block .button-column {
-    margin-left: 0.5rem;
+    margin-left: 0.8rem;
 }
 
 .trigger-form .label-column {
@@ -94,34 +94,34 @@ div.table-title-column {
     width: fit-content;
     height: -webkit-fit-content;
     height: fit-content;
-    margin-left: 1.5625rem;
+    margin-left: 2.5rem;
 }
 
 .empty-notification {
-    line-height: 2.5rem;
+    line-height: 4rem;
 }
 
 .required-sign {
     color: red;
-    font-size: 2rem;
+    font-size: 3.2rem;
 }
 
 /* Common styles */
 .input-placeholder {
-    border: 0.0313rem solid transparent;
-    border-bottom: 0.0313rem solid #40a3f9;
+    border: 0.0501rem solid transparent;
+    border-bottom: 0.0501rem solid #40a3f9;
     background: transparent;
     width: 100%;
-    padding: 0.3125rem;
+    padding: 0.5rem;
 
     &:hover {
-        border: 0.0313rem solid #40a3f9;
-        box-shadow: 0 0 0.3125rem #bbb;
+        border: 0.0501rem solid #40a3f9;
+        box-shadow: 0 0 0.5rem #bbb;
     }
 
     &:focus {
         border-color: #40a3f9;
-        box-shadow: 0 0 0.3125rem #bbb;
+        box-shadow: 0 0 0.5rem #bbb;
     }
 }
 
@@ -131,9 +131,9 @@ div.table-title-column {
         color 0.2s ease-in-out,
         background-color 0.2s ease-in-out,
         border-color 0.2s ease-in-out;
-    border: 0.0625rem solid #009ddc;
-    border-radius: 0.1875rem;
-    padding: 0.0625rem 0.5rem;
+    border: 0.1rem solid #009ddc;
+    border-radius: 0.3rem;
+    padding: 0.1rem 0.8rem;
     background-color: #009ddc;
     color: #fff;
     line-height: 1.5;
@@ -153,28 +153,27 @@ div.table-title-column {
 }
 
 .select-basic {
-    border: 0.0625rem solid #d5d7d9;
-    border-radius: 0.625rem;
+    border: 0.1rem solid #d5d7d9;
+    border-radius: 1rem;
     cursor: pointer;
     width: 100%;
-    font-size: 1.4rem;
     background-color: #fff;
     background-image: none;
-    padding: 0.0625rem $column-padding;
+    padding: 0.1rem $column-padding;
     margin: 0;
-    min-width: 8.0625rem;
+    min-width: 12.9rem;
 
     &:focus {
         outline: none;
-        border: 0.0625rem solid #40a3f9;
+        border: 0.1rem solid #40a3f9;
     }
 
     &:hover {
-        border: 0.0625rem solid #40a3f9;
+        border: 0.1rem solid #40a3f9;
     }
 
     &:disabled {
-        border: 0.0313rem solid transparent;
+        border: 0.0501rem solid transparent;
         color: black;
         background-color: transparent;
         pointer-events: none;

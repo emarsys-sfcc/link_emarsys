@@ -13,7 +13,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 4.0625rem 1.875rem 1.875rem;
+    padding: 6.5rem 3rem 3rem;
     background: rgba(0, 0, 0, 0.6);
     justify-content: center;
     align-items: center;
@@ -26,9 +26,9 @@
 
 .dialog-container .dialog-block {
     background: #fff;
-    box-shadow: 0 0.25rem 0.5rem 0 rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0.4rem 0.8rem 0 rgba(0, 0, 0, 0.3);
     max-height: 100%;
-    max-width: 40.625rem;
+    max-width: 65rem;
     width: 100%;
     display: flex;
     visibility: visible;
@@ -46,41 +46,41 @@
 }
 
 .dialog-container .dialog-header-block {
-    padding-left: 0.9375rem;
-    line-height: 2.5rem;
+    padding-left: 1.5rem;
+    line-height: 4rem;
 }
 
 .dialog-container .dialog-title {
-    font-size: 1.0625rem;
+    font-size: 1.7rem;
 }
 
 .dialog-container .dialog-close-button {
     float: right;
-    margin-right: 0.625rem;
+    margin-right: 1rem;
     cursor: pointer;
 
     &::before {
         content: '\2716';
         color: #717171;
         font-family: 'fontAwesome';
-        font-size: 1rem;
-        height: 1.875rem;
-        line-height: 1.75rem;
+        font-size: 1.6rem;
+        height: 3rem;
+        line-height: 2.8rem;
     }
 }
 
 .dialog-container .dialog-content-block {
-    padding: 0.625rem 0.9375rem 0.3125rem 1.5625rem;
+    padding: 1rem 1.5rem 0.5rem 2.5rem;
 }
 
 .dialog-container .dialog-input-label {
     display: block;
-    margin-bottom: 0.375rem;
+    margin-bottom: 0.6rem;
     font-weight: 700;
 }
 
 .dialog-container .dialog-footer-block {
-    padding: 0.9375rem;
+    padding: 1.5rem;
 }
 
 .dialog-container .dialog-cancel-button {
@@ -94,7 +94,7 @@
 }
 
 .dialog-container .dialog-footer-block .button-basic {
-    margin-right: 0.3125rem;
+    margin-right: 0.5rem;
 }
 
 .dialog-container .dialog-select-block {
@@ -105,8 +105,8 @@
     -ms-flex-direction: column;
     flex-direction: column;
     width: 100%;
-    padding: 0.3125rem 0;
-    padding-right: 0.9375rem;
+    padding: 0.5rem 0;
+    padding-right: 1.5rem;
     box-sizing: border-box;
 }
 

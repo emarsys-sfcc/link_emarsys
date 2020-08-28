@@ -7,17 +7,17 @@
 
     .footer-container {
         h3 {
-            font-size: 0.75rem;
+            font-size: 1.2rem;
         }
     }
 }
 
 .email-signup-wrapper {
-    padding: 0.625rem;
-    margin-bottom: 9.375rem;
+    padding: 1rem;
+    margin-bottom: 15rem;
 
     .required-indicator {
-        font-size: 0.75rem;
+        font-size: 1.2rem;
     }
 
     h3 {
@@ -27,7 +27,7 @@
     .form-row {
         width: 31%;
         float: left;
-        margin: 0 1.25rem 0.625rem 0;
+        margin: 0 2rem 1rem 0;
         position: relative;
 
         @include respond-to(phones) {
@@ -35,7 +35,7 @@
         }
 
         &:nth-child(3n) {
-            margin: 0 0 0.625rem;
+            margin: 0 0 1rem;
         }
 
         span {
@@ -44,8 +44,8 @@
 
         span.error,
         .error-message {
-            bottom: -0.75rem;
-            font-size: 0.6875rem;
+            bottom: -1.2rem;
+            font-size: 1.1rem;
             left: 0;
             margin: 0;
             position: absolute;
@@ -61,18 +61,18 @@
         }
 
         .input-radio {
-            margin: 0.625rem 2%;
+            margin: 1rem 2%;
         }
 
         .input-select {
-            border: 0.0625rem solid #aaa;
+            border: 0.1rem solid #aaa;
         }
     }
 
     .full-width {
         width: 100%;
         float: left;
-        margin: 1.25rem 0;
+        margin: 2rem 0;
 
         .button {
             text-transform: uppercase;
@@ -88,17 +88,17 @@
         background-color: #aaa;
         border: none;
         color: #fff;
-        height: 1.9375rem;
+        height: 3.1rem;
         padding: 0;
         width: auto;
     }
 
     .input-text {
-        width: 10rem;
+        width: 16rem;
         float: left;
 
         @include respond-to(tablets) {
-            width: 7.5rem;
+            width: 12rem;
         }
     }
 }
@@ -112,21 +112,21 @@
 }
 
 .registration-form-wrapper {
-    padding: 0.625rem;
-    min-height: 34.375rem;
+    padding: 1rem;
+    min-height: 55rem;
 
     h6 {
-        font-size: 0.6875rem;
+        font-size: 1.1rem;
     }
 }
 
 .show-confirmation-message {
-    padding: 0.625rem;
+    padding: 1rem;
     box-sizing: border-box;
-    min-height: 34.375rem;
+    min-height: 55rem;
 
     h6 {
-        font-size: 0.6875rem;
+        font-size: 1.1rem;
     }
 }
 
