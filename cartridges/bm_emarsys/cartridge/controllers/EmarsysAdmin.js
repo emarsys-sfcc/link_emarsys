@@ -4,6 +4,7 @@ var server = require('server');
 var Transaction = require('dw/system/Transaction');
 var CustomObjectMgr = require('dw/object/CustomObjectMgr');
 var BMEmarsysHelper = require('*/cartridge/scripts/helpers/bmEmarsysHelper');
+var csrfProtection = require('*/cartridge/scripts/middleware/csrf');
 
 server.get('ShowCatalogConfigurations', server.middleware.https, function (req, res, next) {
     try {
@@ -293,7 +294,7 @@ server.post('SaveSmartInsight', server.middleware.https, function (req, res, nex
     next();
 });
 
-server.get('ShowOrderConfirmationEmail', server.middleware.https, function (req, res, next) {
+server.get('ShowOrderConfirmationEmail', server.middleware.https, csrfProtection.generateToken, function (req, res, next) {
     var orderConfEmailForm = server.forms.getForm('sendOrderConfEmail');
     orderConfEmailForm.clear();
 
@@ -306,7 +307,7 @@ server.get('ShowOrderConfirmationEmail', server.middleware.https, function (req,
     next();
 });
 
-server.post('SendOrderConfirmationEmail', server.middleware.https, function (req, res, next) {
+server.post('SendOrderConfirmationEmail', server.middleware.https, csrfProtection.validateRequest, function (req, res, next) {
     var orderConfEmailForm = server.forms.getForm('sendOrderConfEmail');
     var orderId = orderConfEmailForm.orderId.value;
     var order = require('dw/order/OrderMgr').getOrder(orderId);

@@ -8,9 +8,11 @@ var Site = require('dw/system/Site');
 var eventsHelper = require('int_emarsys/cartridge/scripts/helpers/emarsysEventsHelper');
 var emarsysHelper = new (require('int_emarsys/cartridge/scripts/helpers/emarsysHelper'))();
 var supportedEventsData = require('bm_emarsys/cartridge/config/supportedEventsData');
+var csrfProtection = require('*/cartridge/scripts/middleware/csrf');
 
 server.get('Show',
     server.middleware.https,
+    csrfProtection.generateToken,
     function (req, res, next) {
         var customObjectKey = 'StoredEvents';
         var custom = {};
@@ -347,6 +349,7 @@ server.post('Update',
  */
 server.post('Trigger',
     server.middleware.https,
+    csrfProtection.validateRequest,
     function (req, res, next) {
         var event = {
             type: request.httpParameterMap.type.value,

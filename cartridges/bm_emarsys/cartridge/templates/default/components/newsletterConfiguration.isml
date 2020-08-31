@@ -62,6 +62,8 @@
             <div class="applay-add-fields-buttons-container">
                 <button type="submit" name="${newsletterSubForm.dynamicHtmlName}" class="js-submit-button button-apply">${Resource.msg(newsletterSubForm.applyButton.label,"forms",'')}</button>
             </div>
+
+            <input type="hidden" name="${pdict.csrf.tokenName}" value="${pdict.csrf.token}" />
         </form>
     </div> 
 </isloop>

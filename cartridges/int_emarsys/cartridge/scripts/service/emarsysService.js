@@ -98,7 +98,8 @@ module.exports = {
             },
             parseResponse: function (service, response) {
                 return response && response.text;
-            }
+            },
+            filterLogMessage: function () {}
         });
     }
 };

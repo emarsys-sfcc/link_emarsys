@@ -699,7 +699,7 @@ function checkoutSubscriptionPipe() {
 /* Renders the Newsletter form page. */
 exports.Signup = guard.ensure(['get', 'https'], signup);
 /* Handle for form submission. */
-exports.SubmitForm = guard.ensure(['post', 'https'], submitForm);
+exports.SubmitForm = guard.ensure(['post', 'https', 'csrf'], submitForm);
 /* Renders the error page. */
 exports.ErrorPage = guard.ensure(['get', 'https'], errorPage);
 /* Renders the account overview. */
@@ -731,7 +731,7 @@ exports.Unsubscribe = guard.ensure(['get', 'https'], unsubscribe);
 /* Renders email settings page with form, maps its data on existing emarsys codes and jumps to ProcessData subpipeline to process recieved data. */
 exports.EmailSettings = guard.ensure(['get', 'https', 'loggedIn'], emailSettings);
 /* Email settings form handle */
-exports.EmailSettingsHandleForm = guard.ensure(['post', 'https', 'loggedIn'], emailSettingsHandleForm);
+exports.EmailSettingsHandleForm = guard.ensure(['post', 'https', 'loggedIn', 'csrf'], emailSettingsHandleForm);
 /* Account unsubscribe handle */
 exports.AccountUnsubscribe = guard.ensure(['https', 'loggedIn'], accountUnsubscribe);
 /* Account Double OptIn Thank You page */

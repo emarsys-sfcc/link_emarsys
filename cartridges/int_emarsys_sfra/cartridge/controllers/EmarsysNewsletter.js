@@ -9,6 +9,7 @@ var Site = require('dw/system/Site');
 /* Script Modules */
 var emarsysSFRAHelper = require('~/cartridge/scripts/helpers/emarsysSFRAHelper');
 var NewsletterHelper = require('~/cartridge/scripts/helpers/newsletterHelper');
+var csrfProtection = require('*/cartridge/scripts/middleware/csrf');
 
 /**
  * @description Renders the Newsletter form page
@@ -17,6 +18,7 @@ var NewsletterHelper = require('~/cartridge/scripts/helpers/newsletterHelper');
 server.get(
     'Signup',
     server.middleware.https,
+    csrfProtection.generateToken,
     function (req, res, next) {
         try {
             if (!Site.getCurrent().getCustomPreferenceValue('emarsysEnabled')) {
@@ -45,6 +47,7 @@ server.get(
 server.post(
     'SubmitForm',
     server.middleware.https,
+    csrfProtection.validateRequest,
     function (req, res, next) {
         var args = {};
         args.Email = session.forms.emarsyssignup.emailAddress.value;
@@ -237,6 +240,7 @@ server.get(
 server.get(
     'Unsubscribe',
     server.middleware.https,
+    csrfProtection.generateToken,
     function (req, res, next) {
         var args = {};
         var queryParams = req.querystring;
@@ -282,6 +286,7 @@ server.get(
 server.get(
     'EmailSettings',
     server.middleware.https,
+    csrfProtection.generateToken,
     userLoggedIn.validateLoggedIn,
     function (req, res, next) {
         var CustomerModel = require('int_emarsys_sfra/cartridge/models/customerModel');

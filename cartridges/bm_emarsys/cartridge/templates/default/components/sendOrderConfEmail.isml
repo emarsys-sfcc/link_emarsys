@@ -19,4 +19,6 @@
             <button type="submit" name="${orderConfEmailForm.dynamicHtmlName}" class="js-submit-button button-apply">${Resource.msg("form.apply.sendemail.label","forms",'')}</button>
         </div>
     </div>
+
+    <input type="hidden" name="${pdict.csrf.tokenName}" value="${pdict.csrf.token}" />
 </form>

@@ -21,7 +21,8 @@ module.exports.getFTPService = function (serviceID) {
         },
         parseResponse: function (service, result) {
             return result;
-        }
+        },
+        filterLogMessage: function () {}
     });
 
     return new FtpClientHelper(ftpService);

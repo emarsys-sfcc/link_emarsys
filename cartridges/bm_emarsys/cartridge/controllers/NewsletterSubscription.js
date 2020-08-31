@@ -5,11 +5,12 @@ var server = require('server');
 var Transaction = require('dw/system/Transaction');
 var CustomObjectMgr = require('dw/object/CustomObjectMgr');
 var BMEmarsysHelper = require('*/cartridge/scripts/helpers/bmEmarsysHelper');
+var csrfProtection = require('*/cartridge/scripts/middleware/csrf');
 
 /**
  * @description this function is called with bm_extensions
  */
-server.get('ShowNewsletterSubscription', server.middleware.https, function (req, res, next) {
+server.get('ShowNewsletterSubscription', server.middleware.https, csrfProtection.generateToken, function (req, res, next) {
     try {
         var tabsAttr = BMEmarsysHelper.getTabsAttr('EmarsysNewsletterSubscription', 'EmarsysSubscriptionType');
         var storedConfigurations = BMEmarsysHelper.getStoredConfigurations('EmarsysNewsletterSubscription');
@@ -31,7 +32,7 @@ server.get('ShowNewsletterSubscription', server.middleware.https, function (req,
     next();
 });
 
-server.post('SaveNewsletter', server.middleware.https, function (req, res, next) {
+server.post('SaveNewsletter', server.middleware.https, csrfProtection.validateRequest, function (req, res, next) {
     var newsletteForm = server.forms.getForm('newsletterSub');
     var newsletteFormObj = newsletteForm.toObject();
 
